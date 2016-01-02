@@ -22,6 +22,19 @@
     self.title = @"PKShortVideoPlayer";
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+    self.title = @"PKShortVideoPlayer";
+}
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.title = nil;
+}
+
+
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

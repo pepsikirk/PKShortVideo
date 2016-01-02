@@ -33,7 +33,7 @@
                             </tableViewCell>
                         </prototypes>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="irr-Pn-9x5"/>
+                    <navigationItem key="navigationItem" id="irr-Pn-9x5"/>
                     <connections>
                         <segue destination="JdJ-0X-ZL8" kind="push" identifier="seguePushMessageVC" id="Hvf-k8-GSP"/>
                     </connections>
