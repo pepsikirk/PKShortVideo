@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AE585A411C37F1E7004C1A86 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AE585A401C37F1E7004C1A86 /* Main.storyboard */; };
+		AE6E21DE1C397AD700F883F4 /* PKShortVideoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = AE6E21DD1C397AD700F883F4 /* PKShortVideoItem.m */; };
 		AEC189161C37F5C100C11C2F /* PKRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEC189151C37F5C100C11C2F /* PKRootViewController.m */; };
 		AEC189781C37F60800C11C2F /* JSQMessagesAssets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = AEC189191C37F60800C11C2F /* JSQMessagesAssets.bundle */; };
 		AEC189791C37F60800C11C2F /* JSQSystemSoundPlayer+JSQMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = AEC1891C1C37F60800C11C2F /* JSQSystemSoundPlayer+JSQMessages.m */; };
@@ -82,6 +83,8 @@
 
 /* Begin PBXFileReference section */
 		AE585A401C37F1E7004C1A86 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		AE6E21DC1C397AD700F883F4 /* PKShortVideoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PKShortVideoItem.h; path = Model/PKShortVideoItem.h; sourceTree = "<group>"; };
+		AE6E21DD1C397AD700F883F4 /* PKShortVideoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PKShortVideoItem.m; path = Model/PKShortVideoItem.m; sourceTree = "<group>"; };
 		AEC189141C37F5C100C11C2F /* PKRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PKRootViewController.h; path = Controllers/PKRootViewController.h; sourceTree = "<group>"; };
 		AEC189151C37F5C100C11C2F /* PKRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PKRootViewController.m; path = Controllers/PKRootViewController.m; sourceTree = "<group>"; };
 		AEC189191C37F60800C11C2F /* JSQMessagesAssets.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = JSQMessagesAssets.bundle; sourceTree = "<group>"; };
@@ -224,6 +227,15 @@
 				AEC18AAE1C38107700C11C2F /* JSQSystemSoundPlayer */,
 			);
 			name = Vendor;
+			sourceTree = "<group>";
+		};
+		AE6E21DB1C397A8C00F883F4 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				AE6E21DC1C397AD700F883F4 /* PKShortVideoItem.h */,
+				AE6E21DD1C397AD700F883F4 /* PKShortVideoItem.m */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 		AEC189171C37F60800C11C2F /* JSQMessagesViewController */ = {
@@ -432,6 +444,7 @@
 			children = (
 				AE0E5DC41C36CE4C003751E9 /* Vendor */,
 				AEC189A41C37F76600C11C2F /* Category */,
+				AE6E21DB1C397A8C00F883F4 /* Model */,
 				AEC18AAA1C380E0C00C11C2F /* Controllers */,
 				AEDD7D491C34329100977BD0 /* AppDelegate.h */,
 				AEDD7D4A1C34329100977BD0 /* AppDelegate.m */,
@@ -629,6 +642,7 @@
 				AEC189891C37F60800C11C2F /* JSQMessagesCollectionViewFlowLayout.m in Sources */,
 				AEC189861C37F60800C11C2F /* JSQMessagesTimestampFormatter.m in Sources */,
 				AEDD7D481C34329100977BD0 /* main.m in Sources */,
+				AE6E21DE1C397AD700F883F4 /* PKShortVideoItem.m in Sources */,
 				AEC1898D1C37F60800C11C2F /* JSQMediaItem.m in Sources */,
 				AEC1899C1C37F60800C11C2F /* JSQMessagesLabel.m in Sources */,
 				AEC189871C37F60800C11C2F /* JSQMessagesToolbarButtonFactory.m in Sources */,
