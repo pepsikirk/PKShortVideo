@@ -17,18 +17,17 @@
 		880526341CF2F94C005EC256 /* PKColorConversion.m in Sources */ = {isa = PBXBuildFile; fileRef = 880526121CF2F94C005EC256 /* PKColorConversion.m */; };
 		880526351CF2F94C005EC256 /* PKVideoDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 880526141CF2F94C005EC256 /* PKVideoDecoder.m */; };
 		880526361CF2F94C005EC256 /* PKFullScreenPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 880526171CF2F94C005EC256 /* PKFullScreenPlayerView.m */; };
-		880526371CF2F94C005EC256 /* PKFullScreenPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 880526191CF2F94C005EC256 /* PKFullScreenPlayerViewController.m */; };
-		880526381CF2F94C005EC256 /* UIImage+PKShortVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8805261C1CF2F94C005EC256 /* UIImage+PKShortVideoPlayer.m */; };
-		880526391CF2F94C005EC256 /* PKFullScreenPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 880526201CF2F94C005EC256 /* PKFullScreenPlayerView.m */; };
 		8805263A1CF2F94C005EC256 /* PKFullScreenPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 880526221CF2F94C005EC256 /* PKFullScreenPlayerViewController.m */; };
 		8805263B1CF2F94C005EC256 /* PKShortVideoProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 880526241CF2F94C005EC256 /* PKShortVideoProgressBar.m */; };
 		8805263C1CF2F94C005EC256 /* PKShortVideoRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 880526261CF2F94C005EC256 /* PKShortVideoRecorder.m */; };
 		8805263D1CF2F94C005EC256 /* PKShortVideoSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 880526281CF2F94C005EC256 /* PKShortVideoSession.m */; };
 		8805263E1CF2F94C005EC256 /* PKShortVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8805262A1CF2F94C005EC256 /* PKShortVideoViewController.m */; };
 		8805263F1CF2F94C005EC256 /* PKUtiltiies.m in Sources */ = {isa = PBXBuildFile; fileRef = 8805262C1CF2F94C005EC256 /* PKUtiltiies.m */; };
+		880526441CF2FC70005EC256 /* PKMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 880526411CF2FC70005EC256 /* PKMessageViewController.m */; };
+		880526451CF2FC70005EC256 /* PKRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 880526431CF2FC70005EC256 /* PKRootViewController.m */; };
+		880526481CF2FC99005EC256 /* UIImage+PKShortVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 880526471CF2FC99005EC256 /* UIImage+PKShortVideoPlayer.m */; };
 		AE585A411C37F1E7004C1A86 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AE585A401C37F1E7004C1A86 /* Main.storyboard */; };
 		AE6E21DE1C397AD700F883F4 /* PKShortVideoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = AE6E21DD1C397AD700F883F4 /* PKShortVideoItem.m */; };
-		AEC189161C37F5C100C11C2F /* PKRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEC189151C37F5C100C11C2F /* PKRootViewController.m */; };
 		AEC189781C37F60800C11C2F /* JSQMessagesAssets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = AEC189191C37F60800C11C2F /* JSQMessagesAssets.bundle */; };
 		AEC189791C37F60800C11C2F /* JSQSystemSoundPlayer+JSQMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = AEC1891C1C37F60800C11C2F /* JSQSystemSoundPlayer+JSQMessages.m */; };
 		AEC1897A1C37F60800C11C2F /* NSBundle+JSQMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = AEC1891E1C37F60800C11C2F /* NSBundle+JSQMessages.m */; };
@@ -73,7 +72,6 @@
 		AEC189A11C37F60800C11C2F /* JSQMessagesToolbarContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AEC189741C37F60800C11C2F /* JSQMessagesToolbarContentView.xib */; };
 		AEC189A21C37F60800C11C2F /* JSQMessagesTypingIndicatorFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = AEC189761C37F60800C11C2F /* JSQMessagesTypingIndicatorFooterView.m */; };
 		AEC189A31C37F60800C11C2F /* JSQMessagesTypingIndicatorFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AEC189771C37F60800C11C2F /* JSQMessagesTypingIndicatorFooterView.xib */; };
-		AEC18AAD1C380E5800C11C2F /* PKMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEC18AAC1C380E5800C11C2F /* PKMessageViewController.m */; };
 		AEC18AB11C38107700C11C2F /* JSQSystemSoundPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = AEC18AB01C38107700C11C2F /* JSQSystemSoundPlayer.m */; };
 		AEDD7D481C34329100977BD0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDD7D471C34329100977BD0 /* main.m */; };
 		AEDD7D4B1C34329100977BD0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDD7D4A1C34329100977BD0 /* AppDelegate.m */; };
@@ -123,8 +121,6 @@
 		880526171CF2F94C005EC256 /* PKFullScreenPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PKFullScreenPlayerView.m; sourceTree = "<group>"; };
 		880526181CF2F94C005EC256 /* PKFullScreenPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PKFullScreenPlayerViewController.h; sourceTree = "<group>"; };
 		880526191CF2F94C005EC256 /* PKFullScreenPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PKFullScreenPlayerViewController.m; sourceTree = "<group>"; };
-		8805261B1CF2F94C005EC256 /* UIImage+PKShortVideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+PKShortVideoPlayer.h"; sourceTree = "<group>"; };
-		8805261C1CF2F94C005EC256 /* UIImage+PKShortVideoPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+PKShortVideoPlayer.m"; sourceTree = "<group>"; };
 		8805261F1CF2F94C005EC256 /* PKFullScreenPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PKFullScreenPlayerView.h; sourceTree = "<group>"; };
 		880526201CF2F94C005EC256 /* PKFullScreenPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PKFullScreenPlayerView.m; sourceTree = "<group>"; };
 		880526211CF2F94C005EC256 /* PKFullScreenPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PKFullScreenPlayerViewController.h; sourceTree = "<group>"; };
@@ -139,11 +135,15 @@
 		8805262A1CF2F94C005EC256 /* PKShortVideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PKShortVideoViewController.m; sourceTree = "<group>"; };
 		8805262B1CF2F94C005EC256 /* PKUtiltiies.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PKUtiltiies.h; sourceTree = "<group>"; };
 		8805262C1CF2F94C005EC256 /* PKUtiltiies.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PKUtiltiies.m; sourceTree = "<group>"; };
+		880526401CF2FC70005EC256 /* PKMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PKMessageViewController.h; path = Controller/PKMessageViewController.h; sourceTree = "<group>"; };
+		880526411CF2FC70005EC256 /* PKMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PKMessageViewController.m; path = Controller/PKMessageViewController.m; sourceTree = "<group>"; };
+		880526421CF2FC70005EC256 /* PKRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PKRootViewController.h; path = Controller/PKRootViewController.h; sourceTree = "<group>"; };
+		880526431CF2FC70005EC256 /* PKRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PKRootViewController.m; path = Controller/PKRootViewController.m; sourceTree = "<group>"; };
+		880526461CF2FC99005EC256 /* UIImage+PKShortVideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+PKShortVideoPlayer.h"; path = "Category/UIImage+PKShortVideoPlayer.h"; sourceTree = "<group>"; };
+		880526471CF2FC99005EC256 /* UIImage+PKShortVideoPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+PKShortVideoPlayer.m"; path = "Category/UIImage+PKShortVideoPlayer.m"; sourceTree = "<group>"; };
 		AE585A401C37F1E7004C1A86 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		AE6E21DC1C397AD700F883F4 /* PKShortVideoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PKShortVideoItem.h; path = Model/PKShortVideoItem.h; sourceTree = "<group>"; };
 		AE6E21DD1C397AD700F883F4 /* PKShortVideoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PKShortVideoItem.m; path = Model/PKShortVideoItem.m; sourceTree = "<group>"; };
-		AEC189141C37F5C100C11C2F /* PKRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PKRootViewController.h; path = Controllers/PKRootViewController.h; sourceTree = "<group>"; };
-		AEC189151C37F5C100C11C2F /* PKRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PKRootViewController.m; path = Controllers/PKRootViewController.m; sourceTree = "<group>"; };
 		AEC189191C37F60800C11C2F /* JSQMessagesAssets.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = JSQMessagesAssets.bundle; sourceTree = "<group>"; };
 		AEC1891B1C37F60800C11C2F /* JSQSystemSoundPlayer+JSQMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JSQSystemSoundPlayer+JSQMessages.h"; sourceTree = "<group>"; };
 		AEC1891C1C37F60800C11C2F /* JSQSystemSoundPlayer+JSQMessages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JSQSystemSoundPlayer+JSQMessages.m"; sourceTree = "<group>"; };
@@ -233,8 +233,6 @@
 		AEC189751C37F60800C11C2F /* JSQMessagesTypingIndicatorFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSQMessagesTypingIndicatorFooterView.h; sourceTree = "<group>"; };
 		AEC189761C37F60800C11C2F /* JSQMessagesTypingIndicatorFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSQMessagesTypingIndicatorFooterView.m; sourceTree = "<group>"; };
 		AEC189771C37F60800C11C2F /* JSQMessagesTypingIndicatorFooterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JSQMessagesTypingIndicatorFooterView.xib; sourceTree = "<group>"; };
-		AEC18AAB1C380E5800C11C2F /* PKMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PKMessageViewController.h; path = Controllers/PKMessageViewController.h; sourceTree = "<group>"; };
-		AEC18AAC1C380E5800C11C2F /* PKMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PKMessageViewController.m; path = Controllers/PKMessageViewController.m; sourceTree = "<group>"; };
 		AEC18AAF1C38107700C11C2F /* JSQSystemSoundPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSQSystemSoundPlayer.h; sourceTree = "<group>"; };
 		AEC18AB01C38107700C11C2F /* JSQSystemSoundPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSQSystemSoundPlayer.m; sourceTree = "<group>"; };
 		AEDD7D431C34329100977BD0 /* PKShortVideoPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PKShortVideoPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -283,7 +281,6 @@
 				880526001CF2F94C005EC256 /* AVAssetReader+Layer.Contents */,
 				880526051CF2F94C005EC256 /* AVAssetReader+Open GLES */,
 				880526151CF2F94C005EC256 /* AVPlayer */,
-				8805261A1CF2F94C005EC256 /* Categories */,
 			);
 			path = PKShortVideoPlayer;
 			sourceTree = "<group>";
@@ -337,15 +334,6 @@
 				880526191CF2F94C005EC256 /* PKFullScreenPlayerViewController.m */,
 			);
 			path = AVPlayer;
-			sourceTree = "<group>";
-		};
-		8805261A1CF2F94C005EC256 /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				8805261B1CF2F94C005EC256 /* UIImage+PKShortVideoPlayer.h */,
-				8805261C1CF2F94C005EC256 /* UIImage+PKShortVideoPlayer.m */,
-			);
-			path = Categories;
 			sourceTree = "<group>";
 		};
 		8805261D1CF2F94C005EC256 /* PKShortVideoWriter */ = {
@@ -551,19 +539,21 @@
 		AEC189A41C37F76600C11C2F /* Category */ = {
 			isa = PBXGroup;
 			children = (
+				880526461CF2FC99005EC256 /* UIImage+PKShortVideoPlayer.h */,
+				880526471CF2FC99005EC256 /* UIImage+PKShortVideoPlayer.m */,
 			);
 			name = Category;
 			sourceTree = "<group>";
 		};
-		AEC18AAA1C380E0C00C11C2F /* Controllers */ = {
+		AEC18AAA1C380E0C00C11C2F /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				AEC189141C37F5C100C11C2F /* PKRootViewController.h */,
-				AEC189151C37F5C100C11C2F /* PKRootViewController.m */,
-				AEC18AAB1C380E5800C11C2F /* PKMessageViewController.h */,
-				AEC18AAC1C380E5800C11C2F /* PKMessageViewController.m */,
+				880526401CF2FC70005EC256 /* PKMessageViewController.h */,
+				880526411CF2FC70005EC256 /* PKMessageViewController.m */,
+				880526421CF2FC70005EC256 /* PKRootViewController.h */,
+				880526431CF2FC70005EC256 /* PKRootViewController.m */,
 			);
-			name = Controllers;
+			name = Controller;
 			sourceTree = "<group>";
 		};
 		AEC18AAE1C38107700C11C2F /* JSQSystemSoundPlayer */ = {
@@ -599,12 +589,12 @@
 		AEDD7D451C34329100977BD0 /* PKShortVideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				AE0E5DC41C36CE4C003751E9 /* Vendor */,
 				880525FF1CF2F94C005EC256 /* PKShortVideoPlayer */,
 				8805261D1CF2F94C005EC256 /* PKShortVideoWriter */,
-				AE0E5DC41C36CE4C003751E9 /* Vendor */,
 				AEC189A41C37F76600C11C2F /* Category */,
 				AE6E21DB1C397A8C00F883F4 /* Model */,
-				AEC18AAA1C380E0C00C11C2F /* Controllers */,
+				AEC18AAA1C380E0C00C11C2F /* Controller */,
 				AEDD7D491C34329100977BD0 /* AppDelegate.h */,
 				AEDD7D4A1C34329100977BD0 /* AppDelegate.m */,
 				AE585A401C37F1E7004C1A86 /* Main.storyboard */,
@@ -794,15 +784,14 @@
 				8805263B1CF2F94C005EC256 /* PKShortVideoProgressBar.m in Sources */,
 				AEC1897D1C37F60800C11C2F /* UIDevice+JSQMessages.m in Sources */,
 				AEC1897C1C37F60800C11C2F /* UIColor+JSQMessages.m in Sources */,
-				AEC18AAD1C380E5800C11C2F /* PKMessageViewController.m in Sources */,
 				AEC1897F1C37F60800C11C2F /* UIView+JSQMessages.m in Sources */,
 				AEC189841C37F60800C11C2F /* JSQMessagesBubbleImageFactory.m in Sources */,
+				880526481CF2FC99005EC256 /* UIImage+PKShortVideoPlayer.m in Sources */,
 				AEC1899D1C37F60800C11C2F /* JSQMessagesLoadEarlierHeaderView.m in Sources */,
 				8805263A1CF2F94C005EC256 /* PKFullScreenPlayerViewController.m in Sources */,
 				AEDD7D4B1C34329100977BD0 /* AppDelegate.m in Sources */,
 				AEC189851C37F60800C11C2F /* JSQMessagesMediaViewBubbleImageMasker.m in Sources */,
 				8805262F1CF2F94C005EC256 /* GLProgram.m in Sources */,
-				880526381CF2F94C005EC256 /* UIImage+PKShortVideoPlayer.m in Sources */,
 				AEC189891C37F60800C11C2F /* JSQMessagesCollectionViewFlowLayout.m in Sources */,
 				AEC189861C37F60800C11C2F /* JSQMessagesTimestampFormatter.m in Sources */,
 				8805263D1CF2F94C005EC256 /* PKShortVideoSession.m in Sources */,
@@ -813,12 +802,12 @@
 				8805263C1CF2F94C005EC256 /* PKShortVideoRecorder.m in Sources */,
 				8805263E1CF2F94C005EC256 /* PKShortVideoViewController.m in Sources */,
 				AEC1898D1C37F60800C11C2F /* JSQMediaItem.m in Sources */,
+				880526441CF2FC70005EC256 /* PKMessageViewController.m in Sources */,
 				8805262D1CF2F94C005EC256 /* PKLayerContentsPlayerView.m in Sources */,
 				AEC1899C1C37F60800C11C2F /* JSQMessagesLabel.m in Sources */,
 				AEC189871C37F60800C11C2F /* JSQMessagesToolbarButtonFactory.m in Sources */,
 				AEC189951C37F60800C11C2F /* JSQMessagesCollectionViewCell.m in Sources */,
 				AEC1899A1C37F60800C11C2F /* JSQMessagesComposerTextView.m in Sources */,
-				880526371CF2F94C005EC256 /* PKFullScreenPlayerViewController.m in Sources */,
 				AEC189A21C37F60800C11C2F /* JSQMessagesTypingIndicatorFooterView.m in Sources */,
 				AEC1898A1C37F60800C11C2F /* JSQMessagesCollectionViewFlowLayoutInvalidationContext.m in Sources */,
 				AEC189811C37F60800C11C2F /* JSQMessagesViewController.m in Sources */,
@@ -829,16 +818,15 @@
 				880526321CF2F94C005EC256 /* GPUImageFramebufferCache.m in Sources */,
 				AEC1899F1C37F60800C11C2F /* JSQMessagesMediaPlaceholderView.m in Sources */,
 				AEC189941C37F60800C11C2F /* JSQMessagesCollectionView.m in Sources */,
-				AEC189161C37F5C100C11C2F /* PKRootViewController.m in Sources */,
 				AEC1898B1C37F60800C11C2F /* JSQMessagesCollectionViewLayoutAttributes.m in Sources */,
 				880526301CF2F94C005EC256 /* GPUImageContext.m in Sources */,
 				AEC189921C37F60800C11C2F /* JSQVideoMediaItem.m in Sources */,
-				880526391CF2F94C005EC256 /* PKFullScreenPlayerView.m in Sources */,
 				AEC189911C37F60800C11C2F /* JSQPhotoMediaItem.m in Sources */,
 				AEC189791C37F60800C11C2F /* JSQSystemSoundPlayer+JSQMessages.m in Sources */,
 				AEC189831C37F60800C11C2F /* JSQMessagesAvatarImageFactory.m in Sources */,
 				AEC189901C37F60800C11C2F /* JSQMessagesBubbleImage.m in Sources */,
 				AEC1897A1C37F60800C11C2F /* NSBundle+JSQMessages.m in Sources */,
+				880526451CF2FC70005EC256 /* PKRootViewController.m in Sources */,
 				880526341CF2F94C005EC256 /* PKColorConversion.m in Sources */,
 				8805263F1CF2F94C005EC256 /* PKUtiltiies.m in Sources */,
 			);

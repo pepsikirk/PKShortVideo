@@ -192,14 +192,12 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
     // 码率和帧率设置
     NSDictionary *compressionProperties = @{ AVVideoAverageBitRateKey : @(bitsPerSecond),
                                     AVVideoExpectedSourceFrameRateKey : @(30),
-                                        AVVideoAverageBitRateKey : @(30) };
+                                             AVVideoAverageBitRateKey : @(30) };
     
-    CGSize videoSize = self.isBigSize ? CGSizeMake(720, 1280) : CGSizeMake(360, 480);
-    CGSize size = [PKShortVideoRecorder videoSize:videoSize requestedWidth:self.outputSize.width];
     self.videoCompressionSettings = @{ AVVideoCodecKey : AVVideoCodecH264,
-                                       AVVideoScalingModeKey : AVVideoScalingModeResizeAspectFill,
+                                 AVVideoScalingModeKey : AVVideoScalingModeResizeAspectFill,
                                        AVVideoWidthKey : @(self.outputSize.height),
-                                       AVVideoHeightKey : @(self.outputSize.width),
+                                      AVVideoHeightKey : @(self.outputSize.width),
                        AVVideoCompressionPropertiesKey : compressionProperties };
     
     // 音频设置
@@ -209,15 +207,7 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
                                                      AVSampleRateKey : @(22050) };
 }
 
-+ (CGSize)videoSize:(CGSize)videoSize requestedWidth:(CGFloat)requestedWidth {
-    CGFloat ratio = videoSize.width / requestedWidth;
-    
-    if (ratio <= 1) {
-        return videoSize;
-    }
-    
-    return CGSizeMake(ceil(videoSize.width / ratio) , ceil(videoSize.height / ratio));
-}
+
 
 #pragma mark - SampleBufferDelegate methods
 
@@ -342,7 +332,6 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
     //方向
     AVMutableVideoCompositionLayerInstruction *layerInstruciton = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:assetTrack];
     
-    CGSize videoSize = assetTrack.naturalSize;
     CGFloat cropOffX = 0;
     CGFloat cropOffY = 120;
     CGAffineTransform finalTransform = CGAffineTransformMakeTranslation(0 - cropOffX, 0 - cropOffY);

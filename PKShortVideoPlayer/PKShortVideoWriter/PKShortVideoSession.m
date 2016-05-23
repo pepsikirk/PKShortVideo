@@ -53,8 +53,8 @@ typedef NS_ENUM(NSInteger, PKSessionStatus){
     
     self = [super init];
     if (self) {
-        _delegateCallbackQueue = dispatch_queue_create( "com.PKShortVideoWriter.writerDelegateCallback", DISPATCH_QUEUE_SERIAL );
-        _writingQueue = dispatch_queue_create( "com.PKShortVideoWriter.assetwriter", DISPATCH_QUEUE_SERIAL );
+        _delegateCallbackQueue = dispatch_queue_create("com.PKShortVideoWriter.writerDelegateCallback", DISPATCH_QUEUE_SERIAL );
+        _writingQueue = dispatch_queue_create("com.PKShortVideoWriter.assetwriter", DISPATCH_QUEUE_SERIAL );
         
         _videoTrackTransform = CGAffineTransformMakeRotation(M_PI_2);//人像方向
         _tempFilePath = tempFilePath;
@@ -90,7 +90,7 @@ typedef NS_ENUM(NSInteger, PKSessionStatus){
 - (void)prepareToRecord {
     @synchronized(self) {
         if (self.status != PKSessionStatusIdle){
-            @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"已经开始准备不需要再准备" userInfo:nil];
+            NSLog(@"已经开始准备不需要再准备");
             return;
         }
         [self transitionToStatus:PKSessionStatusPreparingToRecord error:nil];
@@ -134,7 +134,8 @@ typedef NS_ENUM(NSInteger, PKSessionStatus){
             case PKSessionStatusFinishingRecordingPart1:
             case PKSessionStatusFinishingRecordingPart2:
             case PKSessionStatusFinished:
-                @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"还没有开始记录" userInfo:nil];
+                NSLog(@"还没有开始记录");
+                return;
                 break;
             case PKSessionStatusFailed:
                 NSLog( @"记录失败" );
@@ -226,13 +227,13 @@ typedef NS_ENUM(NSInteger, PKSessionStatus){
 
 - (void)appendSampleBuffer:(CMSampleBufferRef)sampleBuffer ofMediaType:(NSString *)mediaType {
     if (sampleBuffer == NULL){
-        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"不存在sampleBuffer" userInfo:nil];
+        NSLog(@"不存在sampleBuffer");
         return;
     }
     
     @synchronized(self){
         if (self.status < PKSessionStatusRecording){
-            @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"还没准备好记录" userInfo:nil];
+            NSLog(@"还没准备好记录");
             return;
         }
     }
