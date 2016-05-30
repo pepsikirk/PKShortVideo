@@ -1,6 +1,6 @@
 //
 //  PKRootViewController.m
-//  PKShortVideoPlayer
+//  PKShortVideo
 //
 //  Created by pepsikirk on 16/1/2.
 //  Copyright © 2016年 pepsikirk. All rights reserved.
@@ -19,13 +19,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"PKShortVideoPlayer";
+    self.title = @"PKShortVideo";
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
-    self.title = @"PKShortVideoPlayer";
+    self.title = @"PKShortVideo";
 }
 
 -(void)viewWillDisappear:(BOOL)animated {

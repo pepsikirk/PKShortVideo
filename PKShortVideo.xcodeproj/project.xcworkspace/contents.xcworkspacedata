@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:PKShortVideoPlayer.xcodeproj">
+      location = "self:/Users/pepsikirk/Desktop/PKShortVideoPlayer/PKShortVideo.xcodeproj">
    </FileRef>
 </Workspace>

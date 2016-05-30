@@ -77,8 +77,8 @@
 		AEDD7D4B1C34329100977BD0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDD7D4A1C34329100977BD0 /* AppDelegate.m */; };
 		AEDD7D531C34329100977BD0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AEDD7D521C34329100977BD0 /* Assets.xcassets */; };
 		AEDD7D561C34329100977BD0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AEDD7D541C34329100977BD0 /* LaunchScreen.storyboard */; };
-		AEDD7D611C34329100977BD0 /* PKShortVideoPlayerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDD7D601C34329100977BD0 /* PKShortVideoPlayerTests.m */; };
-		AEDD7D6C1C34329100977BD0 /* PKShortVideoPlayerUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDD7D6B1C34329100977BD0 /* PKShortVideoPlayerUITests.m */; };
+		AEDD7D611C34329100977BD0 /* PKShortVideoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDD7D601C34329100977BD0 /* PKShortVideoTests.m */; };
+		AEDD7D6C1C34329100977BD0 /* PKShortVideoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDD7D6B1C34329100977BD0 /* PKShortVideoUITests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -235,18 +235,18 @@
 		AEC189771C37F60800C11C2F /* JSQMessagesTypingIndicatorFooterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JSQMessagesTypingIndicatorFooterView.xib; sourceTree = "<group>"; };
 		AEC18AAF1C38107700C11C2F /* JSQSystemSoundPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSQSystemSoundPlayer.h; sourceTree = "<group>"; };
 		AEC18AB01C38107700C11C2F /* JSQSystemSoundPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSQSystemSoundPlayer.m; sourceTree = "<group>"; };
-		AEDD7D431C34329100977BD0 /* PKShortVideoPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PKShortVideoPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AEDD7D431C34329100977BD0 /* PKShortVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PKShortVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEDD7D471C34329100977BD0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		AEDD7D491C34329100977BD0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AEDD7D4A1C34329100977BD0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		AEDD7D521C34329100977BD0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AEDD7D551C34329100977BD0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AEDD7D571C34329100977BD0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		AEDD7D5C1C34329100977BD0 /* PKShortVideoPlayerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PKShortVideoPlayerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		AEDD7D601C34329100977BD0 /* PKShortVideoPlayerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PKShortVideoPlayerTests.m; sourceTree = "<group>"; };
+		AEDD7D5C1C34329100977BD0 /* PKShortVideo.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PKShortVideo.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AEDD7D601C34329100977BD0 /* PKShortVideoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PKShortVideoTests.m; sourceTree = "<group>"; };
 		AEDD7D621C34329100977BD0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		AEDD7D671C34329100977BD0 /* PKShortVideoPlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PKShortVideoPlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		AEDD7D6B1C34329100977BD0 /* PKShortVideoPlayerUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PKShortVideoPlayerUITests.m; sourceTree = "<group>"; };
+		AEDD7D671C34329100977BD0 /* PKShortVideo.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PKShortVideo.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AEDD7D6B1C34329100977BD0 /* PKShortVideoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PKShortVideoUITests.m; sourceTree = "<group>"; };
 		AEDD7D6D1C34329100977BD0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -569,9 +569,9 @@
 		AEDD7D3A1C34329100977BD0 = {
 			isa = PBXGroup;
 			children = (
-				AEDD7D451C34329100977BD0 /* PKShortVideoPlayer */,
-				AEDD7D5F1C34329100977BD0 /* PKShortVideoPlayerTests */,
-				AEDD7D6A1C34329100977BD0 /* PKShortVideoPlayerUITests */,
+				AEDD7D451C34329100977BD0 /* PKShortVideo */,
+				AEDD7D5F1C34329100977BD0 /* PKShortVideoTests */,
+				AEDD7D6A1C34329100977BD0 /* PKShortVideoUITests */,
 				AEDD7D441C34329100977BD0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -579,14 +579,14 @@
 		AEDD7D441C34329100977BD0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AEDD7D431C34329100977BD0 /* PKShortVideoPlayer.app */,
-				AEDD7D5C1C34329100977BD0 /* PKShortVideoPlayerTests.xctest */,
-				AEDD7D671C34329100977BD0 /* PKShortVideoPlayerUITests.xctest */,
+				AEDD7D431C34329100977BD0 /* PKShortVideo.app */,
+				AEDD7D5C1C34329100977BD0 /* PKShortVideo.xctest */,
+				AEDD7D671C34329100977BD0 /* PKShortVideo.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		AEDD7D451C34329100977BD0 /* PKShortVideoPlayer */ = {
+		AEDD7D451C34329100977BD0 /* PKShortVideo */ = {
 			isa = PBXGroup;
 			children = (
 				AE0E5DC41C36CE4C003751E9 /* Vendor */,
@@ -603,7 +603,7 @@
 				AEDD7D571C34329100977BD0 /* Info.plist */,
 				AEDD7D461C34329100977BD0 /* Supporting Files */,
 			);
-			path = PKShortVideoPlayer;
+			path = PKShortVideo;
 			sourceTree = "<group>";
 		};
 		AEDD7D461C34329100977BD0 /* Supporting Files */ = {
@@ -614,30 +614,32 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		AEDD7D5F1C34329100977BD0 /* PKShortVideoPlayerTests */ = {
+		AEDD7D5F1C34329100977BD0 /* PKShortVideoTests */ = {
 			isa = PBXGroup;
 			children = (
-				AEDD7D601C34329100977BD0 /* PKShortVideoPlayerTests.m */,
+				AEDD7D601C34329100977BD0 /* PKShortVideoTests.m */,
 				AEDD7D621C34329100977BD0 /* Info.plist */,
 			);
+			name = PKShortVideoTests;
 			path = PKShortVideoPlayerTests;
 			sourceTree = "<group>";
 		};
-		AEDD7D6A1C34329100977BD0 /* PKShortVideoPlayerUITests */ = {
+		AEDD7D6A1C34329100977BD0 /* PKShortVideoUITests */ = {
 			isa = PBXGroup;
 			children = (
-				AEDD7D6B1C34329100977BD0 /* PKShortVideoPlayerUITests.m */,
+				AEDD7D6B1C34329100977BD0 /* PKShortVideoUITests.m */,
 				AEDD7D6D1C34329100977BD0 /* Info.plist */,
 			);
+			name = PKShortVideoUITests;
 			path = PKShortVideoPlayerUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		AEDD7D421C34329100977BD0 /* PKShortVideoPlayer */ = {
+		AEDD7D421C34329100977BD0 /* PKShortVideo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AEDD7D701C34329100977BD0 /* Build configuration list for PBXNativeTarget "PKShortVideoPlayer" */;
+			buildConfigurationList = AEDD7D701C34329100977BD0 /* Build configuration list for PBXNativeTarget "PKShortVideo" */;
 			buildPhases = (
 				AEDD7D3F1C34329100977BD0 /* Sources */,
 				AEDD7D401C34329100977BD0 /* Frameworks */,
@@ -647,14 +649,14 @@
 			);
 			dependencies = (
 			);
-			name = PKShortVideoPlayer;
+			name = PKShortVideo;
 			productName = PKShortVideoPlayer;
-			productReference = AEDD7D431C34329100977BD0 /* PKShortVideoPlayer.app */;
+			productReference = AEDD7D431C34329100977BD0 /* PKShortVideo.app */;
 			productType = "com.apple.product-type.application";
 		};
-		AEDD7D5B1C34329100977BD0 /* PKShortVideoPlayerTests */ = {
+		AEDD7D5B1C34329100977BD0 /* PKShortVideoTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AEDD7D731C34329100977BD0 /* Build configuration list for PBXNativeTarget "PKShortVideoPlayerTests" */;
+			buildConfigurationList = AEDD7D731C34329100977BD0 /* Build configuration list for PBXNativeTarget "PKShortVideoTests" */;
 			buildPhases = (
 				AEDD7D581C34329100977BD0 /* Sources */,
 				AEDD7D591C34329100977BD0 /* Frameworks */,
@@ -665,14 +667,14 @@
 			dependencies = (
 				AEDD7D5E1C34329100977BD0 /* PBXTargetDependency */,
 			);
-			name = PKShortVideoPlayerTests;
+			name = PKShortVideoTests;
 			productName = PKShortVideoPlayerTests;
-			productReference = AEDD7D5C1C34329100977BD0 /* PKShortVideoPlayerTests.xctest */;
+			productReference = AEDD7D5C1C34329100977BD0 /* PKShortVideo.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		AEDD7D661C34329100977BD0 /* PKShortVideoPlayerUITests */ = {
+		AEDD7D661C34329100977BD0 /* PKShortVideoUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AEDD7D761C34329100977BD0 /* Build configuration list for PBXNativeTarget "PKShortVideoPlayerUITests" */;
+			buildConfigurationList = AEDD7D761C34329100977BD0 /* Build configuration list for PBXNativeTarget "PKShortVideoUITests" */;
 			buildPhases = (
 				AEDD7D631C34329100977BD0 /* Sources */,
 				AEDD7D641C34329100977BD0 /* Frameworks */,
@@ -683,9 +685,9 @@
 			dependencies = (
 				AEDD7D691C34329100977BD0 /* PBXTargetDependency */,
 			);
-			name = PKShortVideoPlayerUITests;
+			name = PKShortVideoUITests;
 			productName = PKShortVideoPlayerUITests;
-			productReference = AEDD7D671C34329100977BD0 /* PKShortVideoPlayerUITests.xctest */;
+			productReference = AEDD7D671C34329100977BD0 /* PKShortVideo.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -710,7 +712,7 @@
 					};
 				};
 			};
-			buildConfigurationList = AEDD7D3E1C34329100977BD0 /* Build configuration list for PBXProject "PKShortVideoPlayer" */;
+			buildConfigurationList = AEDD7D3E1C34329100977BD0 /* Build configuration list for PBXProject "PKShortVideo" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -723,9 +725,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				AEDD7D421C34329100977BD0 /* PKShortVideoPlayer */,
-				AEDD7D5B1C34329100977BD0 /* PKShortVideoPlayerTests */,
-				AEDD7D661C34329100977BD0 /* PKShortVideoPlayerUITests */,
+				AEDD7D421C34329100977BD0 /* PKShortVideo */,
+				AEDD7D5B1C34329100977BD0 /* PKShortVideoTests */,
+				AEDD7D661C34329100977BD0 /* PKShortVideoUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -836,7 +838,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AEDD7D611C34329100977BD0 /* PKShortVideoPlayerTests.m in Sources */,
+				AEDD7D611C34329100977BD0 /* PKShortVideoTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -844,7 +846,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AEDD7D6C1C34329100977BD0 /* PKShortVideoPlayerUITests.m in Sources */,
+				AEDD7D6C1C34329100977BD0 /* PKShortVideoUITests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -853,12 +855,12 @@
 /* Begin PBXTargetDependency section */
 		AEDD7D5E1C34329100977BD0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = AEDD7D421C34329100977BD0 /* PKShortVideoPlayer */;
+			target = AEDD7D421C34329100977BD0 /* PKShortVideo */;
 			targetProxy = AEDD7D5D1C34329100977BD0 /* PBXContainerItemProxy */;
 		};
 		AEDD7D691C34329100977BD0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = AEDD7D421C34329100977BD0 /* PKShortVideoPlayer */;
+			target = AEDD7D421C34329100977BD0 /* PKShortVideo */;
 			targetProxy = AEDD7D681C34329100977BD0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -960,10 +962,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				INFOPLIST_FILE = PKShortVideoPlayer/Info.plist;
+				INFOPLIST_FILE = PKShortVideo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pepsikirk.PKShortVideoPlayer;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = PKShortVideo;
 			};
 			name = Debug;
 		};
@@ -972,10 +974,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				INFOPLIST_FILE = PKShortVideoPlayer/Info.plist;
+				INFOPLIST_FILE = PKShortVideo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pepsikirk.PKShortVideoPlayer;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = PKShortVideo;
 			};
 			name = Release;
 		};
@@ -983,11 +985,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = PKShortVideoPlayerTests/Info.plist;
+				INFOPLIST_FILE = PKShortVideoTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pepsikirk.PKShortVideoPlayerTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PKShortVideoPlayer.app/PKShortVideoPlayer";
+				PRODUCT_NAME = PKShortVideo;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PKShortVideo.app/PKShortVideo";
 			};
 			name = Debug;
 		};
@@ -995,21 +997,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = PKShortVideoPlayerTests/Info.plist;
+				INFOPLIST_FILE = PKShortVideoTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pepsikirk.PKShortVideoPlayerTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PKShortVideoPlayer.app/PKShortVideoPlayer";
+				PRODUCT_NAME = PKShortVideo;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PKShortVideo.app/PKShortVideo";
 			};
 			name = Release;
 		};
 		AEDD7D771C34329100977BD0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				INFOPLIST_FILE = PKShortVideoPlayerUITests/Info.plist;
+				INFOPLIST_FILE = PKShortVideoUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pepsikirk.PKShortVideoPlayerUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = PKShortVideo;
 				TEST_TARGET_NAME = PKShortVideoPlayer;
 				USES_XCTRUNNER = YES;
 			};
@@ -1018,10 +1020,10 @@
 		AEDD7D781C34329100977BD0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				INFOPLIST_FILE = PKShortVideoPlayerUITests/Info.plist;
+				INFOPLIST_FILE = PKShortVideoUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pepsikirk.PKShortVideoPlayerUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = PKShortVideo;
 				TEST_TARGET_NAME = PKShortVideoPlayer;
 				USES_XCTRUNNER = YES;
 			};
@@ -1030,7 +1032,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		AEDD7D3E1C34329100977BD0 /* Build configuration list for PBXProject "PKShortVideoPlayer" */ = {
+		AEDD7D3E1C34329100977BD0 /* Build configuration list for PBXProject "PKShortVideo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AEDD7D6E1C34329100977BD0 /* Debug */,
@@ -1039,7 +1041,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AEDD7D701C34329100977BD0 /* Build configuration list for PBXNativeTarget "PKShortVideoPlayer" */ = {
+		AEDD7D701C34329100977BD0 /* Build configuration list for PBXNativeTarget "PKShortVideo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AEDD7D711C34329100977BD0 /* Debug */,
@@ -1048,7 +1050,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AEDD7D731C34329100977BD0 /* Build configuration list for PBXNativeTarget "PKShortVideoPlayerTests" */ = {
+		AEDD7D731C34329100977BD0 /* Build configuration list for PBXNativeTarget "PKShortVideoTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AEDD7D741C34329100977BD0 /* Debug */,
@@ -1057,7 +1059,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AEDD7D761C34329100977BD0 /* Build configuration list for PBXNativeTarget "PKShortVideoPlayerUITests" */ = {
+		AEDD7D761C34329100977BD0 /* Build configuration list for PBXNativeTarget "PKShortVideoUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AEDD7D771C34329100977BD0 /* Debug */,

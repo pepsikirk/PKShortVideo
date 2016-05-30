@@ -1,6 +1,6 @@
 //
-//  PKShortVideoPlayerTests.m
-//  PKShortVideoPlayerTests
+//  PKShortVideoTests.m
+//  PKShortVideoTests
 //
 //  Created by pepsikirk on 15/12/30.
 //  Copyright © 2015年 pepsikirk. All rights reserved.
@@ -8,11 +8,11 @@
 
 #import <XCTest/XCTest.h>
 
-@interface PKShortVideoPlayerTests : XCTestCase
+@interface PKShortVideoTests : XCTestCase
 
 @end
 
-@implementation PKShortVideoPlayerTests
+@implementation PKShortVideoTests
 
 - (void)setUp {
     [super setUp];

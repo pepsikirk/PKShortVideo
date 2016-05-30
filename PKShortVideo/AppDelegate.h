@@ -1,6 +1,6 @@
 //
 //  AppDelegate.h
-//  PKShortVideoPlayer
+//  PKShortVideo
 //
 //  Created by pepsikirk on 15/12/30.
 //  Copyright © 2015年 pepsikirk. All rights reserved.

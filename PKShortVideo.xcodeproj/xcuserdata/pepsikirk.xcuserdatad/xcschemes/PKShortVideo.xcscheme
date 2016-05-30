@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AEDD7D421C34329100977BD0"
-               BuildableName = "PKShortVideoPlayer.app"
-               BlueprintName = "PKShortVideoPlayer"
-               ReferencedContainer = "container:PKShortVideoPlayer.xcodeproj">
+               BuildableName = "PKShortVideo.app"
+               BlueprintName = "PKShortVideo"
+               ReferencedContainer = "container:PKShortVideo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AEDD7D5B1C34329100977BD0"
-               BuildableName = "PKShortVideoPlayerTests.xctest"
-               BlueprintName = "PKShortVideoPlayerTests"
-               ReferencedContainer = "container:PKShortVideoPlayer.xcodeproj">
+               BuildableName = "PKShortVideo.xctest"
+               BlueprintName = "PKShortVideoTests"
+               ReferencedContainer = "container:PKShortVideo.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AEDD7D661C34329100977BD0"
-               BuildableName = "PKShortVideoPlayerUITests.xctest"
-               BlueprintName = "PKShortVideoPlayerUITests"
-               ReferencedContainer = "container:PKShortVideoPlayer.xcodeproj">
+               BuildableName = "PKShortVideo.xctest"
+               BlueprintName = "PKShortVideoUITests"
+               ReferencedContainer = "container:PKShortVideo.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -53,9 +53,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AEDD7D421C34329100977BD0"
-            BuildableName = "PKShortVideoPlayer.app"
-            BlueprintName = "PKShortVideoPlayer"
-            ReferencedContainer = "container:PKShortVideoPlayer.xcodeproj">
+            BuildableName = "PKShortVideo.app"
+            BlueprintName = "PKShortVideo"
+            ReferencedContainer = "container:PKShortVideo.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -76,9 +76,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AEDD7D421C34329100977BD0"
-            BuildableName = "PKShortVideoPlayer.app"
-            BlueprintName = "PKShortVideoPlayer"
-            ReferencedContainer = "container:PKShortVideoPlayer.xcodeproj">
+            BuildableName = "PKShortVideo.app"
+            BlueprintName = "PKShortVideo"
+            ReferencedContainer = "container:PKShortVideo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -95,9 +95,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AEDD7D421C34329100977BD0"
-            BuildableName = "PKShortVideoPlayer.app"
-            BlueprintName = "PKShortVideoPlayer"
-            ReferencedContainer = "container:PKShortVideoPlayer.xcodeproj">
+            BuildableName = "PKShortVideo.app"
+            BlueprintName = "PKShortVideo"
+            ReferencedContainer = "container:PKShortVideo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
