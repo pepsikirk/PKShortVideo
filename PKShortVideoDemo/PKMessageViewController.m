@@ -7,28 +7,11 @@
 //
 
 #import "PKMessageViewController.h"
-
-static NSString * const kJSQDemoAvatarDisplayNameSquires = @"Jesse Squires";
-static NSString * const kJSQDemoAvatarDisplayNameCook = @"Tim Cook";
-static NSString * const kJSQDemoAvatarDisplayNameJobs = @"Jobs";
-static NSString * const kJSQDemoAvatarDisplayNameWoz = @"Steve Wozniak";
-
-static NSString * const kJSQDemoAvatarIdSquires = @"053496-4509-289";
-static NSString * const kJSQDemoAvatarIdCook = @"468-768355-23123";
-static NSString * const kJSQDemoAvatarIdJobs = @"707-8956784-57";
-static NSString * const kJSQDemoAvatarIdWoz = @"309-41802-93823";
+#import "PKDemoModelData.h"
 
 @interface PKMessageViewController () <UIActionSheetDelegate>
 
-@property (strong, nonatomic) NSMutableArray *messages;//消息
-
-@property (strong, nonatomic) NSDictionary *avatars;//头像
-
-@property (strong, nonatomic) JSQMessagesBubbleImage *outgoingBubbleImageData;//发送气泡
-
-@property (strong, nonatomic) JSQMessagesBubbleImage *incomingBubbleImageData;//接收气泡
-
-@property (strong, nonatomic) NSDictionary *users;//名字
+@property (strong, nonatomic) PKDemoModelData *demoData;
 
 @end
 
@@ -41,7 +24,12 @@ static NSString * const kJSQDemoAvatarIdWoz = @"309-41802-93823";
     
     self.title = @"PKMessages";
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage jsq_defaultTypingIndicatorImage] style:UIBarButtonItemStylePlain target:self action:@selector(receiveShortMessagePressed:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage jsq_defaultTypingIndicatorImage]
+                                                                              style:UIBarButtonItemStyleDone
+                                                                             target:self
+                                                                             action:@selector(receiveMessagePressed:)];
+    
+    self.demoData = [[PKDemoModelData alloc] init];
 
 }
 
@@ -50,7 +38,7 @@ static NSString * const kJSQDemoAvatarIdWoz = @"309-41802-93823";
 
 #pragma mark - Actions
 
-- (void)receiveShortMessagePressed:(UIBarButtonItem *)sender {
+- (void)receiveMessagePressed:(UIBarButtonItem *)sender {
 //    /**
 //     *  Copy last sent message, this will be the new "received" message
 //     */
@@ -208,7 +196,7 @@ static NSString * const kJSQDemoAvatarIdWoz = @"309-41802-93823";
                                                           date:date
                                                           text:text];
     
-    [self.messages addObject:message];
+    [self.demoData.messages addObject:message];
     
     [self finishSendingMessageAnimated:YES];
 }
@@ -267,11 +255,11 @@ static NSString * const kJSQDemoAvatarIdWoz = @"309-41802-93823";
 
 
 - (id<JSQMessageData>)collectionView:(JSQMessagesCollectionView *)collectionView messageDataForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return [self.messages objectAtIndex:indexPath.item];
+    return [self.demoData.messages objectAtIndex:indexPath.item];
 }
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didDeleteMessageAtIndexPath:(NSIndexPath *)indexPath {
-    [self.messages removeObjectAtIndex:indexPath.item];
+    [self.demoData.messages removeObjectAtIndex:indexPath.item];
 }
 
 - (id<JSQMessageBubbleImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView messageBubbleImageDataForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -282,13 +270,13 @@ static NSString * const kJSQDemoAvatarIdWoz = @"309-41802-93823";
      *  Otherwise, return your previously created bubble image data objects.
      */
     
-    JSQMessage *message = [self.messages objectAtIndex:indexPath.item];
+    JSQMessage *message = [self.demoData.messages objectAtIndex:indexPath.item];
     
     if ([message.senderId isEqualToString:self.senderId]) {
-        return self.outgoingBubbleImageData;
+        return self.demoData.outgoingBubbleImageData;
     }
     
-    return self.incomingBubbleImageData;
+    return self.demoData.incomingBubbleImageData;
 }
 
 - (id<JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -312,9 +300,9 @@ static NSString * const kJSQDemoAvatarIdWoz = @"309-41802-93823";
      *
      *  Override the defaults in `viewDidLoad`
      */
-    JSQMessage *message = [self.messages objectAtIndex:indexPath.item];
+    JSQMessage *message = [self.demoData.messages objectAtIndex:indexPath.item];
 
-    return [self.avatars objectForKey:message.senderId];
+    return [self.demoData.avatars objectForKey:message.senderId];
 }
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath {
@@ -325,7 +313,7 @@ static NSString * const kJSQDemoAvatarIdWoz = @"309-41802-93823";
      *  Show a timestamp for every 3rd message
      */
     if (indexPath.item % 3 == 0) {
-        JSQMessage *message = [self.messages objectAtIndex:indexPath.item];
+        JSQMessage *message = [self.demoData.messages objectAtIndex:indexPath.item];
         return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:message.date];
     }
     
@@ -333,7 +321,7 @@ static NSString * const kJSQDemoAvatarIdWoz = @"309-41802-93823";
 }
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath {
-    JSQMessage *message = [self.messages objectAtIndex:indexPath.item];
+    JSQMessage *message = [self.demoData.messages objectAtIndex:indexPath.item];
     
     /**
      *  iOS7-style sender name labels
@@ -343,7 +331,7 @@ static NSString * const kJSQDemoAvatarIdWoz = @"309-41802-93823";
     }
     
     if (indexPath.item - 1 > 0) {
-        JSQMessage *previousMessage = [self.messages objectAtIndex:indexPath.item - 1];
+        JSQMessage *previousMessage = [self.demoData.messages objectAtIndex:indexPath.item - 1];
         if ([[previousMessage senderId] isEqualToString:message.senderId]) {
             return nil;
         }
@@ -362,7 +350,7 @@ static NSString * const kJSQDemoAvatarIdWoz = @"309-41802-93823";
 #pragma mark - UICollectionView DataSource
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return [self.messages count];
+    return [self.demoData.messages count];
 }
 
 - (UICollectionViewCell *)collectionView:(JSQMessagesCollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -386,7 +374,7 @@ static NSString * const kJSQDemoAvatarIdWoz = @"309-41802-93823";
      *  Instead, override the properties you want on `self.collectionView.collectionViewLayout` from `viewDidLoad`
      */
     
-    JSQMessage *msg = [self.messages objectAtIndex:indexPath.item];
+    JSQMessage *msg = [self.demoData.messages objectAtIndex:indexPath.item];
     
     if (!msg.isMediaMessage) {
         
@@ -418,13 +406,13 @@ static NSString * const kJSQDemoAvatarIdWoz = @"309-41802-93823";
 
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath {
-    JSQMessage *currentMessage = [self.messages objectAtIndex:indexPath.item];
+    JSQMessage *currentMessage = [self.demoData.messages objectAtIndex:indexPath.item];
     if ([[currentMessage senderId] isEqualToString:self.senderId]) {
         return 0.0f;
     }
     
     if (indexPath.item - 1 > 0) {
-        JSQMessage *previousMessage = [self.messages objectAtIndex:indexPath.item - 1];
+        JSQMessage *previousMessage = [self.demoData.messages objectAtIndex:indexPath.item - 1];
         if ([[previousMessage senderId] isEqualToString:[currentMessage senderId]]) {
             return 0.0f;
         }

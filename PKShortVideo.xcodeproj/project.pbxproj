@@ -24,6 +24,7 @@
 		8805263E1CF2F94C005EC256 /* PKShortVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8805262A1CF2F94C005EC256 /* PKShortVideoViewController.m */; };
 		8805263F1CF2F94C005EC256 /* PKUtiltiies.m in Sources */ = {isa = PBXBuildFile; fileRef = 8805262C1CF2F94C005EC256 /* PKUtiltiies.m */; };
 		880526481CF2FC99005EC256 /* UIImage+PKShortVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 880526471CF2FC99005EC256 /* UIImage+PKShortVideoPlayer.m */; };
+		88BFB0821D02E00200F223F3 /* PKDemoModelData.m in Sources */ = {isa = PBXBuildFile; fileRef = 88BFB0811D02E00200F223F3 /* PKDemoModelData.m */; };
 		88FBE7921D2A668000556F43 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 88FBE7201D2A668000556F43 /* AppDelegate.m */; };
 		88FBE7931D2A668000556F43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88FBE7211D2A668000556F43 /* Assets.xcassets */; };
 		88FBE7941D2A668000556F43 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88FBE7221D2A668000556F43 /* LaunchScreen.storyboard */; };
@@ -137,6 +138,8 @@
 		8805262C1CF2F94C005EC256 /* PKUtiltiies.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PKUtiltiies.m; sourceTree = "<group>"; };
 		880526461CF2FC99005EC256 /* UIImage+PKShortVideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+PKShortVideoPlayer.h"; path = "Category/UIImage+PKShortVideoPlayer.h"; sourceTree = "<group>"; };
 		880526471CF2FC99005EC256 /* UIImage+PKShortVideoPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+PKShortVideoPlayer.m"; path = "Category/UIImage+PKShortVideoPlayer.m"; sourceTree = "<group>"; };
+		88BFB0801D02E00200F223F3 /* PKDemoModelData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PKDemoModelData.h; sourceTree = "<group>"; };
+		88BFB0811D02E00200F223F3 /* PKDemoModelData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PKDemoModelData.m; sourceTree = "<group>"; };
 		88FBE71F1D2A668000556F43 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		88FBE7201D2A668000556F43 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		88FBE7211D2A668000556F43 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -375,6 +378,8 @@
 				88FBE7261D2A668000556F43 /* Main.storyboard */,
 				88FBE7271D2A668000556F43 /* PKMessageViewController.h */,
 				88FBE7281D2A668000556F43 /* PKMessageViewController.m */,
+				88BFB0801D02E00200F223F3 /* PKDemoModelData.h */,
+				88BFB0811D02E00200F223F3 /* PKDemoModelData.m */,
 				88FBE7291D2A668000556F43 /* PKRootViewController.h */,
 				88FBE72A1D2A668000556F43 /* PKRootViewController.m */,
 				88FBE72B1D2A668000556F43 /* PKShortVideoItem.h */,
@@ -753,6 +758,7 @@
 				88FBE8541D2A686F00556F43 /* JSQMessagesTypingView.m in Sources */,
 				88FBE7921D2A668000556F43 /* AppDelegate.m in Sources */,
 				88FBE83B1D2A686F00556F43 /* JSQAudioMediaItem.m in Sources */,
+				88BFB0821D02E00200F223F3 /* PKDemoModelData.m in Sources */,
 				88FBE8421D2A686F00556F43 /* JSQVideoMediaItem.m in Sources */,
 				880526481CF2FC99005EC256 /* UIImage+PKShortVideoPlayer.m in Sources */,
 				8805263A1CF2F94C005EC256 /* PKFullScreenPlayerViewController.m in Sources */,
