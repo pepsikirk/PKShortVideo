@@ -13,11 +13,10 @@ static CGFloat const PKShortVideoMaxLength = 220;
 
 @interface PKShortVideoItem : JSQMediaItem
 
-@property (nonatomic, strong) NSURL *fileURL;
-
+@property (nonatomic, strong) NSString *videoPath;
 @property (strong, nonatomic) UIImage *image;
 
-- (void)play ;
+- (void)play;
 
 - (void)pause;
 
