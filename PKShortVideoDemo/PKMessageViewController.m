@@ -8,8 +8,9 @@
 
 #import "PKMessageViewController.h"
 #import "PKDemoModelData.h"
+#import "PKShortVideoViewController.h"
 
-@interface PKMessageViewController () <UIActionSheetDelegate>
+@interface PKMessageViewController () <UIActionSheetDelegate, PKRecordShortVideoDelegate>
 
 @property (strong, nonatomic) PKDemoModelData *demoData;
 
@@ -209,7 +210,7 @@
                                                        delegate:self
                                               cancelButtonTitle:@"Cancel"
                                          destructiveButtonTitle:nil
-                                              otherButtonTitles:@"Send photo", @"Send location", @"Send video", nil];
+                                              otherButtonTitles:@"Record short video", @"Send location", @"Send video", nil];
     
     [sheet showFromToolbar:self.inputToolbar];
 }
@@ -225,20 +226,20 @@
     }
     
     switch (buttonIndex) {
-        case 0:
-
-            break;
+        case 0: {
             
-        case 1:
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *fileName = [NSProcessInfo processInfo].globallyUniqueString;
+            NSString *path = [paths[0] stringByAppendingPathComponent:[fileName stringByAppendingPathExtension:@"mp4"]];
             
-            break;
+            PKShortVideoViewController *viewController = [[PKShortVideoViewController alloc] initWithOutputFilePath:path outputSize:CGSizeMake(360, 640) themeColor:[UIColor colorWithRed:0/255.0 green:153/255.0 blue:255/255.0 alpha:1]];
+            viewController.delegate = self;
             
-        case 2:
-
+            [self presentViewController:viewController animated:YES completion:nil];
+        }
+            
             break;
     }
-        
-    [self finishSendingMessageAnimated:YES];
 }
 
 
@@ -447,6 +448,14 @@
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapCellAtIndexPath:(NSIndexPath *)indexPath touchLocation:(CGPoint)touchLocation
 {
     NSLog(@"Tapped cell at %@!", NSStringFromCGPoint(touchLocation));
+}
+
+
+#pragma mark - PKRecordShortVideoDelegate
+
+- (void)didFinishRecordingToOutputFilePath:(NSString *)outputFilePath {
+    [self.demoData addShortVideoMediaMessageWith:outputFilePath];
+    [self finishSendingMessageAnimated:YES];
 }
 
 @end

@@ -23,6 +23,7 @@
 		880526481CF2FC99005EC256 /* UIImage+PKShortVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 880526471CF2FC99005EC256 /* UIImage+PKShortVideoPlayer.m */; };
 		88BFB0821D02E00200F223F3 /* PKDemoModelData.m in Sources */ = {isa = PBXBuildFile; fileRef = 88BFB0811D02E00200F223F3 /* PKDemoModelData.m */; };
 		88BFB0841D103D5100F223F3 /* jsq_messages_sample.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 88BFB0831D103CC400F223F3 /* jsq_messages_sample.m4a */; };
+		88BFB0851D16394000F223F3 /* PKFullScreenPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 880526191CF2F94C005EC256 /* PKFullScreenPlayerViewController.m */; };
 		88FBE7921D2A668000556F43 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 88FBE7201D2A668000556F43 /* AppDelegate.m */; };
 		88FBE7931D2A668000556F43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88FBE7211D2A668000556F43 /* Assets.xcassets */; };
 		88FBE7941D2A668000556F43 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88FBE7221D2A668000556F43 /* LaunchScreen.storyboard */; };
@@ -716,6 +717,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88BFB0851D16394000F223F3 /* PKFullScreenPlayerViewController.m in Sources */,
 				88FBE84F1D2A686F00556F43 /* JSQMessagesMediaPlaceholderView.m in Sources */,
 				880526331CF2F94C005EC256 /* PKChatMessagePlayerView.m in Sources */,
 				88FBE84C1D2A686F00556F43 /* JSQMessagesLabel.m in Sources */,
@@ -906,7 +908,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "$(SRCROOT)/PKShortVideoDemo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.pepsikirk.PKShortVideoPlayer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pepsikirk.PKShortVideo;
 				PRODUCT_NAME = PKShortVideo;
 			};
 			name = Debug;
@@ -918,7 +920,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "$(SRCROOT)/PKShortVideoDemo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.pepsikirk.PKShortVideoPlayer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pepsikirk.PKShortVideo;
 				PRODUCT_NAME = PKShortVideo;
 			};
 			name = Release;

@@ -16,6 +16,8 @@ static CGFloat const PKShortVideoMaxLength = 220;
 @property (nonatomic, strong) NSString *videoPath;
 @property (strong, nonatomic) UIImage *image;
 
+- (instancetype)initWithVideoPath:(NSString *)videoPath previewImage:(UIImage *)image;
+
 - (void)play;
 
 - (void)pause;

@@ -7,6 +7,8 @@
 //
 
 #import "PKDemoModelData.h"
+#import "PKShortVideoItem.h"
+#import "UIImage+PKShortVideoPlayer.h"
 
 /**
  *  This is for demo/testing purposes only.
@@ -152,6 +154,14 @@
     NSURL *videoURL = [NSURL URLWithString:@"file://"];
     
     JSQVideoMediaItem *videoItem = [[JSQVideoMediaItem alloc] initWithFileURL:videoURL isReadyToPlay:YES];
+    JSQMessage *videoMessage = [JSQMessage messageWithSenderId:kJSQDemoAvatarIdSquires
+                                                   displayName:kJSQDemoAvatarDisplayNameSquires
+                                                         media:videoItem];
+    [self.messages addObject:videoMessage];
+}
+
+- (void)addShortVideoMediaMessageWith:(NSString *)videoPath {
+    PKShortVideoItem *videoItem = [[PKShortVideoItem alloc] initWithVideoPath:videoPath previewImage:[UIImage pk_previewImageWithVideoURL:[NSURL fileURLWithPath:videoPath]]];
     JSQMessage *videoMessage = [JSQMessage messageWithSenderId:kJSQDemoAvatarIdSquires
                                                    displayName:kJSQDemoAvatarDisplayNameSquires
                                                          media:videoItem];

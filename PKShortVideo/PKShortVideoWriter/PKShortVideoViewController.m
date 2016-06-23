@@ -179,7 +179,9 @@ static CGFloat const PKRecordButtonWidth = 90;
 }
 
 - (void)sendVideo {
-    [self dismissViewControllerAnimated:YES completion:NULL];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self.delegate didFinishRecordingToOutputFilePath:self.outputFilePath];
+    }];
 }
 
 - (void)endRecordingWithPath:(NSString *)Path failture:(BOOL)failture {

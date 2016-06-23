@@ -8,9 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol PKRecordShortVideoDelegate <NSObject>
+
+- (void)didFinishRecordingToOutputFilePath:(NSString *)outputFilePath;
+
+@end
+
 @interface PKShortVideoViewController : UIViewController
 
 @property (nonatomic, assign) NSTimeInterval videoDurationTime;
+@property (nonatomic, weak) id<PKRecordShortVideoDelegate> delegate;
 
 - (instancetype)initWithOutputFilePath:(NSString *)outputFilePath outputSize:(CGSize)outputSize themeColor:(UIColor *)themeColor;
 
