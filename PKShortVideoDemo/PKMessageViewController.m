@@ -9,6 +9,9 @@
 #import "PKMessageViewController.h"
 #import "PKDemoModelData.h"
 #import "PKShortVideoViewController.h"
+#import "PKShortVideoItem.h"
+#import "PKFullScreenPlayerViewController.h"
+#import "UIImage+PKShortVideoPlayer.h"
 
 @interface PKMessageViewController () <UIActionSheetDelegate, PKRecordShortVideoDelegate>
 
@@ -202,15 +205,14 @@
     [self finishSendingMessageAnimated:YES];
 }
 
-- (void)didPressAccessoryButton:(UIButton *)sender
-{
+- (void)didPressAccessoryButton:(UIButton *)sender {
     [self.inputToolbar.contentView.textView resignFirstResponder];
     
     UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Media messages"
                                                        delegate:self
                                               cancelButtonTitle:@"Cancel"
                                          destructiveButtonTitle:nil
-                                              otherButtonTitles:@"Record short video", @"Send location", @"Send video", nil];
+                                              otherButtonTitles:@"Record short video", nil];
     
     [sheet showFromToolbar:self.inputToolbar];
 }
@@ -232,7 +234,7 @@
             NSString *fileName = [NSProcessInfo processInfo].globallyUniqueString;
             NSString *path = [paths[0] stringByAppendingPathComponent:[fileName stringByAppendingPathExtension:@"mp4"]];
             
-            PKShortVideoViewController *viewController = [[PKShortVideoViewController alloc] initWithOutputFilePath:path outputSize:CGSizeMake(360, 640) themeColor:[UIColor colorWithRed:0/255.0 green:153/255.0 blue:255/255.0 alpha:1]];
+            PKShortVideoViewController *viewController = [[PKShortVideoViewController alloc] initWithOutputFilePath:path outputSize:CGSizeMake(320, 240) themeColor:[UIColor colorWithRed:0/255.0 green:153/255.0 blue:255/255.0 alpha:1]];
             viewController.delegate = self;
             
             [self presentViewController:viewController animated:YES completion:nil];
@@ -430,23 +432,24 @@
 #pragma mark - Responding to collection view tap events
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView
-                header:(JSQMessagesLoadEarlierHeaderView *)headerView didTapLoadEarlierMessagesButton:(UIButton *)sender
-{
+                header:(JSQMessagesLoadEarlierHeaderView *)headerView didTapLoadEarlierMessagesButton:(UIButton *)sender {
     NSLog(@"Load earlier messages!");
 }
 
-- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapAvatarImageView:(UIImageView *)avatarImageView atIndexPath:(NSIndexPath *)indexPath
-{
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapAvatarImageView:(UIImageView *)avatarImageView atIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"Tapped avatar!");
 }
 
-- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSLog(@"Tapped message bubble!");
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
+    JSQMessage *message = self.demoData.messages[indexPath.item];
+    if ([message.media isKindOfClass:[PKShortVideoItem class]]) {
+        PKShortVideoItem *item = (PKShortVideoItem *)message.media;
+        PKFullScreenPlayerViewController *viewController = [[PKFullScreenPlayerViewController alloc] initWithVideoPath:item.videoPath previewImage:[UIImage pk_previewImageWithVideoURL:[NSURL fileURLWithPath:item.videoPath]]];
+        [self presentViewController:viewController animated:NO completion:NULL];
+    }
 }
 
-- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapCellAtIndexPath:(NSIndexPath *)indexPath touchLocation:(CGPoint)touchLocation
-{
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapCellAtIndexPath:(NSIndexPath *)indexPath touchLocation:(CGPoint)touchLocation {
     NSLog(@"Tapped cell at %@!", NSStringFromCGPoint(touchLocation));
 }
 
