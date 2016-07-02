@@ -114,9 +114,7 @@
 }
 
 - (void)processAsset {
-    if (!self.reader) {
-        self.reader = [self createAssetReader];
-    }
+    self.reader = [self createAssetReader];
     
     AVAssetReaderOutput *readerVideoTrackOutput = nil;
     
@@ -186,12 +184,9 @@
 }
 
 - (void)endProcessing {
-    self.keepLooping = NO;
-    
     if (self.delegate && [self.delegate respondsToSelector:@selector(didCompletePlayingMovie)]) {
         [self.delegate didCompletePlayingMovie];
     }
-    self.delegate = nil;
 }
 
 - (void)cancelProcessing {
