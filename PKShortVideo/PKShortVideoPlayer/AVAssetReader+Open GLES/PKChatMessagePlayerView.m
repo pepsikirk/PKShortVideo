@@ -55,7 +55,6 @@
         
         _decoder = [[PKVideoDecoder alloc] initWithVideoPath:videoPath size:frame.size];
         _decoder.delegate = self;
-        [_decoder startProcessing];
     }
     return self;
 }
@@ -128,6 +127,10 @@
 }
 
 #pragma mark - Public
+
+- (void)play {
+    [self.decoder startProcessing];
+}
 
 - (void)stop {
     [self.decoder cancelProcessing];

@@ -29,11 +29,11 @@
 }
 
 - (void)play {
-    self.playerView;
+    [self.playerView play];
 }
 
 - (void)pause {
-    self.playerView;
+    [self.playerView stop];
 }
 
 #pragma mark - JSQMessageMediaData protocol

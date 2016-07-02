@@ -34,7 +34,6 @@
                                                                              action:@selector(receiveMessagePressed:)];
     
     self.demoData = [[PKDemoModelData alloc] init];
-
 }
 
 
@@ -234,7 +233,7 @@
             NSString *fileName = [NSProcessInfo processInfo].globallyUniqueString;
             NSString *path = [paths[0] stringByAppendingPathComponent:[fileName stringByAppendingPathExtension:@"mp4"]];
             
-            PKShortVideoViewController *viewController = [[PKShortVideoViewController alloc] initWithOutputFilePath:path outputSize:CGSizeMake(320, 240) themeColor:[UIColor colorWithRed:0/255.0 green:153/255.0 blue:255/255.0 alpha:1]];
+            PKShortVideoViewController *viewController = [[PKShortVideoViewController alloc] initWithOutputFilePath:path outputSize:CGSizeMake(240, 320) themeColor:[UIColor colorWithRed:0/255.0 green:153/255.0 blue:255/255.0 alpha:1]];
             viewController.delegate = self;
             
             [self presentViewController:viewController animated:YES completion:nil];
@@ -393,6 +392,22 @@
     }
     
     return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    JSQMessage *message = self.demoData.messages[indexPath.item];
+    if ([message.media isKindOfClass:[PKShortVideoItem class]]) {
+        PKShortVideoItem *item = (PKShortVideoItem *)message.media;
+        [item pause];
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    JSQMessage *message = self.demoData.messages[indexPath.item];
+    if ([message.media isKindOfClass:[PKShortVideoItem class]]) {
+        PKShortVideoItem *item = (PKShortVideoItem *)message.media;
+        [item play];
+    }
 }
 
 #pragma mark - Adjusting cell label heights

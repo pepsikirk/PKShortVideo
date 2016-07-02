@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithFrame:(CGRect)frame videoPath:(NSString *)videoPath previewImage:(UIImage *)previewImage;
 
+- (void)play;
 - (void)stop;
 
 @end
