@@ -27,6 +27,7 @@
 
 @property (nonatomic, strong) NSString *videoPath;
 @property (nonatomic, strong) UIImage *previewImage;
+@property (nonatomic, assign) GPUImageRotationMode rotationMode;
 
 @property (nonatomic, readwrite) CGSize sizeInPixels;
 
@@ -63,6 +64,28 @@
     // Set scaling to account for Retina display
     if ([self respondsToSelector:@selector(setContentScaleFactor:)]) {
         self.contentScaleFactor = [[UIScreen mainScreen] scale];
+    }
+    
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:self.videoPath] options:nil];
+    NSArray *tracks = [asset tracksWithMediaType:AVMediaTypeVideo];
+    
+    if([tracks count] > 0) {
+        AVAssetTrack *videoTrack = [tracks objectAtIndex:0];
+        CGAffineTransform t = videoTrack.preferredTransform;
+        
+        if (t.a == 0 && t.b == 1.0 && t.c == -1.0 && t.d == 0) {
+            // Portrait
+            self.rotationMode = kGPUImageRotateRight;
+        } else if (t.a == 0 && t.b == -1.0 && t.c == 1.0 && t.d == 0) {
+            // PortraitUpsideDown
+            self.rotationMode = kGPUImageRotateLeft;
+        } else if (t.a == 1.0 && t.b == 0 && t.c == 0 && t.d == 1.0) {
+            // LandscapeRight
+            self.rotationMode = kGPUImageNoRotation;
+        } else if (t.a == -1.0 && t.b == 0 && t.c == 0 && t.d == -1.0) {
+            // LandscapeLeft
+            self.rotationMode = kGPUImageRotate180;
+        }
     }
     
     self.opaque = YES;
@@ -327,7 +350,7 @@
         glUniform1i(displayInputTextureUniform, 4);
         
         glVertexAttribPointer(displayPositionAttribute, 2, GL_FLOAT, 0, 0, imageVertices);
-        glVertexAttribPointer(displayTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, [PKChatMessagePlayerView textureCoordinatesForRotation:kGPUImageNoRotation]);
+        glVertexAttribPointer(displayTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, [PKChatMessagePlayerView textureCoordinatesForRotation:self.rotationMode]);
         
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         
