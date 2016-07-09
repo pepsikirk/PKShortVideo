@@ -89,5 +89,31 @@
     return size;
 }
 
+#pragma mark - NSCoding
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        _image = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(image))];
+        _videoPath = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(videoPath))];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [super encodeWithCoder:aCoder];
+    [aCoder encodeObject:self.image forKey:NSStringFromSelector(@selector(image))];
+    [aCoder encodeObject:self.videoPath forKey:NSStringFromSelector(@selector(videoPath))];
+}
+
+#pragma mark - NSCopying
+
+- (instancetype)copyWithZone:(NSZone *)zone
+{
+    PKShortVideoItem *copy = [[[self class] allocWithZone:zone] initWithVideoPath:self.videoPath previewImage:self.image];
+    copy.appliesMediaViewMaskAsOutgoing = self.appliesMediaViewMaskAsOutgoing;
+    return copy;
+}
+
 
 @end

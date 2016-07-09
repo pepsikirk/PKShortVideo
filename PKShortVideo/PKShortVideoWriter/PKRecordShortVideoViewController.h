@@ -14,7 +14,7 @@
 
 @end
 
-@interface PKShortVideoViewController : UIViewController
+@interface PKRecordShortVideoViewController : UIViewController
 
 @property (nonatomic, assign) NSTimeInterval videoDurationTime;
 @property (nonatomic, weak) id<PKRecordShortVideoDelegate> delegate;

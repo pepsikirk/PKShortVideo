@@ -147,6 +147,7 @@
     runSynchronouslyOnVideoProcessingQueue(^{
         [self destroyDisplayFramebuffer];
     });
+    [_decoder cancelProcessing];
 }
 
 #pragma mark - Public

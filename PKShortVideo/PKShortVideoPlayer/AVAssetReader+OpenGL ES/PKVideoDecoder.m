@@ -52,6 +52,11 @@
     return self;
 }
 
+- (void)dealloc
+{
+    NSLog(@"dealloc");
+}
+
 - (void)yuvConversionSetup {
     runSynchronouslyOnVideoProcessingQueue(^{
         [GPUImageContext useImageProcessingContext];
