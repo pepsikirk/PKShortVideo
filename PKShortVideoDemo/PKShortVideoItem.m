@@ -28,27 +28,48 @@
     return self;
 }
 
+//开始播放小视频
 - (void)play {
     [self.playerView play];
 }
-
+//结束播放视频
 - (void)pause {
     [self.playerView stop];
 }
 
 #pragma mark - JSQMessageMediaData protocol
 
+//JSQ协议方法
 - (UIView *)mediaView {
     if (!self.videoPath) {
         return nil;
     }
     
     if (!self.playerView) {
+        //当前尺寸
         CGSize size = [self mediaViewDisplaySize];
+        //实例化播放view
         self.playerView = [[PKChatMessagePlayerView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height) videoPath:self.videoPath previewImage:self.image];
         [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:self.playerView isOutgoing:self.appliesMediaViewMaskAsOutgoing];
     }
     return self.playerView;
+}
+
+- (CGSize)mediaViewDisplaySize {
+    CGFloat height = self.image.size.height * self.image.scale;
+    CGFloat width = self.image.size.width * self.image.scale;
+    
+    CGSize size;
+    if (height <= PKShortVideoMaxLength && width <= PKShortVideoMaxLength) {
+        size = CGSizeMake(width, height);
+    } else {
+        if (height > width) {
+            size = CGSizeMake(PKShortVideoMaxLength * (width/height), PKShortVideoMaxLength);
+        } else {
+            size = CGSizeMake(PKShortVideoMaxLength, PKShortVideoMaxLength * (height/width));
+        }
+    }
+    return size;
 }
 
 - (NSUInteger)mediaHash {
@@ -68,25 +89,6 @@
 
 - (NSUInteger)hash {
     return super.hash ^ self.videoPath.hash ^ self.image.hash;
-}
-
-#pragma mark - Extention
-
-- (CGSize)mediaViewDisplaySize {
-    CGFloat height = self.image.size.height * self.image.scale;
-    CGFloat width = self.image.size.width * self.image.scale;
-    
-    CGSize size;
-    if (height <= PKShortVideoMaxLength && width <= PKShortVideoMaxLength) {
-        size = CGSizeMake(width, height);
-    } else {
-        if (height > width) {
-            size = CGSizeMake(PKShortVideoMaxLength * (width/height), PKShortVideoMaxLength);
-        } else {
-            size = CGSizeMake(PKShortVideoMaxLength, PKShortVideoMaxLength * (height/width));
-        }
-    }
-    return size;
 }
 
 #pragma mark - NSCoding

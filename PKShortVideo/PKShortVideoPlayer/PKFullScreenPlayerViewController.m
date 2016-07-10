@@ -93,7 +93,7 @@
     if (self.navigationController) {
         [self.navigationController popViewControllerAnimated:NO];
     } else {
-        [self dismissViewControllerAnimated:YES completion:NULL];
+        [self dismissViewControllerAnimated:NO completion:NULL];
     }
 }
 

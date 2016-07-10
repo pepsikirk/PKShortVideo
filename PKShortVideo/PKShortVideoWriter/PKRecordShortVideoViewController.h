@@ -16,7 +16,8 @@
 
 @interface PKRecordShortVideoViewController : UIViewController
 
-@property (nonatomic, assign) NSTimeInterval videoDurationTime;
+@property (nonatomic, assign) NSTimeInterval videoMaximumDuration;
+@property (nonatomic, assign) NSTimeInterval videoMinimumDuration;
 @property (nonatomic, weak) id<PKRecordShortVideoDelegate> delegate;
 
 - (instancetype)initWithOutputFilePath:(NSString *)outputFilePath outputSize:(CGSize)outputSize themeColor:(UIColor *)themeColor;

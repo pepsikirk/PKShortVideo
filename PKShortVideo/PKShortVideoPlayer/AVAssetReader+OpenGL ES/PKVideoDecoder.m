@@ -106,7 +106,6 @@
     }
     
     NSDictionary *outputSettings = @{
-                                     (id)kCVPixelBufferPixelFormatTypeKey:@(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange),
                                      (id)kCVPixelBufferWidthKey:@(outputSize.width),
                                      (id)kCVPixelBufferHeightKey:@(outputSize.height),
                                    };

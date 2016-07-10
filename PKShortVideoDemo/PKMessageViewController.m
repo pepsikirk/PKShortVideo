@@ -269,10 +269,10 @@
             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
             NSString *fileName = [NSProcessInfo processInfo].globallyUniqueString;
             NSString *path = [paths[0] stringByAppendingPathComponent:[fileName stringByAppendingPathExtension:@"mp4"]];
-            
+            //跳转默认录制视频ViewController
             PKRecordShortVideoViewController *viewController = [[PKRecordShortVideoViewController alloc] initWithOutputFilePath:path outputSize:CGSizeMake(320, 240) themeColor:[UIColor colorWithRed:0/255.0 green:153/255.0 blue:255/255.0 alpha:1]];
+            //通过代理回调
             viewController.delegate = self;
-            
             [self presentViewController:viewController animated:YES completion:nil];
         }
             
@@ -431,6 +431,7 @@
     return cell;
 }
 
+//将要结束显示时停止播放
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     JSQMessage *message = self.demoData.messages[indexPath.item];
     if ([message.media isKindOfClass:[PKShortVideoItem class]]) {
@@ -439,6 +440,7 @@
     }
 }
 
+//将要显示时播放
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     JSQMessage *message = self.demoData.messages[indexPath.item];
     if ([message.media isKindOfClass:[PKShortVideoItem class]]) {
@@ -492,10 +494,13 @@
     NSLog(@"Tapped avatar!");
 }
 
+//点击消息是跳转播放
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
     JSQMessage *message = self.demoData.messages[indexPath.item];
+    //判断媒体消息类型
     if ([message.media isKindOfClass:[PKShortVideoItem class]]) {
         PKShortVideoItem *item = (PKShortVideoItem *)message.media;
+        //跳转全屏播放小视频界面
         PKFullScreenPlayerViewController *viewController = [[PKFullScreenPlayerViewController alloc] initWithVideoPath:item.videoPath previewImage:[UIImage pk_previewImageWithVideoURL:[NSURL fileURLWithPath:item.videoPath]]];
         [self presentViewController:viewController animated:NO completion:NULL];
     }
@@ -507,9 +512,11 @@
 
 
 #pragma mark - PKRecordShortVideoDelegate
-
+//视频拍摄完成输出图片
 - (void)didFinishRecordingToOutputFilePath:(NSString *)outputFilePath {
-    [self.demoData addShortVideoMediaMessageWith:outputFilePath];
+    //自定义的生成小视频聊天对象方法
+    [self.demoData addShortVideoMediaMessageWithVideoPath:outputFilePath];
+    //JSQMessagesViewController的完成发送滚动到底端方法
     [self finishSendingMessageAnimated:YES];
 }
 
