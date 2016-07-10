@@ -1,5 +1,6 @@
 # PKShortVideo
 PKShortVideo 是一个类似微信小视频功能的框架。
+相关文章介绍：[iOS仿微信小视频功能开发优化记录](http://www.jianshu.com/p/6d35bb53f4ac)
 #特性
 - 小视频聊天界面播放，使用基于 GPUImage 的 OpenGL ES 硬件加速播放视频
 - 小视频可以点击放大播放，使用了 AVPlayer

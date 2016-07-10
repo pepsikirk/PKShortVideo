@@ -300,84 +300,10 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
                         [self.delegate recorder:self didFinishRecordingToOutputFilePath:self.tempFilePath error:nil];
                     }
                 });
-//                [self transformVideo];
             }
         }
     }
 }
-
-- (void)transformVideo {
-    //检查文件夹存在
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    if (![fileManager fileExistsAtPath:self.tempFilePath]) {
-        NSString *path = [self.tempFilePath stringByDeletingPathExtension];
-        [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:NULL];
-    }
-    
-    NSError *error = nil;
-    //初始
-    AVAsset *asset = [AVAsset assetWithURL:[NSURL fileURLWithPath:self.tempFilePath]];
-    NSArray *trackArray = [asset tracksWithMediaType:AVMediaTypeVideo];
-    if (!trackArray.count) {
-        error = [NSError errorWithDomain:@"压缩视频失败" code:-1 userInfo:nil];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            @autoreleasepool {
-                [self.delegate recorder:self didFinishRecordingToOutputFilePath:nil error:error];
-            }
-        });
-        return;
-    }
-    
-    AVAssetTrack *assetTrack = [trackArray objectAtIndex:0];
-    //方向
-    AVMutableVideoCompositionLayerInstruction *layerInstruciton = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:assetTrack];
-    
-    CGFloat cropOffX = 0;
-    CGFloat cropOffY = 120;
-    CGAffineTransform finalTransform = CGAffineTransformMakeTranslation(0 - cropOffX, 0 - cropOffY);
-    
-//    CGAffineTransform layerTransform = assetTrack.preferredTransform;
-//    CGAffineTransform layerTransform = CGAffineTransformMake(0, 1, -1, 0, 480, 0);
-    [layerInstruciton setTransform:finalTransform atTime:kCMTimeZero];
-    //编辑
-    AVMutableVideoCompositionInstruction *mainInstruciton = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
-    mainInstruciton.timeRange = CMTimeRangeMake(kCMTimeZero, asset.duration);
-    mainInstruciton.layerInstructions = @[layerInstruciton];
-    
-    AVMutableVideoComposition *mainCompositionInst = [AVMutableVideoComposition videoComposition];
-    mainCompositionInst.instructions = @[mainInstruciton];
-    mainCompositionInst.frameDuration = CMTimeMake(1, 30);
-    CGSize size = CGSizeMake(self.outputSize.height, self.outputSize.width);
-    mainCompositionInst.renderSize = size;
-    
-    AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetHighestQuality];
-    exporter.videoComposition = mainCompositionInst;
-    exporter.outputURL = [NSURL fileURLWithPath:self.outputFilePath];
-    exporter.shouldOptimizeForNetworkUse = YES;
-    exporter.outputFileType = AVFileTypeMPEG4;
-    //输出
-    [exporter exportAsynchronouslyWithCompletionHandler:^(void) {
-        if (exporter.status == AVAssetExportSessionStatusCompleted) {
-            [fileManager removeItemAtPath:self.tempFilePath error:nil];
-            dispatch_async( dispatch_get_main_queue(), ^{
-                @autoreleasepool {
-                    [self.delegate recorder:self didFinishRecordingToOutputFilePath:self.outputFilePath error:nil];
-                }
-            });
-        } else {
-            NSError *error = [exporter error];
-            if (!error) {
-                error = [NSError errorWithDomain:@"压缩视频失败" code:-1 userInfo:nil];
-            }
-            dispatch_async( dispatch_get_main_queue(), ^{
-                @autoreleasepool {
-                    [self.delegate recorder:self didFinishRecordingToOutputFilePath:nil error:error];
-                }
-            });
-        }
-    }];
-}
-
 
 #pragma mark - Capture Session Setup
 

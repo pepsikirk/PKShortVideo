@@ -81,10 +81,10 @@
             self.rotationMode = kGPUImageRotateLeft;
         } else if (t.a == 1.0 && t.b == 0 && t.c == 0 && t.d == 1.0) {
             // LandscapeRight
-            self.rotationMode = kGPUImageNoRotation;
+            self.rotationMode = kGPUImageRotate180;
         } else if (t.a == -1.0 && t.b == 0 && t.c == 0 && t.d == -1.0) {
             // LandscapeLeft
-            self.rotationMode = kGPUImageRotate180;
+            self.rotationMode = kGPUImageNoRotation;
         }
     }
     
