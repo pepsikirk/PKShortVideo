@@ -13,10 +13,10 @@ PKShortVideo 是一个类似微信小视频功能的框架。
 ###进入录制界面
 ```            
 //跳转默认录制视频ViewController
-            PKRecordShortVideoViewController *viewController = [[PKRecordShortVideoViewController alloc] initWithOutputFilePath:path outputSize:CGSizeMake(320, 240) themeColor:[UIColor colorWithRed:0/255.0 green:153/255.0 blue:255/255.0 alpha:1]];
-            //通过代理回调
-            viewController.delegate = self;
-            [self presentViewController:viewController animated:YES completion:nil];
+PKRecordShortVideoViewController *viewController = [[PKRecordShortVideoViewController alloc] initWithOutputFilePath:path outputSize:CGSizeMake(320, 240) themeColor:[UIColor colorWithRed:0/255.0 green:153/255.0 blue:255/255.0 alpha:1]];
+//通过代理回调
+viewController.delegate = self;
+[self presentViewController:viewController animated:YES completion:nil];
 ```
             
 ###录制完成回调
@@ -102,10 +102,10 @@ previewLayer.frame = CGRectMake(0, 44, kScreenWidth, PKPreviewLayerHeight);
 ###聊天对象附属的媒体对象内部实现
 
 ```
-        //当前尺寸
-        CGSize size = [self mediaViewDisplaySize];
-        //实例化播放view
-        self.playerView = [[PKChatMessagePlayerView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height) videoPath:self.videoPath previewImage:self.image];
+//当前尺寸
+CGSize size = [self mediaViewDisplaySize];
+//实例化播放view
+self.playerView = [[PKChatMessagePlayerView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height) videoPath:self.videoPath previewImage:self.image];
 
 ```
 
@@ -123,6 +123,7 @@ previewLayer.frame = CGRectMake(0, 44, kScreenWidth, PKPreviewLayerHeight);
 }
 ```
 
+###聊天界面控制实现
 
 > 出于性能考虑，最好在聊天界面处理做到显示的时候才播放，不显示的时候停止播放
 >  
@@ -167,11 +168,12 @@ previewLayer.frame = CGRectMake(0, 44, kScreenWidth, PKPreviewLayerHeight);
 ```
 
 #要求
-本框架最低支持 iOS 7.0 和 Xcode 7.0。
+本框架最低支持 `iOS 7.0` 和 `Xcode 7.0`。
 #许可证
 PKShortVideo 使用 MIT 许可证，详情见 LICENSE 文件。
 # 联系方式
 Weibo: [@-湛蓝_](http://weibo.com/u/1776530813/)
+
 Email: [pepsikirk@gmail.com](mailto:pepsikirk@gmail.com)
 
 
