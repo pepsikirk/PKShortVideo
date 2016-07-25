@@ -147,14 +147,21 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
             
             newInput = [AVCaptureDeviceInput deviceInputWithDevice:newCamera error:nil];
 
-            // beginConfiguration 确保改变不会立刻应用
+            //beginConfiguration 确保改变不会立刻应用
             [self.captureSession beginConfiguration];
             
+            [self.captureSession removeOutput:self.videoDataOutput];
+            [self.captureSession removeOutput:self.audioDataOutput];
+
             [self.captureSession removeInput:input];
             [self.captureSession addInput:newInput];
             
-            // 开始生效
+            self.outputVideoFormatDescription = nil;
+            self.outputAudioFormatDescription = nil;
+            //开始生效
             [self.captureSession commitConfiguration];
+            //重新加载
+            [self addDataOutputsToCaptureSession:self.captureSession];
             break;
         }
     }
