@@ -96,6 +96,12 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 #pragma mark - Recording
 
 - (void)startRecording {
+    if (TARGET_IPHONE_SIMULATOR) {
+        NSLog(@"录制视频不支持模拟器");
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:@"录制视频不支持模拟器" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
+        [alertView show];
+        return;
+    }
     @synchronized(self) {
         if (self.recordingStatus != PKRecordingStatusIdle) {
             NSLog(@"已经在录制了");
