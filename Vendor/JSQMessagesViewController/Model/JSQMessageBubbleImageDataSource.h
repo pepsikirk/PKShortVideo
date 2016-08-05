@@ -19,8 +19,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
-
 /**
  *  The `JSQMessageBubbleImageDataSource` protocol defines the common interface through which
  *  a `JSQMessagesViewController` and `JSQMessagesCollectionView` interact with 
@@ -52,5 +50,3 @@ NS_ASSUME_NONNULL_BEGIN
 - (UIImage *)messageBubbleHighlightedImage;
 
 @end
-
-NS_ASSUME_NONNULL_END

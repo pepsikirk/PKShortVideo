@@ -18,8 +18,6 @@
 
 #import "JSQMessageMediaData.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
 /**
  *  The `JSQMediaItem` class is an abstract base class for media item model objects that represents
  *  a single media attachment for a user message. It provides some default behavior for media items,
@@ -48,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param maskAsOutgoing A boolean value indicating whether this media item should apply
  *  an outgoing or incoming bubble image mask to its media views.
  *
- *  @return An initialized `JSQMediaItem` object.
+ *  @return An initialized `JSQMediaItem` object if successful, `nil` otherwise.
  */
 - (instancetype)initWithMaskAsOutgoing:(BOOL)maskAsOutgoing;
 
@@ -58,5 +56,3 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)clearCachedMediaViews;
 
 @end
-
-NS_ASSUME_NONNULL_END

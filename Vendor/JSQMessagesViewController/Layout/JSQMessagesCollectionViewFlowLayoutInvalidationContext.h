@@ -18,8 +18,6 @@
 
 #import <UIKit/UIKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
-
 /**
  *  A `JSQMessagesCollectionViewFlowLayoutInvalidationContext` object specifies properties for 
  *  determining whether to recompute the size of items or their position in the layout. 
@@ -42,10 +40,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  `JSQMessagesViewController` subclass, you should use this method to instantiate a new invalidation 
  *  context and pass this object to `invalidateLayoutWithContext:`.
  *
- *  @return An initialized invalidation context object.
+ *  @return An initialized invalidation context object if successful, otherwise `nil`.
  */
 + (instancetype)context;
 
 @end
-
-NS_ASSUME_NONNULL_END

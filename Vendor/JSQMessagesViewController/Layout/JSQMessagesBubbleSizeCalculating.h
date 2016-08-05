@@ -22,8 +22,6 @@
 @class JSQMessagesCollectionViewFlowLayout;
 @protocol JSQMessageData;
 
-NS_ASSUME_NONNULL_BEGIN
-
 /**
  *  The `JSQMessagesBubbleSizeCalculating` protocol defines the common interface through which
  *  an object provides layout information to an instance of `JSQMessagesCollectionViewFlowLayout`.
@@ -57,5 +55,3 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)prepareForResettingLayout:(JSQMessagesCollectionViewFlowLayout *)layout;
 
 @end
-
-NS_ASSUME_NONNULL_END

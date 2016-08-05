@@ -40,7 +40,7 @@ FOUNDATION_EXPORT const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault
  */
 FOUNDATION_EXPORT const CGFloat kJSQMessagesCollectionViewAvatarSizeDefault;
 
-NS_ASSUME_NONNULL_BEGIN
+
 
 /**
  *  The `JSQMessagesCollectionViewFlowLayout` is a concrete layout object that inherits 
@@ -211,5 +211,3 @@ NS_ASSUME_NONNULL_BEGIN
 - (CGSize)sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
-
-NS_ASSUME_NONNULL_END

@@ -24,8 +24,6 @@
  */
 FOUNDATION_EXPORT const CGFloat kJSQMessagesTypingIndicatorFooterViewHeight;
 
-NS_ASSUME_NONNULL_BEGIN
-
 /**
  *  The `JSQMessagesTypingIndicatorFooterView` class implements a reusable view that can be placed
  *  at the bottom of a `JSQMessagesCollectionView`. This view represents a typing indicator 
@@ -38,7 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Returns the `UINib` object initialized for the collection reusable view.
  *
- *  @return The initialized `UINib` object.
+ *  @return The initialized `UINib` object or `nil` if there were errors during
+ *  initialization or the nib file could not be located.
  */
 + (UINib *)nib;
 
@@ -52,20 +51,17 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Typing indicator
 
 /**
- *  Configures the receiver with the specified attributes for the given collection view.
+ *  Configures the receiver with the specified attributes for the given collection view. 
  *  Call this method after dequeuing the footer view.
  *
  *  @param ellipsisColor       The color of the typing indicator ellipsis. This value must not be `nil`.
  *  @param messageBubbleColor  The color of the typing indicator message bubble. This value must not be `nil`.
- *  @param animated            Specifies whether the typing indicator should animate.
  *  @param shouldDisplayOnLeft Specifies whether the typing indicator displays on the left or right side of the collection view when displayed.
  *  @param collectionView      The collection view in which the footer view will appear. This value must not be `nil`.
  */
 - (void)configureWithEllipsisColor:(UIColor *)ellipsisColor
                 messageBubbleColor:(UIColor *)messageBubbleColor
-                          animated:(BOOL)animated
                shouldDisplayOnLeft:(BOOL)shouldDisplayOnLeft
                  forCollectionView:(UICollectionView *)collectionView;
-@end
 
-NS_ASSUME_NONNULL_END
+@end

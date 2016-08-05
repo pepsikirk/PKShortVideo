@@ -21,8 +21,6 @@
 
 #import "JSQMessageAvatarImageDataSource.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
 /**
  *  A `JSQMessagesAvatarImage` model object represents an avatar image.
  *  This is a concrete class that implements the `JSQMessageAvatarImageDataSource` protocol.
@@ -35,12 +33,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The avatar image for a regular display state.
  */
-@property (nonatomic, strong, nullable) UIImage *avatarImage;
+@property (nonatomic, strong) UIImage *avatarImage;
 
 /**
  *  The avatar image for a highlighted display state.
  */
-@property (nonatomic, strong, nullable) UIImage *avatarHighlightedImage;
+@property (nonatomic, strong) UIImage *avatarHighlightedImage;
 
 /**
  *  Returns the placeholder image for an avatar to display if avatarImage is `nil`.
@@ -54,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  properties: avatarImage, avatarHighlightedImage, avatarPlaceholderImage;
  *  This value must not be `nil`.
  *
- *  @return An initialized `JSQMessagesAvatarImage` object.
+ *  @return An initialized `JSQMessagesAvatarImage` object if successful, `nil` otherwise.
  */
 + (instancetype)avatarWithImage:(UIImage *)image;
 
@@ -63,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param placeholderImage The placeholder image for this avatar image. This value must not be `nil`.
  *
- *  @return An initialized `JSQMessagesAvatarImage` object.
+ *  @return An initialized `JSQMessagesAvatarImage` object if successful, `nil` otherwise.
  */
 + (instancetype)avatarImageWithPlaceholder:(UIImage *)placeholderImage;
 
@@ -74,10 +72,10 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param highlightedImage The avatar image for a highlighted display state.
  *  @param placeholderImage The placeholder image for this avatar image. This value must not be `nil`.
  *
- *  @return An initialized `JSQMessagesAvatarImage` object.
+ *  @return An initialized `JSQMessagesAvatarImage` object if successful, `nil` otherwise.
  */
-- (instancetype)initWithAvatarImage:(nullable UIImage *)avatarImage
-                   highlightedImage:(nullable UIImage *)highlightedImage
+- (instancetype)initWithAvatarImage:(UIImage *)avatarImage
+                   highlightedImage:(UIImage *)highlightedImage
                    placeholderImage:(UIImage *)placeholderImage NS_DESIGNATED_INITIALIZER;
 
 /**
@@ -86,5 +84,3 @@ NS_ASSUME_NONNULL_BEGIN
 - (id)init NS_UNAVAILABLE;
 
 @end
-
-NS_ASSUME_NONNULL_END

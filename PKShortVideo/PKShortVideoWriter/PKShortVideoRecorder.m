@@ -205,7 +205,10 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
     // 码率和帧率设置
     NSDictionary *compressionProperties = @{ AVVideoAverageBitRateKey : @(bitsPerSecond),
                                     AVVideoExpectedSourceFrameRateKey : @(30),
-                                             AVVideoAverageBitRateKey : @(30) };
+                                        AVVideoMaxKeyFrameIntervalKey : @(30),
+                                               AVVideoProfileLevelKey : AVVideoProfileLevelH264BaselineAutoLevel };
+    
+    self.videoCompressionSettings = [self.videoDataOutput recommendedVideoSettingsForAssetWriterWithOutputFileType:AVFileTypeMPEG4];
     
     self.videoCompressionSettings = @{ AVVideoCodecKey : AVVideoCodecH264,
                                  AVVideoScalingModeKey : AVVideoScalingModeResizeAspectFill,

@@ -25,8 +25,6 @@
  */
 FOUNDATION_EXPORT const CGFloat kJSQMessagesLoadEarlierHeaderViewHeight;
 
-NS_ASSUME_NONNULL_BEGIN
-
 /**
  *  The `JSQMessagesLoadEarlierHeaderViewDelegate` defines methods that allow you to
  *  respond to interactions within the header view.
@@ -56,19 +54,20 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The object that acts as the delegate of the header view.
  */
-@property (weak, nonatomic, nullable) id<JSQMessagesLoadEarlierHeaderViewDelegate> delegate;
+@property (weak, nonatomic) id<JSQMessagesLoadEarlierHeaderViewDelegate> delegate;
 
 /**
  *  Returns the load button of the header view.
  */
-@property (weak, nonatomic, readonly, nullable) UIButton *loadButton;
+@property (weak, nonatomic, readonly) UIButton *loadButton;
 
 #pragma mark - Class methods
 
 /**
  *  Returns the `UINib` object initialized for the collection reusable view.
  *
- *  @return The initialized `UINib` object.
+ *  @return The initialized `UINib` object or `nil` if there were errors during
+ *  initialization or the nib file could not be located.
  */
 + (UINib *)nib;
 
@@ -80,5 +79,3 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString *)headerReuseIdentifier;
 
 @end
-
-NS_ASSUME_NONNULL_END

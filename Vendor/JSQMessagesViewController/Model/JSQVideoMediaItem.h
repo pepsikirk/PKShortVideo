@@ -18,8 +18,6 @@
 
 #import "JSQMediaItem.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
 /**
  *  The `JSQVideoMediaItem` class is a concrete `JSQMediaItem` subclass that implements the `JSQMessageMediaData` protocol
  *  and represents a video media message. An initialized `JSQVideoMediaItem` object can be passed
@@ -31,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The URL that identifies a video resource.
  */
-@property (nonatomic, strong, nullable) NSURL *fileURL;
+@property (nonatomic, strong) NSURL *fileURL;
 
 /**
  *  A boolean value that specifies whether or not the video is ready to be played.
@@ -46,15 +44,13 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param fileURL       The URL that identifies the video resource.
  *  @param isReadyToPlay A boolean value that specifies if the video is ready to play.
  *
- *  @return An initialized `JSQVideoMediaItem`.
+ *  @return An initialized `JSQVideoMediaItem` if successful, `nil` otherwise.
  *
  *  @discussion If the video must be downloaded from the network,
  *  you may initialize a `JSQVideoMediaItem` with a `nil` fileURL or specify `NO` for
  *  isReadyToPlay. Once the video has been saved to disk, or is ready to stream, you can
  *  set the fileURL property or isReadyToPlay property, respectively.
  */
-- (instancetype)initWithFileURL:(nullable NSURL *)fileURL isReadyToPlay:(BOOL)isReadyToPlay;
+- (instancetype)initWithFileURL:(NSURL *)fileURL isReadyToPlay:(BOOL)isReadyToPlay;
 
 @end
-
-NS_ASSUME_NONNULL_END

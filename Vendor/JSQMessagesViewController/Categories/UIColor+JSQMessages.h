@@ -18,8 +18,6 @@
 
 #import <UIKit/UIKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
-
 @interface UIColor (JSQMessages)
 
 #pragma mark - Message bubble colors
@@ -56,5 +54,3 @@ NS_ASSUME_NONNULL_BEGIN
 - (UIColor *)jsq_colorByDarkeningColorWithValue:(CGFloat)value;
 
 @end
-
-NS_ASSUME_NONNULL_END

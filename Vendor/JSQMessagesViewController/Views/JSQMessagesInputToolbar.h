@@ -23,7 +23,6 @@
 
 @class JSQMessagesInputToolbar;
 
-NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  The `JSQMessagesInputToolbarDelegate` protocol defines methods for interacting with
@@ -63,12 +62,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The object that acts as the delegate of the toolbar.
  */
-@property (weak, nonatomic, nullable) id<JSQMessagesInputToolbarDelegate> delegate;
+@property (weak, nonatomic) id<JSQMessagesInputToolbarDelegate> delegate;
 
 /**
  *  Returns the content view of the toolbar. This view contains all subviews of the toolbar.
  */
-@property (weak, nonatomic, readonly, nullable) JSQMessagesToolbarContentView *contentView;
+@property (weak, nonatomic, readonly) JSQMessagesToolbarContentView *contentView;
 
 /**
  *  A boolean value indicating whether the send button is on the right side of the toolbar or not.
@@ -104,10 +103,8 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @discussion Override this method to provide a custom content view for the toolbar.
  *
- *  @return An initialized `JSQMessagesToolbarContentView`.
+ *  @return An initialized `JSQMessagesToolbarContentView` if successful, otherwise `nil`.
  */
 - (JSQMessagesToolbarContentView *)loadToolbarContentView;
 
 @end
-
-NS_ASSUME_NONNULL_END

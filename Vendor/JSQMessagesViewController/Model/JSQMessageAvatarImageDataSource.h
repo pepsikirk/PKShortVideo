@@ -19,8 +19,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
-
 /**
  *  The `JSQMessageAvatarImageDataSource` protocol defines the common interface through which
  *  a `JSQMessagesViewController` and `JSQMessagesCollectionView` interact with avatar image model objects.
@@ -41,14 +39,14 @@ NS_ASSUME_NONNULL_BEGIN
  *  
  *  @discussion You may return `nil` from this method while the image is being downloaded.
  */
-- (nullable UIImage *)avatarImage;
+- (UIImage *)avatarImage;
 
 /**
  *  @return The avatar image for a highlighted display state. 
  *  
  *  @discussion You may return `nil` from this method if this does not apply.
  */
-- (nullable UIImage *)avatarHighlightedImage;
+- (UIImage *)avatarHighlightedImage;
 
 /**
  *  @return A placeholder avatar image to be displayed if avatarImage is not yet available, or `nil`.
@@ -63,5 +61,3 @@ NS_ASSUME_NONNULL_BEGIN
 - (UIImage *)avatarPlaceholderImage;
 
 @end
-
-NS_ASSUME_NONNULL_END

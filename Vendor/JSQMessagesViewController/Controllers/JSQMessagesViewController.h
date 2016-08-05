@@ -21,8 +21,7 @@
 #import "JSQMessagesCollectionView.h"
 #import "JSQMessagesCollectionViewFlowLayout.h"
 #import "JSQMessagesInputToolbar.h"
-
-NS_ASSUME_NONNULL_BEGIN
+#import "JSQMessagesKeyboardController.h"
 
 /**
  *  The `JSQMessagesViewController` class is an abstract class that represents a view controller whose content consists of
@@ -38,13 +37,34 @@ NS_ASSUME_NONNULL_BEGIN
  *  Returns the collection view object managed by this view controller.
  *  This view controller is the collection view's data source and delegate.
  */
-@property (weak, nonatomic, readonly, nullable) JSQMessagesCollectionView *collectionView;
+@property (weak, nonatomic, readonly) JSQMessagesCollectionView *collectionView;
 
 /**
  *  Returns the input toolbar view object managed by this view controller.
  *  This view controller is the toolbar's delegate.
  */
-@property (strong, nonatomic, readonly) JSQMessagesInputToolbar *inputToolbar;
+@property (weak, nonatomic, readonly) JSQMessagesInputToolbar *inputToolbar;
+
+/**
+ *  Returns the keyboard controller object used to manage the software keyboard.
+ */
+@property (strong, nonatomic) JSQMessagesKeyboardController *keyboardController;
+
+/**
+ *  The display name of the current user who is sending messages.
+ *
+ *  @discussion This value does not have to be unique. This value must not be `nil`.
+ */
+@property (copy, nonatomic) NSString *senderDisplayName;
+
+/**
+ *  The string identifier that uniquely identifies the current user sending messages.
+ *
+ *  @discussion This property is used to determine if a message is incoming or outgoing.
+ *  All message data objects returned by `collectionView:messageDataForItemAtIndexPath:` are
+ *  checked against this identifier. This value must not be `nil`.
+ */
+@property (copy, nonatomic) NSString *senderId;
 
 /**
  *  Specifies whether or not the view controller should automatically scroll to the most recent message
@@ -157,7 +177,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Returns the `UINib` object initialized for a `JSQMessagesViewController`.
  *
- *  @return The initialized `UINib` object.
+ *  @return The initialized `UINib` object or `nil` if there were errors during initialization
+ *  or the nib file could not be located.
  *
  *  @discussion You may override this method to provide a customized nib. If you do,
  *  you should also override `messagesViewController` to return your
@@ -170,7 +191,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @discussion This is the designated initializer for programmatic instantiation.
  *
- *  @return An initialized `JSQMessagesViewController` object.
+ *  @return An initialized `JSQMessagesViewController` object if successful, `nil` otherwise.
  */
 + (instancetype)messagesViewController;
 
@@ -304,5 +325,3 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)didReceiveMenuWillHideNotification:(NSNotification *)notification;
 
 @end
-
-NS_ASSUME_NONNULL_END

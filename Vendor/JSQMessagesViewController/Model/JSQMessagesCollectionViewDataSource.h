@@ -24,7 +24,6 @@
 @protocol JSQMessageBubbleImageDataSource;
 @protocol JSQMessageAvatarImageDataSource;
 
-NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  An object that adopts the `JSQMessagesCollectionViewDataSource` protocol is responsible for providing the data and views
@@ -90,7 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @see JSQMessagesBubbleImageFactory.
  *  @see JSQMessagesCollectionViewFlowLayout.
  */
-- (nullable id<JSQMessageBubbleImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView messageBubbleImageDataForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (id<JSQMessageBubbleImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView messageBubbleImageDataForItemAtIndexPath:(NSIndexPath *)indexPath;
 
 /**
  *  Asks the data source for the avatar image data that corresponds to the specified message data item at indexPath in the collectionView.
@@ -107,7 +106,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @see JSQMessagesAvatarImageFactory.
  *  @see JSQMessagesCollectionViewFlowLayout.
  */
-- (nullable id<JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (id<JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath;
 
 @optional
 
@@ -137,7 +136,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @see JSQMessagesCollectionViewCell.
  */
-- (nullable NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath;
+- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath;
 
 /**
  *  Asks the data source for the text to display in the `cellBottomLabel` for the the specified
@@ -151,8 +150,6 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @see JSQMessagesCollectionViewCell.
  */
-- (nullable NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath;
+- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
-
-NS_ASSUME_NONNULL_END

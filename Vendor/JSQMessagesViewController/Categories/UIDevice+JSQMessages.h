@@ -16,13 +16,18 @@
 //  Released under an MIT license: http://opensource.org/licenses/MIT
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@interface NSString (JSQMessages)
+@interface UIDevice (JSQMessages)
 
 /**
- *  @return A copy of the receiver with all leading and trailing whitespace removed.
+ *  @return Whether or not the current device is running a version of iOS before 8.0.
  */
-- (NSString *)jsq_stringByTrimingWhitespace;
++ (BOOL)jsq_isCurrentDeviceBeforeiOS8;
+
+/**
+ *  @return Whether or not the current device is running a version of iOS after 9.0.
+ */
++ (BOOL)jsq_isCurrentDeviceAfteriOS9;
 
 @end
