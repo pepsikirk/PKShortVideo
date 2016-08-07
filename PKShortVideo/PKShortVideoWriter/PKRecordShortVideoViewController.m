@@ -57,6 +57,10 @@ static CGFloat const PKRecordButtonWidth = 90;
     return self;
 }
 
+- (void)dealloc {
+    [_recorder stopRunning];
+}
+
 
 
 #pragma mark - LifeCycle
@@ -131,6 +135,7 @@ static CGFloat const PKRecordButtonWidth = 90;
 #pragma mark - Private 
 
 - (void)cancelShoot {
+    [self.recorder stopRunning];
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
