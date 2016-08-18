@@ -52,9 +52,8 @@
     return self;
 }
 
-- (void)dealloc
-{
-    NSLog(@"dealloc");
+- (void)dealloc {
+    [_reader cancelReading];
 }
 
 - (void)yuvConversionSetup {
@@ -173,17 +172,22 @@
     NSDictionary *inputOptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
     AVURLAsset *inputAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:self.videoPath] options:inputOptions];
     
-    PKVideoDecoder __block *blockSelf = self;
+    __weak typeof(self)weakSelf = self;;
     
     [inputAsset loadValuesAsynchronouslyForKeys:[NSArray arrayWithObject:@"tracks"] completionHandler: ^{
+        
+        if (!weakSelf) {
+            return;
+        }
+        __strong __typeof(weakSelf)strongSelf = weakSelf;
+        
         NSError *error = nil;
         AVKeyValueStatus tracksStatus = [inputAsset statusOfValueForKey:@"tracks" error:&error];
         if (tracksStatus != AVKeyValueStatusLoaded) {
             return;
         }
-        blockSelf.asset = inputAsset;
-        [blockSelf processAsset];
-        blockSelf = nil;
+        strongSelf.asset = inputAsset;
+        [strongSelf processAsset];
     }];
 }
 
@@ -246,7 +250,6 @@
     if (self.reader.status == AVAssetReaderStatusReading) {
         CMSampleBufferRef sampleBufferRef = [readerVideoTrackOutput copyNextSampleBuffer];
         if (sampleBufferRef) {
-            //NSLog(@"read a video frame: %@", CFBridgingRelease(CMTimeCopyDescription(kCFAllocatorDefault, CMSampleBufferGetOutputPresentationTimeStamp(sampleBufferRef))));
             // Do this outside of the video processing queue to not slow that down while waiting
             CMTime currentSampleTime = CMSampleBufferGetOutputPresentationTimeStamp(sampleBufferRef);
             CMTime differenceFromLastFrame = CMTimeSubtract(currentSampleTime, previousFrameTime);
@@ -255,8 +258,7 @@
             CGFloat frameTimeDifference = CMTimeGetSeconds(differenceFromLastFrame);
             CGFloat actualTimeDifference = currentActualTime - previousActualFrameTime;
             
-            if (frameTimeDifference > actualTimeDifference)
-            {
+            if (frameTimeDifference > actualTimeDifference) {
                 usleep(1000000.0 * (frameTimeDifference - actualTimeDifference));
             }
             

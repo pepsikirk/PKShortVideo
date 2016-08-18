@@ -56,8 +56,20 @@
         
         _decoder = [[PKVideoDecoder alloc] initWithVideoPath:videoPath size:frame.size];
         _decoder.delegate = self;
+        
+        //程序退到后台
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pk_didEnterBackgroundNotification:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
     return self;
+}
+
+- (void)dealloc {
+    runSynchronouslyOnVideoProcessingQueue(^{
+        [self destroyDisplayFramebuffer];
+    });
+    [_decoder cancelProcessing];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)commonInit {
@@ -141,13 +153,6 @@
     } else if (!CGSizeEqualToSize(self.bounds.size, CGSizeZero)) {
         [self recalculateViewGeometry];
     }
-}
-
-- (void)dealloc {
-    runSynchronouslyOnVideoProcessingQueue(^{
-        [self destroyDisplayFramebuffer];
-    });
-    [_decoder cancelProcessing];
 }
 
 #pragma mark - Public
@@ -361,9 +366,17 @@
     });
 }
 
--(void)didCompletePlayingMovie {
+- (void)didCompletePlayingMovie {
     
 }
+
+
+#pragma mark - Notification
+
+- (void)pk_didEnterBackgroundNotification:(NSNotification *)notification {
+    [self stop];
+}
+
 
 #pragma mark - Getter
 
@@ -376,8 +389,7 @@
         else {
             return self.bounds.size;
         }
-    }
-    else {
+    } else {
         return _sizeInPixels;
     }
 }

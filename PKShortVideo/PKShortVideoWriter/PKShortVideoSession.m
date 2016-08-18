@@ -62,6 +62,10 @@ typedef NS_ENUM(NSInteger, PKSessionStatus){
     return self;
 }
 
+- (void)dealloc {
+    [_assetWriter cancelWriting];
+}
+
 
 #pragma mark - Public
 

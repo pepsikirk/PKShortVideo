@@ -34,6 +34,10 @@
     return self;
 }
 
+- (void)dealloc {
+    [_playerView pause];
+}
+
 
 
 #pragma mark - View Lifecycle

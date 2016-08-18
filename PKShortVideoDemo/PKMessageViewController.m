@@ -34,6 +34,8 @@
                                                                              action:@selector(receiveMessagePressed:)];
     
     self.demoData = [[PKDemoModelData alloc] init];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pk_msgVC_didBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 
@@ -527,5 +529,23 @@
     //JSQMessagesViewController的完成发送滚动到底端方法
     [self finishSendingMessageAnimated:YES];
 }
+
+
+#pragma mark - Notificaiton
+
+- (void)pk_msgVC_didBecomeActiveNotification:(NSNotification *)notification {
+    NSArray *array = [self.collectionView indexPathsForVisibleItems];
+    if (!array) {
+        return;
+    }
+    for (NSIndexPath *indexPath in array) {
+        JSQMessage *msg = self.demoData.messages[indexPath.item];
+        if ([msg.media isKindOfClass:[PKShortVideoItem class]]) {
+            PKShortVideoItem *item = (PKShortVideoItem *)msg.media;
+            [item play];
+        }
+    }
+}
+
 
 @end

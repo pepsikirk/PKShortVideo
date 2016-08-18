@@ -74,6 +74,11 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
     return self;
 }
 
+- (void)dealloc {
+    [_assetSession finishRecording];
+    [self stopRunning];
+}
+
 
 
 #pragma mark - Running Session
