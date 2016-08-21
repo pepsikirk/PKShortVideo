@@ -86,17 +86,17 @@
         CGAffineTransform t = videoTrack.preferredTransform;
         
         if (t.a == 0 && t.b == 1.0 && t.c == -1.0 && t.d == 0) {
-            // Portrait
+            // Portrait             90
             self.rotationMode = kGPUImageRotateRight;
         } else if (t.a == 0 && t.b == -1.0 && t.c == 1.0 && t.d == 0) {
-            // PortraitUpsideDown
+            // PortraitUpsideDown   270
             self.rotationMode = kGPUImageRotateLeft;
         } else if (t.a == 1.0 && t.b == 0 && t.c == 0 && t.d == 1.0) {
-            // LandscapeRight
-            self.rotationMode = kGPUImageRotate180;
-        } else if (t.a == -1.0 && t.b == 0 && t.c == 0 && t.d == -1.0) {
-            // LandscapeLeft
+            // LandscapeRight       0
             self.rotationMode = kGPUImageNoRotation;
+        } else if (t.a == -1.0 && t.b == 0 && t.c == 0 && t.d == -1.0) {
+            // LandscapeLeft        180
+            self.rotationMode = kGPUImageRotate180;
         }
     }
     
