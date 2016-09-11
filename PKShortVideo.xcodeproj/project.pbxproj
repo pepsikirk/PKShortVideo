@@ -251,6 +251,7 @@
 		AEDD7D671C34329100977BD0 /* PKShortVideo.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PKShortVideo.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEDD7D6B1C34329100977BD0 /* PKShortVideoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PKShortVideoUITests.m; sourceTree = "<group>"; };
 		AEDD7D6D1C34329100977BD0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AEED9EF51D852B71005CF78C /* PKShortVideo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PKShortVideo.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -590,6 +591,7 @@
 		AEDD7D451C34329100977BD0 /* PKShortVideo */ = {
 			isa = PBXGroup;
 			children = (
+				AEED9EF51D852B71005CF78C /* PKShortVideo.h */,
 				88BFB08C1D1C5A3700F223F3 /* PKAsset */,
 				880525FF1CF2F94C005EC256 /* PKShortVideoPlayer */,
 				8805261D1CF2F94C005EC256 /* PKShortVideoWriter */,
