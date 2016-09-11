@@ -9,6 +9,12 @@ PKShortVideo 是一个类似微信小视频功能的框架。
 - 小视频可以点击放大播放，使用了 AVPlayer
 - 提供小视频拍摄，能够支持自定义分辨率视频拍摄，有着基础样式，并提供了基础的切换摄像头、录制、播放、重新录制的功能，使用了 AVCaptureSession + AVCaptureVideoDataOutput和AVCaptureAudioDataOutput直接输出视频
 
+#安装
+1. 在 Podfile 中添加 pod 'PKShortVideo'。
+2. 执行 pod install 或 pod update。
+3. 导入 #import "PKShortVideo.h"。
+
+
 #简单用法
 > 视频录制时，OutputFilePath参数为录制完成后输出的视频文件路径，OutputSize是输出视频的分辨率
 > 
