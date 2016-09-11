@@ -6,9 +6,6 @@
 //  Copyright © 2016年 pepsikirk. All rights reserved.
 //
 
-#ifndef PKShortVideo_h
-#define PKShortVideo_h
-
 //PKShortVideoPlayer
 #import "PKChatMessagePlayerView.h"
 #import "PKVideoDecoder.h"
@@ -22,5 +19,3 @@
 #import "PKRecordShortVideoViewController.h"
 
 #import "UIImage+PKShortVideoPlayer.h"
-
-#endif /* PKShortVideo_h */

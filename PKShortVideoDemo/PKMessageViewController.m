@@ -8,10 +8,8 @@
 
 #import "PKMessageViewController.h"
 #import "PKDemoModelData.h"
-#import "PKRecordShortVideoViewController.h"
+#import "PKShortVideo.h"
 #import "PKShortVideoItem.h"
-#import "PKFullScreenPlayerViewController.h"
-#import "UIImage+PKShortVideoPlayer.h"
 
 @interface PKMessageViewController () <UIActionSheetDelegate, PKRecordShortVideoDelegate>
 
@@ -136,8 +134,7 @@
             audioItemCopy.audioData = nil;
             
             newMediaData = audioItemCopy;
-        }
-        else if ([copyMediaData isKindOfClass:[PKShortVideoItem class]]) {
+        } else if ([copyMediaData isKindOfClass:[PKShortVideoItem class]]) {
             PKShortVideoItem *videoItemCopy = [((PKShortVideoItem *)copyMediaData) copy];
             videoItemCopy.appliesMediaViewMaskAsOutgoing = NO;
             newMediaData = videoItemCopy;
