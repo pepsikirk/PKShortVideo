@@ -2,7 +2,7 @@
 //  PKPlayerView.m
 //  PKShortVideo
 //
-//  Created by TYM01 on 16/9/26.
+//  Created by jiangxincai on 16/9/26.
 //  Copyright © 2016年 pepsikirk. All rights reserved.
 //
 
@@ -21,8 +21,8 @@
 @property (strong, nonatomic) AVPlayerLayer *playerLayer;
 @property (strong, nonatomic) AVPlayerItem *playerItem;
 
-@property (assign, nonatomic) BOOL isPlayable;
-@property (nonatomic ,assign , readwrite) BOOL isPlaying;
+@property (assign, nonatomic ,readwrite) BOOL isPlayable;
+@property (nonatomic ,assign ,readwrite) BOOL isPlaying;
 
 @property (nonatomic, strong) NSString *videoPath;
 @property (nonatomic, strong) NSString *uniqueID;
@@ -100,11 +100,6 @@
 
 #pragma mark Prepare to play asset, URL
 
-/*
- Invoked at the completion of the loading of the values for all keys on the asset that we require.
- Checks whether loading was successfull and whether the asset is playable.
- If so, sets up an AVPlayerItem and an AVPlayer to play the asset.
- */
 - (void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys {
     for (NSString *thisKey in requestedKeys) {
         NSError *error = nil;
@@ -122,6 +117,8 @@
     
     [self creatPlayer];
 }
+
+
 
 #pragma mark - Public
 
@@ -148,6 +145,8 @@
     }
 }
 
+
+
 #pragma mark - Private
 
 - (void)creatPlayer {
@@ -159,6 +158,8 @@
     }
 }
 
+
+
 #pragma mark - Notification
 
 - (void)shortVideoItemPlayerItemDidReachEnd:(NSNotification *)notification{
@@ -168,6 +169,8 @@
         [self.player play];
     }
 }
+
+
 
 #pragma mark - Getter
 
