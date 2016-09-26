@@ -2,19 +2,28 @@
 //  PKPlayerManager.m
 //  PKShortVideo
 //
-//  Created by TYM01 on 16/9/26.
+//  Created by jiangxincai on 16/9/26.
 //  Copyright © 2016年 pepsikirk. All rights reserved.
 //
 
 #import "PKPlayerManager.h"
 @import AVFoundation;
 
-static NSInteger const PKPlayerCount = 8;
-
 @interface PKPlayerManager ()
 
+/**
+ *  AVPlayer 对象缓存快速取出字典
+ */
 @property (strong, nonatomic) NSMutableDictionary *playerDict;
+
+/**
+ *  AVPlayer 对象缓存排序数组
+ */
 @property (strong, nonatomic) NSMutableArray *playerArray;
+
+/**
+ *  AVPlayer 排序顺序
+ */
 @property (assign, nonatomic) NSInteger playerIndex;
 
 @end
@@ -35,32 +44,38 @@ static NSInteger const PKPlayerCount = 8;
     if (self) {
         _playerDict = [NSMutableDictionary new];
         _playerArray = [NSMutableArray new];
+        
+        _playerMaxCount = 8;
     }
     return self;
 }
 
 - (AVPlayer *)getAVQueuePlayWithPlayerItem:(AVPlayerItem *)item uniqueID:(NSString *)uniqueID {
+    //通过uniqueID取Player对象
     AVPlayer *player = self.playerDict[uniqueID];
     if (player) {
+        //对象不等时替换player对象的item
         if (player.currentItem != item) {
             [player replaceCurrentItemWithPlayerItem:item];
         }
         return player;
     } else {
+        //未在界面创建小视频时返回nil
         if (!self.playerArray.count) {
             return nil;
         }
         if (self.playerArray.count <= self.playerIndex) {
             self.playerIndex = 0;
         }
+        //按顺序平均分配player数组里面的player
         AVPlayer *player = self.playerArray[self.playerIndex];
-        if (self.playerIndex == PKPlayerCount - 1) {
+        if (self.playerIndex == self.playerMaxCount - 1) {
             self.playerIndex = 0;
         } else {
             self.playerIndex = self.playerIndex + 1;
         }
         [player replaceCurrentItemWithPlayerItem:item];
-        
+        //缓存play可以快速获取对应的player
         [self.playerDict setObject:player forKey:uniqueID];
         
         return player;
@@ -72,7 +87,7 @@ static NSInteger const PKPlayerCount = 8;
         return;
     }
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        for (NSInteger i = 0; i < PKPlayerCount ; i++) {
+        for (NSInteger i = 0; i < self.playerMaxCount ; i++) {
             AVPlayer *player = [AVPlayer new];
             player.volume = 0;
             [self.playerArray addObject:player];

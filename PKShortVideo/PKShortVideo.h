@@ -11,6 +11,8 @@
 #import "PKVideoDecoder.h"
 #import "PKFullScreenPlayerView.h"
 #import "PKFullScreenPlayerViewController.h"
+#import "PKPlayerManager.h"
+#import "PKPlayerManager.h"
 
 //PKShortVideoWriter
 #import "PKShortVideoProgressBar.h"

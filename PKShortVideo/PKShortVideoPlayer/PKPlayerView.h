@@ -2,7 +2,7 @@
 //  PKPlayerView.h
 //  PKShortVideo
 //
-//  Created by TYM01 on 16/9/26.
+//  Created by jiangxincai on 16/9/26.
 //  Copyright © 2016年 pepsikirk. All rights reserved.
 //
 
@@ -12,7 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PKPlayerView : UIView
 
-@property (nonatomic ,assign , readonly) BOOL isPlaying;
+@property (assign, nonatomic ,readonly) BOOL isPlayable;
+@property (nonatomic ,assign ,readonly) BOOL isPlaying;
 
 - (instancetype)initWithFrame:(CGRect)frame videoPath:(NSString *)videoPath previewImage:(UIImage *)previewImage;
 
