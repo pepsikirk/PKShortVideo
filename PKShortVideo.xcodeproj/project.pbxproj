@@ -71,6 +71,10 @@
 		88FBE7981D2A668000556F43 /* PKMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88FBE7281D2A668000556F43 /* PKMessageViewController.m */; };
 		88FBE7991D2A668000556F43 /* PKRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88FBE72A1D2A668000556F43 /* PKRootViewController.m */; };
 		88FBE79A1D2A668000556F43 /* PKShortVideoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 88FBE72C1D2A668000556F43 /* PKShortVideoItem.m */; };
+		9C6454451D98F43C0021FADE /* PKPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C6454441D98F43C0021FADE /* PKPlayerView.m */; };
+		9C6454481D98F49D0021FADE /* PKPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C6454471D98F49D0021FADE /* PKPlayerManager.m */; };
+		9CCBDCC01D98D2AB00BA9C4A /* PKMessageViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CCBDCBF1D98D2AB00BA9C4A /* PKMessageViewController2.m */; };
+		9CCBDCC31D98D37800BA9C4A /* PKShortVideoItem2.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CCBDCC21D98D37800BA9C4A /* PKShortVideoItem2.m */; };
 		AE4066D91D30E046002273A8 /* PKFullScreenPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE4066D61D30E046002273A8 /* PKFullScreenPlayerView.m */; };
 		AE4066DA1D30E046002273A8 /* PKFullScreenPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE4066D81D30E046002273A8 /* PKFullScreenPlayerViewController.m */; };
 		AE4066DC1D30E0C4002273A8 /* PK_Camera_Turn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE4066DB1D30E0C4002273A8 /* PK_Camera_Turn@2x.png */; };
@@ -225,6 +229,14 @@
 		88FBE72A1D2A668000556F43 /* PKRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PKRootViewController.m; sourceTree = "<group>"; };
 		88FBE72B1D2A668000556F43 /* PKShortVideoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PKShortVideoItem.h; sourceTree = "<group>"; };
 		88FBE72C1D2A668000556F43 /* PKShortVideoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PKShortVideoItem.m; sourceTree = "<group>"; };
+		9C6454431D98F43C0021FADE /* PKPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PKPlayerView.h; sourceTree = "<group>"; };
+		9C6454441D98F43C0021FADE /* PKPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PKPlayerView.m; sourceTree = "<group>"; };
+		9C6454461D98F49D0021FADE /* PKPlayerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PKPlayerManager.h; sourceTree = "<group>"; };
+		9C6454471D98F49D0021FADE /* PKPlayerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PKPlayerManager.m; sourceTree = "<group>"; };
+		9CCBDCBE1D98D2AB00BA9C4A /* PKMessageViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PKMessageViewController2.h; sourceTree = "<group>"; };
+		9CCBDCBF1D98D2AB00BA9C4A /* PKMessageViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PKMessageViewController2.m; sourceTree = "<group>"; };
+		9CCBDCC11D98D37800BA9C4A /* PKShortVideoItem2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PKShortVideoItem2.h; sourceTree = "<group>"; };
+		9CCBDCC21D98D37800BA9C4A /* PKShortVideoItem2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PKShortVideoItem2.m; sourceTree = "<group>"; };
 		AE4066D51D30E046002273A8 /* PKFullScreenPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PKFullScreenPlayerView.h; sourceTree = "<group>"; };
 		AE4066D61D30E046002273A8 /* PKFullScreenPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PKFullScreenPlayerView.m; sourceTree = "<group>"; };
 		AE4066D71D30E046002273A8 /* PKFullScreenPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PKFullScreenPlayerViewController.h; sourceTree = "<group>"; };
@@ -284,6 +296,8 @@
 			children = (
 				AE52D2591D856F1300D9B86B /* PKChatMessagePlayerView.h */,
 				AE52D25A1D856F1300D9B86B /* PKChatMessagePlayerView.m */,
+				9C6454431D98F43C0021FADE /* PKPlayerView.h */,
+				9C6454441D98F43C0021FADE /* PKPlayerView.m */,
 				AE52D25B1D856F1300D9B86B /* PKColorConversion.h */,
 				AE52D25C1D856F1300D9B86B /* PKColorConversion.m */,
 				AE52D25D1D856F1300D9B86B /* PKVideoDecoder.h */,
@@ -292,6 +306,8 @@
 				AE4066D61D30E046002273A8 /* PKFullScreenPlayerView.m */,
 				AE4066D71D30E046002273A8 /* PKFullScreenPlayerViewController.h */,
 				AE4066D81D30E046002273A8 /* PKFullScreenPlayerViewController.m */,
+				9C6454461D98F49D0021FADE /* PKPlayerManager.h */,
+				9C6454471D98F49D0021FADE /* PKPlayerManager.m */,
 			);
 			path = PKShortVideoPlayer;
 			sourceTree = "<group>";
@@ -510,12 +526,16 @@
 				88FBE7251D2A668000556F43 /* main.m */,
 				88FBE7271D2A668000556F43 /* PKMessageViewController.h */,
 				88FBE7281D2A668000556F43 /* PKMessageViewController.m */,
+				9CCBDCBE1D98D2AB00BA9C4A /* PKMessageViewController2.h */,
+				9CCBDCBF1D98D2AB00BA9C4A /* PKMessageViewController2.m */,
 				88BFB0801D02E00200F223F3 /* PKDemoModelData.h */,
 				88BFB0811D02E00200F223F3 /* PKDemoModelData.m */,
 				88FBE7291D2A668000556F43 /* PKRootViewController.h */,
 				88FBE72A1D2A668000556F43 /* PKRootViewController.m */,
 				88FBE72B1D2A668000556F43 /* PKShortVideoItem.h */,
 				88FBE72C1D2A668000556F43 /* PKShortVideoItem.m */,
+				9CCBDCC11D98D37800BA9C4A /* PKShortVideoItem2.h */,
+				9CCBDCC21D98D37800BA9C4A /* PKShortVideoItem2.m */,
 				88BFB0831D103CC400F223F3 /* jsq_messages_sample.m4a */,
 				88FBE7211D2A668000556F43 /* Assets.xcassets */,
 				88FBE7221D2A668000556F43 /* LaunchScreen.storyboard */,
@@ -759,7 +779,9 @@
 				88C4D17A1D73CC8A00796D25 /* JSQMessagesCollectionViewCell.m in Sources */,
 				88C4D17F1D73CC8A00796D25 /* JSQMessagesComposerTextView.m in Sources */,
 				88C4D1721D73CC8A00796D25 /* JSQMediaItem.m in Sources */,
+				9CCBDCC01D98D2AB00BA9C4A /* PKMessageViewController2.m in Sources */,
 				88FBE7921D2A668000556F43 /* AppDelegate.m in Sources */,
+				9CCBDCC31D98D37800BA9C4A /* PKShortVideoItem2.m in Sources */,
 				88BFB0821D02E00200F223F3 /* PKDemoModelData.m in Sources */,
 				AE52D2611D856F1300D9B86B /* PKVideoDecoder.m in Sources */,
 				88C4D1821D73CC8A00796D25 /* JSQMessagesLoadEarlierHeaderView.m in Sources */,
@@ -787,6 +809,7 @@
 				AEED9EFF1D8545FC005CF78C /* GLProgram.m in Sources */,
 				88C4D16C1D73CC8A00796D25 /* JSQMessagesBubblesSizeCalculator.m in Sources */,
 				88C4D1701D73CC8A00796D25 /* JSQAudioMediaItem.m in Sources */,
+				9C6454451D98F43C0021FADE /* PKPlayerView.m in Sources */,
 				88C4D1661D73CC8A00796D25 /* JSQMessagesAvatarImageFactory.m in Sources */,
 				88C4D1761D73CC8A00796D25 /* JSQPhotoMediaItem.m in Sources */,
 				AE4066DA1D30E046002273A8 /* PKFullScreenPlayerViewController.m in Sources */,
@@ -798,6 +821,7 @@
 				88C4D1601D73CC8A00796D25 /* UIDevice+JSQMessages.m in Sources */,
 				AE52D25F1D856F1300D9B86B /* PKChatMessagePlayerView.m in Sources */,
 				88C4D1801D73CC8A00796D25 /* JSQMessagesInputToolbar.m in Sources */,
+				9C6454481D98F49D0021FADE /* PKPlayerManager.m in Sources */,
 				88C4D16A1D73CC8A00796D25 /* JSQMessagesToolbarButtonFactory.m in Sources */,
 				88C4D16E1D73CC8A00796D25 /* JSQMessagesCollectionViewFlowLayoutInvalidationContext.m in Sources */,
 				88C4D1711D73CC8A00796D25 /* JSQLocationMediaItem.m in Sources */,

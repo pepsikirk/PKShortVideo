@@ -1,14 +1,14 @@
 //
-//  PKShortVideoItem.h
+//  PKShortVideoItem2.h
 //  PKShortVideo
 //
-//  Created by pepsikirk on 16/1/3.
+//  Created by TYM01 on 16/9/26.
 //  Copyright © 2016年 pepsikirk. All rights reserved.
 //
 
 #import "JSQMediaItem.h"
 
-@interface PKShortVideoItem : JSQMediaItem
+@interface PKShortVideoItem2 : JSQMediaItem
 
 @property (nonatomic, strong) NSString *videoPath;
 @property (strong, nonatomic) UIImage *image;

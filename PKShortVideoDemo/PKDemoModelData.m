@@ -8,6 +8,7 @@
 
 #import "PKDemoModelData.h"
 #import "PKShortVideoItem.h"
+#import "PKShortVideoItem2.h"
 #import "UIImage+PKShortVideoPlayer.h"
 
 /**
@@ -162,16 +163,34 @@
     [self.messages addObject:videoMessage];
 }
 
-- (void)addShortVideoMediaMessageWithVideoPath:(NSString *)videoPath {
+- (void)addShortVideoMediaMessageWithVideoPath:(NSString *)videoPath  playType:(PKPlayType)type {
     //PKShortVideoItem为遵循JSQMessagesViewController的规范创建的媒体(非文字)类型
     //previewImage参数为视频的预览图片，目前只用来判断视频分辨率，实际应用可以用来未下载/未播放情况下显示
-    PKShortVideoItem *videoItem = [[PKShortVideoItem alloc] initWithVideoPath:videoPath previewImage:[UIImage pk_previewImageWithVideoURL:[NSURL fileURLWithPath:videoPath]]];
-    //创建message对象
-    JSQMessage *videoMessage = [JSQMessage messageWithSenderId:kJSQDemoAvatarIdSquires
-                                                   displayName:kJSQDemoAvatarDisplayNameSquires
-                                                         media:videoItem];
-    //把创建聊天对象加入聊天数组
-    [self.messages addObject:videoMessage];
+    
+    switch (type) {
+        case PKPlayTypeOpenGL: {
+            PKShortVideoItem *videoItem = [[PKShortVideoItem alloc] initWithVideoPath:videoPath previewImage:[UIImage pk_previewImageWithVideoURL:[NSURL fileURLWithPath:videoPath]]];
+            //创建message对象
+            JSQMessage *videoMessage = [JSQMessage messageWithSenderId:kJSQDemoAvatarIdSquires
+                                                           displayName:kJSQDemoAvatarDisplayNameSquires
+                                                                 media:videoItem];
+            //把创建聊天对象加入聊天数组
+            [self.messages addObject:videoMessage];
+        }
+            break;
+            
+        case PKPlayTypeAVPlayer: {
+            PKShortVideoItem2 *videoItem = [[PKShortVideoItem2 alloc] initWithVideoPath:videoPath previewImage:[UIImage pk_previewImageWithVideoURL:[NSURL fileURLWithPath:videoPath]]];
+            //创建message对象
+            JSQMessage *videoMessage = [JSQMessage messageWithSenderId:kJSQDemoAvatarIdSquires
+                                                           displayName:kJSQDemoAvatarDisplayNameSquires
+                                                                 media:videoItem];
+            //把创建聊天对象加入聊天数组
+            [self.messages addObject:videoMessage];
+        }
+            break;
+    }
+
 }
 
 @end
