@@ -42,7 +42,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 1;
+    return 2;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -56,7 +56,11 @@
     if (indexPath.section == 0) {
         switch (indexPath.row) {
             case 0:
-                cell.textLabel.text = @"Push via storyboard";
+                cell.textLabel.text = @"Push OpenGL Demo";
+                break;
+                
+            case 1:
+                cell.textLabel.text = @"Push AVPlayer Demo";
                 break;
         }
     }
@@ -68,13 +72,19 @@
     return @"Presentation";
 }
 
+
+
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
         switch (indexPath.row) {
             case 0:
-                [self performSegueWithIdentifier:@"seguePushMessageVC" sender:self];
+                [self performSegueWithIdentifier:@"seguePushMessageVC1" sender:self];
+                break;
+                
+            case 1:
+                [self performSegueWithIdentifier:@"seguePushMessageVC2" sender:self];
                 break;
         }
     }

@@ -24,6 +24,11 @@ static NSString * const kJSQDemoAvatarIdCook = @"468-768355-23123";
 static NSString * const kJSQDemoAvatarIdJobs = @"707-8956784-57";
 static NSString * const kJSQDemoAvatarIdWoz = @"309-41802-93823";
 
+typedef NS_ENUM(NSUInteger, PKPlayType) {
+    PKPlayTypeOpenGL,
+    PKPlayTypeAVPlayer,
+};
+
 
 @interface PKDemoModelData : NSObject
 
@@ -45,6 +50,6 @@ static NSString * const kJSQDemoAvatarIdWoz = @"309-41802-93823";
 
 - (void)addAudioMediaMessage;
 
-- (void)addShortVideoMediaMessageWithVideoPath:(NSString *)videoPath;
+- (void)addShortVideoMediaMessageWithVideoPath:(NSString *)videoPath playType:(PKPlayType)type;
 
 @end

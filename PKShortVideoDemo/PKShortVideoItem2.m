@@ -1,25 +1,25 @@
 //
-//  PKShortVideoItem.m
+//  PKShortVideoItem2.m
 //  PKShortVideo
 //
-//  Created by pepsikirk on 16/1/3.
+//  Created by TYM01 on 16/9/26.
 //  Copyright © 2016年 pepsikirk. All rights reserved.
 //
 
-#import "PKShortVideoItem.h"
-#import "PKChatMessagePlayerView.h"
+#import "PKShortVideoItem2.h"
+#import "PKPlayerView.h"
 #import "JSQMessagesMediaViewBubbleImageMasker.h"
 #import "UIImage+JSQMessages.h"
 
 static CGFloat const PKShortVideoMaxLength = 220;
 
-@interface PKShortVideoItem ()
+@interface PKShortVideoItem2 ()
 
-@property (nonatomic, strong) PKChatMessagePlayerView *playerView;
+@property (nonatomic, strong) PKPlayerView *playerView;
 
 @end
 
-@implementation PKShortVideoItem
+@implementation PKShortVideoItem2
 
 - (instancetype)initWithVideoPath:(NSString *)videoPath previewImage:(UIImage *)image {
     self = [super init];
@@ -51,9 +51,10 @@ static CGFloat const PKShortVideoMaxLength = 220;
         //当前尺寸
         CGSize size = [self mediaViewDisplaySize];
         //实例化播放view
-        self.playerView = [[PKChatMessagePlayerView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height) videoPath:self.videoPath previewImage:self.image];
+        self.playerView = [[PKPlayerView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height) videoPath:self.videoPath previewImage:self.image];
         [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:self.playerView isOutgoing:self.appliesMediaViewMaskAsOutgoing];
     }
+    
     return self.playerView;
 }
 
@@ -85,7 +86,7 @@ static CGFloat const PKShortVideoMaxLength = 220;
         return NO;
     }
     
-    PKShortVideoItem *videoItem = (PKShortVideoItem *)object;
+    PKShortVideoItem2 *videoItem = (PKShortVideoItem2 *)object;
     return [self.videoPath isEqual:videoItem.videoPath];
 }
 
@@ -114,7 +115,7 @@ static CGFloat const PKShortVideoMaxLength = 220;
 
 - (instancetype)copyWithZone:(NSZone *)zone
 {
-    PKShortVideoItem *copy = [[[self class] allocWithZone:zone] initWithVideoPath:self.videoPath previewImage:self.image];
+    PKShortVideoItem2 *copy = [[[self class] allocWithZone:zone] initWithVideoPath:self.videoPath previewImage:self.image];
     copy.appliesMediaViewMaskAsOutgoing = self.appliesMediaViewMaskAsOutgoing;
     return copy;
 }

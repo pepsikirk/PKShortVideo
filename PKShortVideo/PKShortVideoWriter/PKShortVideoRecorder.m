@@ -118,7 +118,7 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
     NSString *tempFileName = [NSProcessInfo processInfo].globallyUniqueString;
     self.tempFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[tempFileName stringByAppendingPathExtension:@"mp4"]];
     
-    self.assetSession = [[PKShortVideoSession alloc] initWithTempFilePath:self.tempFilePath];
+    self.assetSession = [[PKShortVideoSession alloc] initWithTempFilePath:self.outputFilePath];
     self.assetSession.delegate = self;
     
     [self.assetSession addVideoTrackWithSourceFormatDescription:self.outputVideoFormatDescription settings:self.videoCompressionSettings];
@@ -318,7 +318,7 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
                 dispatch_async( dispatch_get_main_queue(), ^{
                     @autoreleasepool {
                         [self.delegate recorderDidEndRecording:self];
-                        [self.delegate recorder:self didFinishRecordingToOutputFilePath:self.tempFilePath error:nil];
+                        [self.delegate recorder:self didFinishRecordingToOutputFilePath:self.outputFilePath error:nil];
                     }
                 });
             }
