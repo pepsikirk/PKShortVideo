@@ -42,8 +42,8 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 @property (nonatomic, strong) NSDictionary *videoCompressionSettings;
 @property (nonatomic, strong) NSDictionary *audioCompressionSettings;
 
-@property (nonatomic) CMFormatDescriptionRef outputVideoFormatDescription;
-@property (nonatomic) CMFormatDescriptionRef outputAudioFormatDescription;
+@property (nonatomic, retain) __attribute__((NSObject)) CMFormatDescriptionRef outputVideoFormatDescription;
+@property (nonatomic, retain) __attribute__((NSObject)) CMFormatDescriptionRef outputAudioFormatDescription;
 
 @property (nonatomic, assign) PKRecordingStatus recordingStatus;
 

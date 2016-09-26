@@ -679,6 +679,7 @@
 				TargetAttributes = {
 					AEDD7D421C34329100977BD0 = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = E8AE63JXQ3;
 					};
 					AEDD7D5B1C34329100977BD0 = {
 						CreatedOnToolsVersion = 7.2;
@@ -944,9 +945,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = E8AE63JXQ3;
 				INFOPLIST_FILE = "$(SRCROOT)/PKShortVideoDemo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.pepsikirk.PKShortVideo;
+				PRODUCT_BUNDLE_IDENTIFIER = ios.pepsikirk.PKShortVideo;
 				PRODUCT_NAME = PKShortVideo;
 			};
 			name = Debug;
@@ -956,9 +958,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = E8AE63JXQ3;
 				INFOPLIST_FILE = "$(SRCROOT)/PKShortVideoDemo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.pepsikirk.PKShortVideo;
+				PRODUCT_BUNDLE_IDENTIFIER = ios.pepsikirk.PKShortVideo;
 				PRODUCT_NAME = PKShortVideo;
 			};
 			name = Release;
