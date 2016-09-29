@@ -4,6 +4,7 @@ PKShortVideo 是一个类似微信小视频功能的框架。
 相关文章介绍：[iOS仿微信小视频功能开发优化记录](http://www.jianshu.com/p/6d35bb53f4ac)
 
 ![sc1](https://raw.githubusercontent.com/pepsikirk/PKShortVideo/master/Screenshots/gif.gif)
+
 #特性
 - 小视频聊天界面播放，使用基于 GPUImage 的 OpenGL ES 硬件加速播放视频
 - 小视频可以点击放大播放，使用了 AVPlayer
@@ -20,6 +21,7 @@ PKShortVideo 是一个类似微信小视频功能的框架。
 
 ##简单使用自带UI界面时，录制视频(PKRecordShortVideoViewController)
 ###进入录制界面
+
 ```            
 //跳转默认录制视频ViewController
 PKRecordShortVideoViewController *viewController = [[PKRecordShortVideoViewController alloc] initWithOutputFilePath:path outputSize:CGSizeMake(320, 240) themeColor:[UIColor colorWithRed:0/255.0 green:153/255.0 blue:255/255.0 alpha:1]];
@@ -61,17 +63,21 @@ previewLayer.frame = CGRectMake(0, 44, kScreenWidth, PKPreviewLayerHeight);
 //开始预览摄像头工作
 [self.recorder startRunning];
 ```
+
 ###切换前后摄像头
+
 ```
 //切换前后摄像头
 [self.recorder swapFrontAndBackCameras];
 ```
     
 ###开始录制
+
 ```
 //开始录制视频
 [self.recorder startRecording];
 ```
+
 ###停止录制
 
 ```    
@@ -87,7 +93,6 @@ previewLayer.frame = CGRectMake(0, 44, kScreenWidth, PKPreviewLayerHeight);
 //录制成功返回路径，录制失败返回错误对象
 }
 ```
-   
    
 > 视频播放时，OutputFilePath参数为录制完成后输出的视频文件路径，previewImage是视频预览图
 > 
@@ -127,7 +132,10 @@ previewLayer.frame = CGRectMake(0, 44, kScreenWidth, PKPreviewLayerHeight);
 }
 ```
 ###聊天对象附属的媒体对象内部实现
-可以使用基于 OpenGL 的 PKChatMessagePlayerView 和基于 AVPlayer 的 PKPlayerView ,由于 PKChatMessagePlayerView 实现的 OpenGL 的实现通过反映目前并不稳定，推荐使用 PKPlayerView ，使用接口完全一致。
+
+> 可以使用基于 OpenGL 的 PKChatMessagePlayerView 和基于 AVPlayer 的 PKPlayerView ,由于 PKChatMessagePlayerView 实现的 OpenGL 的实现通过反映目前并不稳定，推荐使用 PKPlayerView ，使用接口完全一致。
+> 
+
 ```
 //当前尺寸
 CGSize size = [self mediaViewDisplaySize];
