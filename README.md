@@ -6,6 +6,7 @@
 [![Support](https://img.shields.io/badge/support-iOS%207%2B%20-blue.svg?style=flat)](https://www.apple.com/nl/ios/)
 
 A video library like WeChat short video for iOS.
+
 Related Articles：[iOS仿微信小视频功能开发优化记录](http://www.jianshu.com/p/6d35bb53f4ac)
 
 ![sc1](https://raw.githubusercontent.com/pepsikirk/PKShortVideo/master/Screenshots/gif.gif)
@@ -76,21 +77,21 @@ previewLayer.frame = CGRectMake(0, 44, kScreenWidth, PKPreviewLayerHeight);
 [self.recorder startRunning];
 ```
 
-###swap front and back camera
+###Swap front and back camera
 
 ```objc
 //切换前后摄像头
 [self.recorder swapFrontAndBackCameras];
 ```
 
-###startRecording
+###Start Recording
 
 ```objc
 //开始录制视频
 [self.recorder startRecording];
 ```
 
-###stopRecording
+###Stop Recording
 
 ```objc
 //停止录制
@@ -222,6 +223,8 @@ PKShortVideo is provided under the MIT license. See LICENSE file for details.
 Weibo: [@-湛蓝_](http://weibo.com/u/1776530813/)
 
 Email: [pepsikirk@gmail.com](mailto:pepsikirk@gmail.com)
+
+==============
 
 #中文介绍
 
