@@ -1,5 +1,10 @@
 # PKShortVideo
 
+[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/pepsikirk/PKShortVideo/blob/master/LICENSE) 
+[![CocoaPods](http://img.shields.io/cocoapods/v/PKShortVideo.svg)](http://cocoapods.org/pods/PKShortVideo) 
+[![CocoaPods](http://img.shields.io/cocoapods/p/PKShortVideo.svg?style=flat)](http://cocoapods.org/pods/PKShortVideo) 
+[![Support](https://img.shields.io/badge/support-iOS%207%2B%20-blue.svg?style=flat)](https://www.apple.com/nl/ios/) 
+
 PKShortVideo 是一个类似微信小视频功能的框架。
 
 相关文章介绍：[iOS仿微信小视频功能开发优化记录](http://www.jianshu.com/p/6d35bb53f4ac)
