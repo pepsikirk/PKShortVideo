@@ -22,7 +22,7 @@ PKShortVideo 是一个类似微信小视频功能的框架。
 ##简单使用自带UI界面时，录制视频(PKRecordShortVideoViewController)
 ###进入录制界面
 
-```            
+```
 //跳转默认录制视频ViewController
 PKRecordShortVideoViewController *viewController = [[PKRecordShortVideoViewController alloc] initWithOutputFilePath:path outputSize:CGSizeMake(320, 240) themeColor:[UIColor colorWithRed:0/255.0 green:153/255.0 blue:255/255.0 alpha:1]];
 //通过代理回调
