@@ -20,19 +20,20 @@ PKShortVideo 是一个类似微信小视频功能的框架。
 > 
 
 ##简单使用自带UI界面时，录制视频(PKRecordShortVideoViewController)
+
 ###进入录制界面
 
-```
+```objc
 //跳转默认录制视频ViewController
 PKRecordShortVideoViewController *viewController = [[PKRecordShortVideoViewController alloc] initWithOutputFilePath:path outputSize:CGSizeMake(320, 240) themeColor:[UIColor colorWithRed:0/255.0 green:153/255.0 blue:255/255.0 alpha:1]];
 //通过代理回调
 viewController.delegate = self;
 [self presentViewController:viewController animated:YES completion:nil];
 ```
-            
+
 ###录制完成回调
 
-```
+```objc
 #pragma mark - PKRecordShortVideoDelegate
 //视频拍摄完成输出图片
 - (void)didFinishRecordingToOutputFilePath:(NSString *)outputFilePath {
@@ -44,8 +45,10 @@ viewController.delegate = self;
 ```
 
 ##自定义UI时录制时，录制视频(PKShortVideoRecorder)
+
 ###创建录制对象
-```
+
+```objc
 //创建视频录制对象
 self.recorder = [[PKShortVideoRecorder alloc] initWithOutputFilePath:self.outputFilePath outputSize:self.outputSize];
 //通过代理回调
@@ -56,51 +59,51 @@ previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
 previewLayer.frame = CGRectMake(0, 44, kScreenWidth, PKPreviewLayerHeight);
 [self.view.layer insertSublayer:previewLayer atIndex:0];
 ```
-    
+
 ###开始预览摄像头工作
-        
-```
+
+```objc
 //开始预览摄像头工作
 [self.recorder startRunning];
 ```
 
 ###切换前后摄像头
 
-```
+```objc
 //切换前后摄像头
 [self.recorder swapFrontAndBackCameras];
 ```
-    
+
 ###开始录制
 
-```
+```objc
 //开始录制视频
 [self.recorder startRecording];
 ```
 
 ###停止录制
 
-```    
+```objc
 //停止录制
 [self.recorder stopRecording];
 ```
-    
+
 ###视频录制成功回调
 
-```
+```objc
 //视频录制结束回调
 - (void)recorder:(PKShortVideoRecorder *)recorder didFinishRecordingToOutputFilePath:(NSString *)outputFilePath error:(NSError *)error {
 //录制成功返回路径，录制失败返回错误对象
 }
 ```
-   
+
 > 视频播放时，OutputFilePath参数为录制完成后输出的视频文件路径，previewImage是视频预览图
 > 
-
 ##聊天界面播放(由于聊天框架不同，这里只用JSQMessagesViewController进行示范)
 
 ###聊天对象创建
-```
+
+```objc
 - (void)addShortVideoMediaMessageWithVideoPath:(NSString *)videoPath  playType:(PKPlayType)type {
     //PKShortVideoItem为遵循JSQMessagesViewController的规范创建的媒体(非文字)类型
     //previewImage参数为视频的预览图片
@@ -131,23 +134,22 @@ previewLayer.frame = CGRectMake(0, 44, kScreenWidth, PKPreviewLayerHeight);
 
 }
 ```
-###聊天对象附属的媒体对象内部实现
 
+###聊天对象附属的媒体对象内部实现
 > 可以使用基于 OpenGL 的 PKChatMessagePlayerView 和基于 AVPlayer 的 PKPlayerView ,由于 PKChatMessagePlayerView 实现的 OpenGL 的实现通过反映目前并不稳定，推荐使用 PKPlayerView ，使用接口完全一致。
 > 
 
-```
+```objc
 //当前尺寸
 CGSize size = [self mediaViewDisplaySize];
 //实例化播放view
 self.playerView = [[PKPlayerView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height) videoPath:self.videoPath previewImage:self.image];
-
 ```
 
 > 如果需求策略非常复杂，如需判断是群还是好友、各种网络情况下，是否下载或者自动播放，仍然需要自定义聊天对象附属媒体对象，PKChatMessagePlayerView仅可在视频存在情况下播放使用
 >  
 
-```
+```objc
 //开始播放小视频
 - (void)play {
     [self.playerView play];
@@ -159,11 +161,10 @@ self.playerView = [[PKPlayerView alloc] initWithFrame:CGRectMake(0, 0, size.widt
 ```
 
 ###聊天界面控制实现
-
 > 出于性能考虑，最好在聊天界面处理做到显示的时候才播放，不显示的时候停止播放
->  
+>
 
-```
+```objc
 //将要结束显示时停止播放
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     JSQMessage *message = self.demoData.messages[indexPath.item];
@@ -185,7 +186,7 @@ self.playerView = [[PKPlayerView alloc] initWithFrame:CGRectMake(0, 0, size.widt
 
 ##点击全屏播放
 
-```
+```objc
 //点击消息是跳转播放
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
     JSQMessage *message = self.demoData.messages[indexPath.item];
