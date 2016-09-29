@@ -1,4 +1,5 @@
 # PKShortVideo
+
 PKShortVideo 是一个类似微信小视频功能的框架。
 
 相关文章介绍：[iOS仿微信小视频功能开发优化记录](http://www.jianshu.com/p/6d35bb53f4ac)
@@ -6,16 +7,19 @@ PKShortVideo 是一个类似微信小视频功能的框架。
 ![sc1](https://raw.githubusercontent.com/pepsikirk/PKShortVideo/master/Screenshots/gif.gif)
 
 #特性
+
 - 小视频聊天界面播放，使用基于 GPUImage 的 OpenGL ES 硬件加速播放视频
 - 小视频可以点击放大播放，使用了 AVPlayer
 - 提供小视频拍摄，能够支持自定义分辨率视频拍摄，有着基础样式，并提供了基础的切换摄像头、录制、播放、重新录制的功能，使用了 AVCaptureSession + AVCaptureVideoDataOutput和AVCaptureAudioDataOutput直接输出视频
 
 #安装
+
 1. 在 Podfile 中添加 pod 'PKShortVideo'。
 2. 执行 pod install 或 pod update。
 3. 导入 #import "PKShortVideo.h"。
 
 #简单用法
+
 > 视频录制时，OutputFilePath参数为录制完成后输出的视频文件路径，OutputSize是输出视频的分辨率
 > 
 
@@ -99,6 +103,7 @@ previewLayer.frame = CGRectMake(0, 44, kScreenWidth, PKPreviewLayerHeight);
 
 > 视频播放时，OutputFilePath参数为录制完成后输出的视频文件路径，previewImage是视频预览图
 > 
+
 ##聊天界面播放(由于聊天框架不同，这里只用JSQMessagesViewController进行示范)
 
 ###聊天对象创建
@@ -136,6 +141,7 @@ previewLayer.frame = CGRectMake(0, 44, kScreenWidth, PKPreviewLayerHeight);
 ```
 
 ###聊天对象附属的媒体对象内部实现
+
 > 可以使用基于 OpenGL 的 PKChatMessagePlayerView 和基于 AVPlayer 的 PKPlayerView ,由于 PKChatMessagePlayerView 实现的 OpenGL 的实现通过反映目前并不稳定，推荐使用 PKPlayerView ，使用接口完全一致。
 > 
 
@@ -161,6 +167,7 @@ self.playerView = [[PKPlayerView alloc] initWithFrame:CGRectMake(0, 0, size.widt
 ```
 
 ###聊天界面控制实现
+
 > 出于性能考虑，最好在聊天界面处理做到显示的时候才播放，不显示的时候停止播放
 >
 
@@ -202,8 +209,10 @@ self.playerView = [[PKPlayerView alloc] initWithFrame:CGRectMake(0, 0, size.widt
 
 #要求
 本框架最低支持 `iOS 7.0` 和 `Xcode 7.0`。
+
 #许可证
 PKShortVideo 使用 MIT 许可证，详情见 LICENSE 文件。
+
 # 联系方式
 Weibo: [@-湛蓝_](http://weibo.com/u/1776530813/)
 
