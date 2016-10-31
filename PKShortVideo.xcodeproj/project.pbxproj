@@ -73,6 +73,7 @@
 		88FBE79A1D2A668000556F43 /* PKShortVideoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 88FBE72C1D2A668000556F43 /* PKShortVideoItem.m */; };
 		9C6454451D98F43C0021FADE /* PKPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C6454441D98F43C0021FADE /* PKPlayerView.m */; };
 		9C6454481D98F49D0021FADE /* PKPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C6454471D98F49D0021FADE /* PKPlayerManager.m */; };
+		9C7785C61DC740B400AE912E /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9C7785C51DC740B400AE912E /* Info.plist */; };
 		9CCBDCC01D98D2AB00BA9C4A /* PKMessageViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CCBDCBF1D98D2AB00BA9C4A /* PKMessageViewController2.m */; };
 		9CCBDCC31D98D37800BA9C4A /* PKShortVideoItem2.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CCBDCC21D98D37800BA9C4A /* PKShortVideoItem2.m */; };
 		AE4066D91D30E046002273A8 /* PKFullScreenPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE4066D61D30E046002273A8 /* PKFullScreenPlayerView.m */; };
@@ -233,6 +234,7 @@
 		9C6454441D98F43C0021FADE /* PKPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PKPlayerView.m; sourceTree = "<group>"; };
 		9C6454461D98F49D0021FADE /* PKPlayerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PKPlayerManager.h; sourceTree = "<group>"; };
 		9C6454471D98F49D0021FADE /* PKPlayerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PKPlayerManager.m; sourceTree = "<group>"; };
+		9C7785C51DC740B400AE912E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9CCBDCBE1D98D2AB00BA9C4A /* PKMessageViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PKMessageViewController2.h; sourceTree = "<group>"; };
 		9CCBDCBF1D98D2AB00BA9C4A /* PKMessageViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PKMessageViewController2.m; sourceTree = "<group>"; };
 		9CCBDCC11D98D37800BA9C4A /* PKShortVideoItem2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PKShortVideoItem2.h; sourceTree = "<group>"; };
@@ -537,6 +539,7 @@
 				9CCBDCC11D98D37800BA9C4A /* PKShortVideoItem2.h */,
 				9CCBDCC21D98D37800BA9C4A /* PKShortVideoItem2.m */,
 				88BFB0831D103CC400F223F3 /* jsq_messages_sample.m4a */,
+				9C7785C51DC740B400AE912E /* Info.plist */,
 				88FBE7211D2A668000556F43 /* Assets.xcassets */,
 				88FBE7221D2A668000556F43 /* LaunchScreen.storyboard */,
 				88FBE7261D2A668000556F43 /* Main.storyboard */,
@@ -744,6 +747,7 @@
 				88FBE7941D2A668000556F43 /* LaunchScreen.storyboard in Resources */,
 				88BFB0841D103D5100F223F3 /* jsq_messages_sample.m4a in Resources */,
 				AE4066DC1D30E0C4002273A8 /* PK_Camera_Turn@2x.png in Resources */,
+				9C7785C61DC740B400AE912E /* Info.plist in Resources */,
 				88C4D17E1D73CC8A00796D25 /* JSQMessagesCollectionViewCellOutgoing.xib in Resources */,
 				88C4D17C1D73CC8A00796D25 /* JSQMessagesCollectionViewCellIncoming.xib in Resources */,
 				88BFB08F1D1C5A3700F223F3 /* PK_Delete@2x.png in Resources */,
@@ -973,7 +977,7 @@
 				DEVELOPMENT_TEAM = E8AE63JXQ3;
 				INFOPLIST_FILE = "$(SRCROOT)/PKShortVideoDemo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = ios.pepsikirk.PKShortVideo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pepsikirk.PKShortVideo;
 				PRODUCT_NAME = PKShortVideo;
 				PROVISIONING_PROFILE = "";
 			};
@@ -988,7 +992,7 @@
 				DEVELOPMENT_TEAM = E8AE63JXQ3;
 				INFOPLIST_FILE = "$(SRCROOT)/PKShortVideoDemo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = ios.pepsikirk.PKShortVideo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pepsikirk.PKShortVideo;
 				PRODUCT_NAME = PKShortVideo;
 				PROVISIONING_PROFILE = "";
 			};
