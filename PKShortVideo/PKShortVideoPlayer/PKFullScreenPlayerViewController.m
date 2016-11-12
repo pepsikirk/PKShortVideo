@@ -8,6 +8,7 @@
 
 #import "PKFullScreenPlayerViewController.h"
 #import "PKFullScreenPlayerView.h"
+#import <AVFoundation/AVFoundation.h>
 
 @interface PKFullScreenPlayerViewController ()
 
@@ -44,6 +45,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    //静音模式也有声音
+    if (![[AVAudioSession sharedInstance].category isEqualToString:AVAudioSessionCategoryPlayback]) {
+        [[AVAudioSession sharedInstance] setCategory :AVAudioSessionCategoryPlayback error:nil];
+    }
+    
     self.view.backgroundColor = [UIColor blackColor];
     
     CGSize viewSize = self.view.bounds.size;
