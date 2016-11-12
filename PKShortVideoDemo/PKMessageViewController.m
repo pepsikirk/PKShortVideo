@@ -34,6 +34,29 @@
     self.demoData = [[PKDemoModelData alloc] init];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pk_msgVC_didBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
+    
+    //获取已经缓存视频
+    NSMutableArray *pathArray = [NSMutableArray new];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSDirectoryEnumerator * directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:paths[0]];
+    NSString *filePath = nil;
+    while((filePath = [directoryEnumerator nextObject]) != nil) {
+        [pathArray addObject:[paths[0] stringByAppendingPathComponent:filePath]];
+    }
+    
+    NSArray *sortArray = [pathArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        NSDictionary* firstAttribute  = [[NSFileManager defaultManager] attributesOfItemAtPath:obj1 error:nil];
+        NSDate *first = [firstAttribute objectForKey:NSFileModificationDate];
+        NSDictionary *secondAttribute = [[NSFileManager defaultManager] attributesOfItemAtPath:obj2 error:nil];
+        NSDate *second = [secondAttribute objectForKey:NSFileModificationDate];
+        return [second compare:first];
+    }];
+    
+    for (NSString *path in sortArray) {
+        [self.demoData addShortVideoMediaMessageWithVideoPath:path playType:PKPlayTypeOpenGL];
+    }
+    
+    [self finishSendingMessageAnimated:YES];
 }
 
 
