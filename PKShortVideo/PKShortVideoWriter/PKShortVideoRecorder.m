@@ -332,10 +332,10 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 - (AVCaptureSession *)setupCaptureSession {
     AVCaptureSession *captureSession = [AVCaptureSession new];
     
-    if (self.isBigSize) {
-        captureSession.sessionPreset = AVCaptureSessionPresetMedium;//360 x 480 小视频一般不会超过此尺寸
+    if (self.outputSize.width > 360 || self.outputSize.width/self.outputSize.height > 4/3) {
+        captureSession.sessionPreset = AVCaptureSessionPreset1280x720;//720 x 1280
     } else {
-        captureSession.sessionPreset = AVCaptureSessionPreset1280x720;//720 x 1280 小视频一般不会超过此尺寸
+        captureSession.sessionPreset = AVCaptureSessionPresetMedium;//360 x 480 小视频一般不会超过此尺寸
     }
     
     if (![self addDefaultCameraInputToCaptureSession:captureSession]){
@@ -413,14 +413,6 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
         _previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:self.captureSession];
     }
     return _previewLayer;
-}
-
-- (BOOL)isBigSize {
-    if (self.outputSize.width > 360 || self.outputSize.width/self.outputSize.height > 4/3) {
-        return YES;
-    } else {
-        return NO;
-    }
 }
 
 
