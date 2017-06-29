@@ -26,16 +26,21 @@
     const GLfloat *_preferredConversion;
     
     int imageBufferWidth, imageBufferHeight;
+    
+    NSLock *readerLock;
+    NSMutableArray *readers;
 }
 
 @property (nonatomic, assign) CGSize size;
 
 @property (nonatomic, strong, readwrite) AVAssetReader *reader;
 
+@property (atomic, assign) BOOL foreground;
+
 @end
 
 @implementation PKVideoDecoder
-
+@synthesize foreground = _foreground;
 
 
 #pragma mark - Initialization
@@ -47,13 +52,21 @@
         _size = size;
         _asset = nil;
         _keepLooping = YES;
+        readerLock = [[NSLock alloc] init];
+        readers = [NSMutableArray array];
+        
         [self yuvConversionSetup];
     }
     return self;
 }
 
 - (void)dealloc {
-    [_reader cancelReading];
+    [readerLock lock];
+    for (AVAssetReader *reader in readers) {
+        [reader cancelReading];
+    }
+    [readers removeAllObjects];
+    [readerLock unlock];
 }
 
 - (void)yuvConversionSetup {
@@ -107,41 +120,47 @@
     NSDictionary *outputSettings = @{
                                      (id)kCVPixelBufferWidthKey:@(outputSize.width),
                                      (id)kCVPixelBufferHeightKey:@(outputSize.height),
-                                   };
+                                     };
     
     AVAssetReaderTrackOutput *readerVideoTrackOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:assetTrack outputSettings:outputSettings];
     readerVideoTrackOutput.alwaysCopiesSampleData = NO;
     [assetReader addOutput:readerVideoTrackOutput];
     
+    [readerLock lock];
+    self.reader = assetReader;
+    [readers addObject:assetReader];
+    [readerLock unlock];
+    
     return assetReader;
 }
 
 - (void)processAsset {
-    self.reader = [self createAssetReader];
+    AVAssetReader *reader = [self createAssetReader];
     
     AVAssetReaderOutput *readerVideoTrackOutput = nil;
     
-    for( AVAssetReaderOutput *output in self.reader.outputs ) {
+    for( AVAssetReaderOutput *output in reader.outputs ) {
         if( [output.mediaType isEqualToString:AVMediaTypeVideo] ) {
             readerVideoTrackOutput = output;
         }
     }
     
-    if ([self.reader startReading] == NO) {
+    if (reader.status == AVAssetReaderStatusUnknown && [reader startReading] == NO && self.foreground) {
         NSLog(@"Error reading from file at Path: %@", self.videoPath);
         return;
     }
     
     __weak typeof(self)weakSelf = self;
     
-    while (self.reader.status == AVAssetReaderStatusReading) {
-        [weakSelf readNextVideoFrameFromOutput:readerVideoTrackOutput];
+    while (reader.status == AVAssetReaderStatusReading && self.foreground) {
+        [weakSelf readNextVideoFrameFromOutput:readerVideoTrackOutput reader:reader];
     }
     
-    if (self.reader.status == AVAssetReaderStatusCompleted) {
-        
-        [self.reader cancelReading];
-        
+    [reader cancelReading];
+    [readerLock lock];
+    [readers removeObject:reader];
+    [readerLock unlock];
+    if (reader.status == AVAssetReaderStatusCompleted && self.foreground) {
         if (self.keepLooping) {
             self.reader = nil;
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -150,7 +169,6 @@
         } else {
             [weakSelf endProcessing];
         }
-        
     }
 }
 
@@ -159,6 +177,7 @@
 #pragma mark - Public
 
 - (void)startProcessing {
+    self.foreground = true;
     previousFrameTime = kCMTimeZero;
     previousActualFrameTime = CFAbsoluteTimeGetCurrent();
     
@@ -198,9 +217,7 @@
 }
 
 - (void)cancelProcessing {
-    if (self.reader) {
-        [self.reader cancelReading];
-    }
+    self.foreground = false;
     [self endProcessing];
 }
 
@@ -246,9 +263,11 @@
 
 #pragma mark - Pravite
 
-- (BOOL)readNextVideoFrameFromOutput:(AVAssetReaderOutput *)readerVideoTrackOutput {
-    if (self.reader.status == AVAssetReaderStatusReading) {
+- (BOOL)readNextVideoFrameFromOutput:(AVAssetReaderOutput *)readerVideoTrackOutput reader:(AVAssetReader*)reader {
+    [readerLock lock];
+    if (reader.status == AVAssetReaderStatusReading) {
         CMSampleBufferRef sampleBufferRef = [readerVideoTrackOutput copyNextSampleBuffer];
+        [readerLock unlock];
         if (sampleBufferRef) {
             // Do this outside of the video processing queue to not slow that down while waiting
             CMTime currentSampleTime = CMSampleBufferGetOutputPresentationTimeStamp(sampleBufferRef);
@@ -279,6 +298,8 @@
                 [self endProcessing];
             }
         }
+    } else {
+        [readerLock unlock];
     }
     return NO;
 }
