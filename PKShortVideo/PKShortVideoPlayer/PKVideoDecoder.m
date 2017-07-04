@@ -26,9 +26,6 @@
     const GLfloat *_preferredConversion;
     
     int imageBufferWidth, imageBufferHeight;
-    
-    NSLock *readerLock;
-    NSMutableArray *readers;
 }
 
 @property (nonatomic, assign) CGSize size;
@@ -40,7 +37,7 @@
 @end
 
 @implementation PKVideoDecoder
-@synthesize foreground = _foreground;
+
 
 
 #pragma mark - Initialization
@@ -52,8 +49,6 @@
         _size = size;
         _asset = nil;
         _keepLooping = YES;
-        readerLock = [[NSLock alloc] init];
-        readers = [NSMutableArray array];
         
         [self yuvConversionSetup];
     }
@@ -61,12 +56,7 @@
 }
 
 - (void)dealloc {
-    [readerLock lock];
-    for (AVAssetReader *reader in readers) {
-        [reader cancelReading];
-    }
-    [readers removeAllObjects];
-    [readerLock unlock];
+    [_reader cancelReading];
 }
 
 - (void)yuvConversionSetup {
@@ -126,10 +116,7 @@
     readerVideoTrackOutput.alwaysCopiesSampleData = NO;
     [assetReader addOutput:readerVideoTrackOutput];
     
-    [readerLock lock];
     self.reader = assetReader;
-    [readers addObject:assetReader];
-    [readerLock unlock];
     
     return assetReader;
 }
@@ -157,9 +144,7 @@
     }
     
     [reader cancelReading];
-    [readerLock lock];
-    [readers removeObject:reader];
-    [readerLock unlock];
+
     if (reader.status == AVAssetReaderStatusCompleted && self.foreground) {
         if (self.keepLooping) {
             self.reader = nil;
@@ -177,7 +162,8 @@
 #pragma mark - Public
 
 - (void)startProcessing {
-    self.foreground = true;
+    self.foreground = YES;
+    
     previousFrameTime = kCMTimeZero;
     previousActualFrameTime = CFAbsoluteTimeGetCurrent();
     
@@ -217,7 +203,8 @@
 }
 
 - (void)cancelProcessing {
-    self.foreground = false;
+    self.foreground = NO;
+    
     [self endProcessing];
 }
 
@@ -264,10 +251,8 @@
 #pragma mark - Pravite
 
 - (BOOL)readNextVideoFrameFromOutput:(AVAssetReaderOutput *)readerVideoTrackOutput reader:(AVAssetReader*)reader {
-    [readerLock lock];
     if (reader.status == AVAssetReaderStatusReading) {
         CMSampleBufferRef sampleBufferRef = [readerVideoTrackOutput copyNextSampleBuffer];
-        [readerLock unlock];
         if (sampleBufferRef) {
             // Do this outside of the video processing queue to not slow that down while waiting
             CMTime currentSampleTime = CMSampleBufferGetOutputPresentationTimeStamp(sampleBufferRef);
@@ -298,8 +283,6 @@
                 [self endProcessing];
             }
         }
-    } else {
-        [readerLock unlock];
     }
     return NO;
 }
