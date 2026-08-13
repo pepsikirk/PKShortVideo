@@ -96,24 +96,43 @@
 }
 
 - (AVAssetReader*)createAssetReader {
+    if (!self.asset) {
+        NSLog(@"视频资源为空，不能创建解码器");
+        return nil;
+    }
+
     NSError *error = nil;
     AVAssetReader *assetReader = [AVAssetReader assetReaderWithAsset:self.asset error:&error];
-    AVAssetTrack *assetTrack = [[self.asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+    if (!assetReader) {
+        NSLog(@"创建 AVAssetReader 失败: %@", error.localizedDescription);
+        return nil;
+    }
+
+    AVAssetTrack *assetTrack = [self.asset tracksWithMediaType:AVMediaTypeVideo].firstObject;
+    if (!assetTrack) {
+        NSLog(@"视频资源没有视频轨道");
+        return nil;
+    }
     
-    CGSize outputSize = CGSizeZero;
-    if (self.size.width > assetTrack.naturalSize.width) {
-        outputSize = assetTrack.naturalSize;
-    } else {
-        outputSize= self.size;
+    CGSize naturalSize = assetTrack.naturalSize;
+    CGSize outputSize = self.size;
+    if (outputSize.width <= 0 || outputSize.height <= 0 ||
+        outputSize.width > naturalSize.width || outputSize.height > naturalSize.height) {
+        outputSize = naturalSize;
     }
     
     NSDictionary *outputSettings = @{
                                      (id)kCVPixelBufferWidthKey:@(outputSize.width),
                                      (id)kCVPixelBufferHeightKey:@(outputSize.height),
+                                     (id)kCVPixelBufferPixelFormatTypeKey:@(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange),
                                      };
     
     AVAssetReaderTrackOutput *readerVideoTrackOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:assetTrack outputSettings:outputSettings];
     readerVideoTrackOutput.alwaysCopiesSampleData = NO;
+    if (![assetReader canAddOutput:readerVideoTrackOutput]) {
+        NSLog(@"不能向 AVAssetReader 添加视频输出");
+        return nil;
+    }
     [assetReader addOutput:readerVideoTrackOutput];
     
     self.reader = assetReader;
@@ -123,6 +142,12 @@
 
 - (void)processAsset {
     AVAssetReader *reader = [self createAssetReader];
+    if (!reader) {
+        if (self.foreground) {
+            [self endProcessing];
+        }
+        return;
+    }
     
     AVAssetReaderOutput *readerVideoTrackOutput = nil;
     
@@ -132,8 +157,9 @@
         }
     }
     
-    if (reader.status == AVAssetReaderStatusUnknown && [reader startReading] == NO && self.foreground) {
+    if (reader.status == AVAssetReaderStatusUnknown && ![reader startReading] && self.foreground) {
         NSLog(@"Error reading from file at Path: %@", self.videoPath);
+        [self endProcessing];
         return;
     }
     
@@ -251,7 +277,7 @@
 #pragma mark - Pravite
 
 - (BOOL)readNextVideoFrameFromOutput:(AVAssetReaderOutput *)readerVideoTrackOutput reader:(AVAssetReader*)reader {
-    if (reader.status == AVAssetReaderStatusReading) {
+    if (readerVideoTrackOutput && reader.status == AVAssetReaderStatusReading) {
         CMSampleBufferRef sampleBufferRef = [readerVideoTrackOutput copyNextSampleBuffer];
         if (sampleBufferRef) {
             // Do this outside of the video processing queue to not slow that down while waiting
@@ -288,14 +314,23 @@
 }
 
 - (void)processMovieFrame:(CMSampleBufferRef)movieSampleBuffer {
+    if (!movieSampleBuffer) {
+        return;
+    }
     CMTime currentSampleTime = CMSampleBufferGetOutputPresentationTimeStamp(movieSampleBuffer);
     CVImageBufferRef movieFrame = CMSampleBufferGetImageBuffer(movieSampleBuffer);
+    if (!movieFrame) {
+        return;
+    }
     
     processingFrameTime = currentSampleTime;
     [self processMovieFrame:movieFrame withSampleTime:currentSampleTime];
 }
 
 - (void)processMovieFrame:(CVPixelBufferRef)movieFrame withSampleTime:(CMTime)currentSampleTime {
+    if (!movieFrame) {
+        return;
+    }
     int bufferHeight = (int) CVPixelBufferGetHeight(movieFrame);
     int bufferWidth = (int) CVPixelBufferGetWidth(movieFrame);
     
@@ -318,7 +353,7 @@
     CVOpenGLESTextureRef chrominanceTextureRef = NULL;
     
     if (CVPixelBufferGetPlaneCount(movieFrame) > 0) {// Check for YUV planar inputs to do RGB conversion
-        if ( (imageBufferWidth != bufferWidth) && (imageBufferHeight != bufferHeight) ) {
+        if ( (imageBufferWidth != bufferWidth) || (imageBufferHeight != bufferHeight) ) {
             imageBufferWidth = bufferWidth;
             imageBufferHeight = bufferHeight;
         }
@@ -332,8 +367,12 @@
         else {
             err = CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault, [[GPUImageContext sharedImageProcessingContext] coreVideoTextureCache], movieFrame, NULL, GL_TEXTURE_2D, GL_LUMINANCE, bufferWidth, bufferHeight, GL_LUMINANCE, GL_UNSIGNED_BYTE, 0, &luminanceTextureRef);
         }
-        if (err) {
+        if (err != kCVReturnSuccess || !luminanceTextureRef) {
             NSLog(@"Error at CVOpenGLESTextureCacheCreateTextureFromImage %d", err);
+            if (luminanceTextureRef) {
+                CFRelease(luminanceTextureRef);
+            }
+            return;
         }
         
         luminanceTexture = CVOpenGLESTextureGetName(luminanceTextureRef);
@@ -350,8 +389,13 @@
         else {
             err = CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault, [[GPUImageContext sharedImageProcessingContext] coreVideoTextureCache], movieFrame, NULL, GL_TEXTURE_2D, GL_LUMINANCE_ALPHA, bufferWidth/2, bufferHeight/2, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, 1, &chrominanceTextureRef);
         }
-        if (err) {
+        if (err != kCVReturnSuccess || !chrominanceTextureRef) {
             NSLog(@"Error at CVOpenGLESTextureCacheCreateTextureFromImage %d", err);
+            CFRelease(luminanceTextureRef);
+            if (chrominanceTextureRef) {
+                CFRelease(chrominanceTextureRef);
+            }
+            return;
         }
         
         chrominanceTexture = CVOpenGLESTextureGetName(chrominanceTextureRef);
@@ -367,7 +411,6 @@
         }
         [outputFramebuffer unlock];
         
-        CVPixelBufferUnlockBaseAddress(movieFrame, 0);
         CFRelease(luminanceTextureRef);
         CFRelease(chrominanceTextureRef);
     }
