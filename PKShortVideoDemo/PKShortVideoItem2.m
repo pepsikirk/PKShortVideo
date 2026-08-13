@@ -61,6 +61,10 @@ static CGFloat const PKShortVideoMaxLength = 220;
 - (CGSize)mediaViewDisplaySize {
     CGFloat height = self.image.size.height * self.image.scale;
     CGFloat width = self.image.size.width * self.image.scale;
+
+    if (height <= 0 || width <= 0) {
+        return CGSizeMake(PKShortVideoMaxLength, PKShortVideoMaxLength);
+    }
     
     CGSize size;
     if (height <= PKShortVideoMaxLength && width <= PKShortVideoMaxLength) {
