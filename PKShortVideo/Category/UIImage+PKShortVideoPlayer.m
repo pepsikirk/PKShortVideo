@@ -12,15 +12,24 @@
 @implementation UIImage (PKShortVideoPlayer)
 
 + (UIImage *)pk_previewImageWithVideoURL:(NSURL *)videoURL {
+    if (!videoURL) {
+        return nil;
+    }
+
     AVAsset *asset = [AVAsset assetWithURL:videoURL];
+    if (!asset) {
+        return nil;
+    }
     
     AVAssetImageGenerator *generator = [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
     generator.appliesPreferredTrackTransform = YES;
 
-    CGImageRef img = [generator copyCGImageAtTime:CMTimeMake(1, asset.duration.timescale) actualTime:NULL error:nil];
-    UIImage *image = [UIImage imageWithCGImage:img];
+    CGImageRef img = [generator copyCGImageAtTime:kCMTimeZero actualTime:NULL error:nil];
+    UIImage *image = img ? [UIImage imageWithCGImage:img] : nil;
     
-    CGImageRelease(img);
+    if (img) {
+        CGImageRelease(img);
+    }
     return image;
 }
 
