@@ -22,8 +22,6 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 @property (nonatomic, strong) NSString *outputFilePath;
 @property (nonatomic, assign) CGSize outputSize;
 
-@property (nonatomic, strong) NSString *tempFilePath;
-
 @property (nonatomic, strong) dispatch_queue_t recorderQueue;
 
 @property (nonatomic, strong) dispatch_queue_t videoDataOutputQueue;
@@ -46,6 +44,7 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 @property (nonatomic, retain) __attribute__((NSObject)) CMFormatDescriptionRef outputAudioFormatDescription;
 
 @property (nonatomic, assign) PKRecordingStatus recordingStatus;
+@property (nonatomic, assign) BOOL stopRequested;
 
 @property (nonatomic, retain) PKShortVideoSession *assetSession;
 
@@ -75,7 +74,6 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 }
 
 - (void)dealloc {
-    [_assetSession finishRecording];
     [self stopRunning];
 }
 
@@ -112,12 +110,15 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
             NSLog(@"已经在录制了");
             return;
         }   
+        if (!self.outputVideoFormatDescription || !self.outputAudioFormatDescription) {
+            [self transitionToRecordingStatus:PKRecordingStatusStartingRecording error:nil];
+            [self transitionToRecordingStatus:PKRecordingStatusIdle error:[self recorderErrorWithDescription:@"相机或麦克风尚未准备完成"]];
+            return;
+        }
+        self.stopRequested = NO;
         [self transitionToRecordingStatus:PKRecordingStatusStartingRecording error:nil];
     }
-    
-    NSString *tempFileName = [NSProcessInfo processInfo].globallyUniqueString;
-    self.tempFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[tempFileName stringByAppendingPathExtension:@"mp4"]];
-    
+
     self.assetSession = [[PKShortVideoSession alloc] initWithTempFilePath:self.outputFilePath];
     self.assetSession.delegate = self;
     
@@ -129,6 +130,10 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 
 - (void)stopRecording {
     @synchronized(self) {
+        if (self.recordingStatus == PKRecordingStatusStartingRecording) {
+            self.stopRequested = YES;
+            return;
+        }
         if (self.recordingStatus != PKRecordingStatusRecording){
             return;
         }
@@ -142,40 +147,49 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 #pragma mark - SwapCamera
 
 - (void)swapFrontAndBackCameras {
-    NSArray *inputs = self.captureSession.inputs;
-    for ( AVCaptureDeviceInput *input in inputs ) {
-        AVCaptureDevice *device = input.device;
-        if ( [device hasMediaType:AVMediaTypeVideo] ) {
-            AVCaptureDevicePosition position = device.position;
-            AVCaptureDevice *newCamera = nil;
-            AVCaptureDeviceInput *newInput = nil;
-            
-            if (position == AVCaptureDevicePositionFront) {
-                newCamera = [self cameraWithPosition:AVCaptureDevicePositionBack];
-            } else {
-                newCamera = [self cameraWithPosition:AVCaptureDevicePositionFront];
+    dispatch_async(self.recorderQueue, ^{
+        @synchronized(self) {
+            if (self.recordingStatus != PKRecordingStatusIdle) {
+                NSLog(@"录制期间不能切换摄像头");
+                return;
             }
-            
-            newInput = [AVCaptureDeviceInput deviceInputWithDevice:newCamera error:nil];
-
-            //beginConfiguration 确保改变不会立刻应用
-            [self.captureSession beginConfiguration];
-            
-            [self.captureSession removeOutput:self.videoDataOutput];
-            [self.captureSession removeOutput:self.audioDataOutput];
-
-            [self.captureSession removeInput:input];
-            [self.captureSession addInput:newInput];
-            
-            self.outputVideoFormatDescription = nil;
-            self.outputAudioFormatDescription = nil;
-            //开始生效
-            [self.captureSession commitConfiguration];
-            //重新加载
-            [self addDataOutputsToCaptureSession:self.captureSession];
-            break;
         }
-    }
+
+        AVCaptureDeviceInput *currentInput = nil;
+        for (AVCaptureDeviceInput *input in self.captureSession.inputs) {
+            if ([input.device hasMediaType:AVMediaTypeVideo]) {
+                currentInput = input;
+                break;
+            }
+        }
+        if (!currentInput) {
+            return;
+        }
+
+        AVCaptureDevicePosition newPosition = currentInput.device.position == AVCaptureDevicePositionFront ? AVCaptureDevicePositionBack : AVCaptureDevicePositionFront;
+        AVCaptureDevice *newCamera = [self cameraWithPosition:newPosition];
+        if (!newCamera) {
+            NSLog(@"找不到目标摄像头");
+            return;
+        }
+
+        NSError *error = nil;
+        AVCaptureDeviceInput *newInput = [AVCaptureDeviceInput deviceInputWithDevice:newCamera error:&error];
+        if (!newInput || error || ![self.captureSession canAddInput:newInput]) {
+            NSLog(@"切换摄像头失败: %@", error.localizedDescription ?: @"不能添加摄像头输入");
+            return;
+        }
+
+        [self.captureSession beginConfiguration];
+        [self.captureSession removeOutput:self.videoDataOutput];
+        [self.captureSession removeOutput:self.audioDataOutput];
+        [self.captureSession removeInput:currentInput];
+        [self.captureSession addInput:newInput];
+        self.outputVideoFormatDescription = nil;
+        self.outputAudioFormatDescription = nil;
+        [self addDataOutputsToCaptureSession:self.captureSession];
+        [self.captureSession commitConfiguration];
+    });
 }
 
 
@@ -264,11 +278,20 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 #pragma mark - PKAssetWriterDelegate methods
 
 - (void)sessionDidFinishPreparing:(PKShortVideoRecorder *)writer {
+    BOOL shouldStop = NO;
     @synchronized(self) {
         if (self.recordingStatus != PKRecordingStatusStartingRecording){
             return;
         }
         [self transitionToRecordingStatus:PKRecordingStatusRecording error:nil];
+        shouldStop = self.stopRequested;
+        self.stopRequested = NO;
+        if (shouldStop) {
+            [self transitionToRecordingStatus:PKRecordingStatusStoppingRecording error:nil];
+        }
+    }
+    if (shouldStop) {
+        [self.assetSession finishRecording];
     }
 }
 
@@ -332,10 +355,14 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 - (AVCaptureSession *)setupCaptureSession {
     AVCaptureSession *captureSession = [AVCaptureSession new];
     
-    if (self.outputSize.width > 360 || self.outputSize.width/self.outputSize.height > 4/3) {
-        captureSession.sessionPreset = AVCaptureSessionPreset1280x720;//720 x 1280
+    if (self.outputSize.width > 360 || (self.outputSize.height > 0 && self.outputSize.width/self.outputSize.height > 4.0 / 3.0)) {
+        if ([captureSession canSetSessionPreset:AVCaptureSessionPreset1280x720]) {
+            captureSession.sessionPreset = AVCaptureSessionPreset1280x720;//720 x 1280
+        }
     } else {
-        captureSession.sessionPreset = AVCaptureSessionPresetMedium;//360 x 480 小视频一般不会超过此尺寸
+        if ([captureSession canSetSessionPreset:AVCaptureSessionPresetMedium]) {
+            captureSession.sessionPreset = AVCaptureSessionPresetMedium;//360 x 480 小视频一般不会超过此尺寸
+        }
     }
     
     if (![self addDefaultCameraInputToCaptureSession:captureSession]){
@@ -350,7 +377,8 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 
 - (BOOL)addDefaultCameraInputToCaptureSession:(AVCaptureSession *)captureSession {
     NSError *error;
-    AVCaptureDeviceInput *cameraDeviceInput = [[AVCaptureDeviceInput alloc] initWithDevice:[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] error:&error];
+    AVCaptureDevice *camera = [self cameraWithPosition:AVCaptureDevicePositionBack];
+    AVCaptureDeviceInput *cameraDeviceInput = [[AVCaptureDeviceInput alloc] initWithDevice:camera error:&error];
     
     if (error) {
         NSLog(@"配置摄像头输入错误: %@", [error localizedDescription]);
@@ -364,7 +392,10 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 
 - (BOOL)addDefaultMicInputToCaptureSession:(AVCaptureSession *)captureSession {
     NSError *error;
-    AVCaptureDeviceInput *micDeviceInput = [[AVCaptureDeviceInput alloc] initWithDevice:[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio] error:&error];
+    AVCaptureDevice *microphone = [AVCaptureDeviceDiscoverySession discoverySessionWithDeviceTypes:@[AVCaptureDeviceTypeBuiltInMicrophone]
+                                                                                         mediaType:AVMediaTypeAudio
+                                                                                          position:AVCaptureDevicePositionUnspecified].devices.firstObject;
+    AVCaptureDeviceInput *micDeviceInput = [[AVCaptureDeviceInput alloc] initWithDevice:microphone error:&error];
     if (error){
         NSLog(@"配置麦克风输入错误: %@", [error localizedDescription]);
         return NO;
@@ -396,13 +427,16 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 }
 
 - (AVCaptureDevice *)cameraWithPosition:(AVCaptureDevicePosition)position {
-    NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
-    for ( AVCaptureDevice *device in devices ) {
-        if ( device.position == position ) {
-            return device;
-        }
-    }
-    return nil;
+    AVCaptureDeviceDiscoverySession *discoverySession = [AVCaptureDeviceDiscoverySession discoverySessionWithDeviceTypes:@[AVCaptureDeviceTypeBuiltInWideAngleCamera]
+                                                                                                                   mediaType:AVMediaTypeVideo
+                                                                                                                    position:position];
+    return discoverySession.devices.firstObject;
+}
+
+- (NSError *)recorderErrorWithDescription:(NSString *)description {
+    return [NSError errorWithDomain:@"com.PKShortVideoWriter" code:1 userInfo:@{
+        NSLocalizedDescriptionKey : description ?: @"录制不能开始"
+    }];
 }
 
 

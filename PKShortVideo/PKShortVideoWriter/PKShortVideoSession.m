@@ -64,20 +64,40 @@ typedef NS_ENUM(NSInteger, PKSessionStatus){
 
 - (void)dealloc {
     [_assetWriter cancelWriting];
+    if (_audioTrackSourceFormatDescription) {
+        CFRelease(_audioTrackSourceFormatDescription);
+    }
+    if (_videoTrackSourceFormatDescription) {
+        CFRelease(_videoTrackSourceFormatDescription);
+    }
 }
 
 
 #pragma mark - Public
 
 - (void)addVideoTrackWithSourceFormatDescription:(CMFormatDescriptionRef)formatDescription settings:(NSDictionary *)videoSettings {
+    if (!formatDescription || !videoSettings) {
+        NSLog(@"视频轨道格式或编码设置为空，无法初始化录制");
+        return;
+    }
     @synchronized(self) {
+        if (self.videoTrackSourceFormatDescription) {
+            CFRelease(self.videoTrackSourceFormatDescription);
+        }
         self.videoTrackSourceFormatDescription = (CMFormatDescriptionRef)CFRetain(formatDescription);
         self.videoTrackSettings = [videoSettings copy];
     }
 }
 
 - (void)addAudioTrackWithSourceFormatDescription:(CMFormatDescriptionRef)formatDescription settings:(NSDictionary *)audioSettings {
+    if (!formatDescription || !audioSettings) {
+        NSLog(@"音频轨道格式或编码设置为空，无法初始化录制");
+        return;
+    }
     @synchronized(self) {
+        if (self.audioTrackSourceFormatDescription) {
+            CFRelease(self.audioTrackSourceFormatDescription);
+        }
         self.audioTrackSourceFormatDescription = (CMFormatDescriptionRef)CFRetain(formatDescription);
         self.audioTrackSettings = [audioSettings copy];
     }
@@ -101,9 +121,15 @@ typedef NS_ENUM(NSInteger, PKSessionStatus){
     }
             
     NSError *error = nil;
+    if (!self.videoTrackSourceFormatDescription || !self.videoTrackSettings ||
+        !self.audioTrackSourceFormatDescription || !self.audioTrackSettings) {
+        error = [self cannotSetupInputErrorWithReason:@"音视频轨道尚未准备完成"];
+    }
     //确保当前url文件不存在
-    [[NSFileManager defaultManager] removeItemAtPath:self.tempFilePath error:&error];
-    self.assetWriter = [[AVAssetWriter alloc] initWithURL:[NSURL fileURLWithPath:self.tempFilePath] fileType:AVFileTypeMPEG4 error:&error];
+    if (!error) {
+        [[NSFileManager defaultManager] removeItemAtPath:self.tempFilePath error:&error];
+        self.assetWriter = [[AVAssetWriter alloc] initWithURL:[NSURL fileURLWithPath:self.tempFilePath] fileType:AVFileTypeMPEG4 error:&error];
+    }
     
     //创建添加输入
     if (!error && _videoTrackSourceFormatDescription) {
@@ -252,14 +278,21 @@ typedef NS_ENUM(NSInteger, PKSessionStatus){
                 }
             }
             
-            if (!self.haveStartedSession && mediaType == AVMediaTypeVideo) {
+            BOOL isVideo = [mediaType isEqualToString:AVMediaTypeVideo];
+            if (!self.haveStartedSession) {
+                // AVAssetWriter cannot accept audio before its session start time.
+                // Wait for the first video sample so audio/video share the same timeline.
+                if (!isVideo) {
+                    CFRelease(sampleBuffer);
+                    return;
+                }
                 [self.assetWriter startSessionAtSourceTime:CMSampleBufferGetPresentationTimeStamp(sampleBuffer)];
-                self.haveStartedSession = YES;
+                self.haveStartedSession = (self.assetWriter.status == AVAssetWriterStatusWriting);
             }
             
-            AVAssetWriterInput *input = (mediaType == AVMediaTypeVideo) ? self.videoInput : self.audioInput;
-            
-            if (input.readyForMoreMediaData){
+            AVAssetWriterInput *input = isVideo ? self.videoInput : self.audioInput;
+
+            if (self.haveStartedSession && input.readyForMoreMediaData){
                 BOOL success = [input appendSampleBuffer:sampleBuffer];
                 if (!success){
                     NSError *error = self.assetWriter.error;
@@ -267,7 +300,7 @@ typedef NS_ENUM(NSInteger, PKSessionStatus){
                         [self transitionToStatus:PKSessionStatusFailed error:error];
                     }
                 }
-            } else {
+            } else if (self.haveStartedSession) {
                 NSLog( @"%@ 输入不能添加更多数据了，抛弃 buffer", mediaType );
             }
             CFRelease(sampleBuffer);
@@ -319,8 +352,12 @@ typedef NS_ENUM(NSInteger, PKSessionStatus){
 }
 
 - (NSError *)cannotSetupInputError {
+    return [self cannotSetupInputErrorWithReason:@"不能初始化writer"];
+}
+
+- (NSError *)cannotSetupInputErrorWithReason:(NSString *)reason {
     NSDictionary *errorDict = @{ NSLocalizedDescriptionKey : @"记录不能开始",
-                                 NSLocalizedFailureReasonErrorKey : @"不能初始化writer" };
+                                 NSLocalizedFailureReasonErrorKey : reason ?: @"不能初始化writer" };
     return [NSError errorWithDomain:@"com.PKShortVideoWriter" code:0 userInfo:errorDict];
 }
 
