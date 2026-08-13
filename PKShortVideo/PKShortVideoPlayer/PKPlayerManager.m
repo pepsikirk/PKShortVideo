@@ -26,6 +26,8 @@
  */
 @property (assign, nonatomic) NSInteger playerIndex;
 
+@property (nonatomic, strong) dispatch_queue_t playerQueue;
+
 @end
 
 @implementation PKPlayerManager
@@ -44,6 +46,7 @@
     if (self) {
         _playerDict = [NSMutableDictionary new];
         _playerArray = [NSMutableArray new];
+        _playerQueue = dispatch_queue_create("com.PKShortVideo.playerManager", DISPATCH_QUEUE_SERIAL);
         
         _playerMaxCount = 8;
     }
@@ -51,42 +54,44 @@
 }
 
 - (AVPlayer *)getAVQueuePlayWithPlayerItem:(AVPlayerItem *)item uniqueID:(NSString *)uniqueID {
-    //通过uniqueID取Player对象
-    AVPlayer *player = self.playerDict[uniqueID];
-    if (player) {
-        //对象不等时替换player对象的item
-        if (player.currentItem != item) {
-            [player replaceCurrentItemWithPlayerItem:item];
+    if (!item || uniqueID.length == 0) {
+        return nil;
+    }
+
+    __block AVPlayer *player = nil;
+    dispatch_sync(self.playerQueue, ^{
+        //通过uniqueID取Player对象
+        player = self.playerDict[uniqueID];
+        if (player) {
+            //对象不等时替换player对象的item
+            if (player.currentItem != item) {
+                [player replaceCurrentItemWithPlayerItem:item];
+            }
+            return;
         }
-        return player;
-    } else {
+
         //未在界面创建小视频时返回nil
         if (!self.playerArray.count) {
-            return nil;
+            return;
         }
-        if (self.playerArray.count <= self.playerIndex) {
+        if (self.playerIndex >= self.playerArray.count) {
             self.playerIndex = 0;
         }
         //按顺序平均分配player数组里面的player
-        AVPlayer *player = self.playerArray[self.playerIndex];
-        if (self.playerIndex == self.playerMaxCount - 1) {
-            self.playerIndex = 0;
-        } else {
-            self.playerIndex = self.playerIndex + 1;
-        }
+        player = self.playerArray[self.playerIndex];
+        self.playerIndex = (self.playerIndex + 1) % self.playerArray.count;
         [player replaceCurrentItemWithPlayerItem:item];
         //缓存play可以快速获取对应的player
-        [self.playerDict setObject:player forKey:uniqueID];
-        
-        return player;
-    }
+        self.playerDict[uniqueID] = player;
+    });
+    return player;
 }
 
 - (void)creatMessagePlayer {
-    if (self.playerArray.count > 0) {
-        return;
-    }
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+    dispatch_sync(self.playerQueue, ^{
+        if (self.playerArray.count > 0) {
+            return;
+        }
         for (NSInteger i = 0; i < self.playerMaxCount ; i++) {
             AVPlayer *player = [AVPlayer new];
             player.volume = 0;
@@ -96,22 +101,34 @@
 }
 
 - (void)removeAllPlayer {
-    [self.playerDict removeAllObjects];
-    for (AVPlayer *player in self.playerArray) {
-        [PKPlayerManager removePlayer:player];
-    }
-    [self.playerArray removeAllObjects];
+    dispatch_sync(self.playerQueue, ^{
+        [self.playerDict removeAllObjects];
+        for (AVPlayer *player in self.playerArray) {
+            [PKPlayerManager removePlayer:player];
+        }
+        [self.playerArray removeAllObjects];
+        self.playerIndex = 0;
+    });
 }
 
 - (void)removePlayerWithuniqueID:(NSString *)uniqueID {
-    AVPlayer *player = self.playerDict[uniqueID];
-    if (player) {
-        [PKPlayerManager removePlayer:player];
-        [self.playerArray removeObject:player];
+    if (uniqueID.length == 0) {
+        return;
     }
+    dispatch_sync(self.playerQueue, ^{
+        AVPlayer *player = self.playerDict[uniqueID];
+        if (player) {
+            [PKPlayerManager removePlayer:player];
+            //释放唯一 ID 映射，但保留播放器池容量供后续消息复用。
+            [self.playerDict removeObjectForKey:uniqueID];
+        }
+    });
 }
 
 + (void)removePlayer:(AVPlayer *)player {
+    if (!player) {
+        return;
+    }
     [player pause];
     [player.currentItem cancelPendingSeeks];
     [player.currentItem.asset cancelLoading];

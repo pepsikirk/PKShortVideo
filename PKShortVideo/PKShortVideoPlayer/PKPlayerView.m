@@ -124,12 +124,14 @@
 
 - (void)play {
     if (!self.playerItem) {
-        if (!self.player) {
-            self.needPlay = YES;
-            return;
-        }
-    } else {
-        [self creatPlayer];
+        self.needPlay = YES;
+        return;
+    }
+
+    [self creatPlayer];
+    if (!self.player) {
+        self.needPlay = YES;
+        return;
     }
     
     [self.player play];
@@ -152,7 +154,7 @@
 - (void)creatPlayer {
     self.player = [[PKPlayerManager sharedManager] getAVQueuePlayWithPlayerItem:self.playerItem uniqueID:self.uniqueID];
     self.playerLayer.player = self.player;
-    if (self.needPlay) {
+    if (self.needPlay && self.player) {
         self.needPlay = NO;
         [self play];
     }
