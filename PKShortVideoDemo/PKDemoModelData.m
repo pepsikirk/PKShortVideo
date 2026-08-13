@@ -166,10 +166,20 @@
 - (void)addShortVideoMediaMessageWithVideoPath:(NSString *)videoPath  playType:(PKPlayType)type {
     //PKShortVideoItem为遵循JSQMessagesViewController的规范创建的媒体(非文字)类型
     //previewImage参数为视频的预览图片
+    if (videoPath.length == 0 || ![[NSFileManager defaultManager] fileExistsAtPath:videoPath]) {
+        NSLog(@"忽略不存在的视频文件: %@", videoPath);
+        return;
+    }
+
+    UIImage *previewImage = [UIImage pk_previewImageWithVideoURL:[NSURL fileURLWithPath:videoPath]];
+    if (!previewImage) {
+        NSLog(@"忽略无法生成预览图的视频文件: %@", videoPath);
+        return;
+    }
     
     switch (type) {
         case PKPlayTypeOpenGL: {
-            PKShortVideoItem *videoItem = [[PKShortVideoItem alloc] initWithVideoPath:videoPath previewImage:[UIImage pk_previewImageWithVideoURL:[NSURL fileURLWithPath:videoPath]]];
+            PKShortVideoItem *videoItem = [[PKShortVideoItem alloc] initWithVideoPath:videoPath previewImage:previewImage];
             //创建message对象
             JSQMessage *videoMessage = [JSQMessage messageWithSenderId:kJSQDemoAvatarIdSquires
                                                            displayName:kJSQDemoAvatarDisplayNameSquires
@@ -180,7 +190,7 @@
             break;
             
         case PKPlayTypeAVPlayer: {
-            PKShortVideoItem2 *videoItem = [[PKShortVideoItem2 alloc] initWithVideoPath:videoPath previewImage:[UIImage pk_previewImageWithVideoURL:[NSURL fileURLWithPath:videoPath]]];
+            PKShortVideoItem2 *videoItem = [[PKShortVideoItem2 alloc] initWithVideoPath:videoPath previewImage:previewImage];
             //创建message对象
             JSQMessage *videoMessage = [JSQMessage messageWithSenderId:kJSQDemoAvatarIdSquires
                                                            displayName:kJSQDemoAvatarDisplayNameSquires

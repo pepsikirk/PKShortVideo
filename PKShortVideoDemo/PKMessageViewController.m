@@ -11,6 +11,29 @@
 #import "PKShortVideo.h"
 #import "PKShortVideoItem.h"
 
+static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *documentsPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+    if (documentsPath.length == 0) {
+        return @[];
+    }
+
+    NSSet<NSString *> *videoExtensions = [NSSet setWithObjects:@"mp4", @"mov", @"m4v", nil];
+    NSMutableArray<NSString *> *videoPaths = [NSMutableArray array];
+    NSDirectoryEnumerator *directoryEnumerator = [fileManager enumeratorAtPath:documentsPath];
+    for (NSString *relativePath in directoryEnumerator) {
+        NSString *fullPath = [documentsPath stringByAppendingPathComponent:relativePath];
+        BOOL isDirectory = NO;
+        if (![fileManager fileExistsAtPath:fullPath isDirectory:&isDirectory] || isDirectory) {
+            continue;
+        }
+        if ([videoExtensions containsObject:relativePath.pathExtension.lowercaseString]) {
+            [videoPaths addObject:fullPath];
+        }
+    }
+    return videoPaths;
+}
+
 @interface PKMessageViewController () <UIActionSheetDelegate, PKRecordShortVideoDelegate>
 
 @property (strong, nonatomic) PKDemoModelData *demoData;
@@ -36,20 +59,14 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pk_msgVC_didBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
     
     //获取已经缓存视频
-    NSMutableArray *pathArray = [NSMutableArray new];
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSDirectoryEnumerator * directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:paths[0]];
-    NSString *filePath = nil;
-    while((filePath = [directoryEnumerator nextObject]) != nil) {
-        [pathArray addObject:[paths[0] stringByAppendingPathComponent:filePath]];
-    }
+    NSArray *pathArray = PKDemoVideoPathsInDocuments();
     
     NSArray *sortArray = [pathArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         NSDictionary* firstAttribute  = [[NSFileManager defaultManager] attributesOfItemAtPath:obj1 error:nil];
         NSDate *first = [firstAttribute objectForKey:NSFileModificationDate];
         NSDictionary *secondAttribute = [[NSFileManager defaultManager] attributesOfItemAtPath:obj2 error:nil];
         NSDate *second = [secondAttribute objectForKey:NSFileModificationDate];
-        return [second compare:first];
+        return [(second ?: [NSDate distantPast]) compare:(first ?: [NSDate distantPast])];
     }];
     
     for (NSString *path in sortArray) {
@@ -57,6 +74,10 @@
     }
     
     [self finishSendingMessageAnimated:YES];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
@@ -391,7 +412,7 @@
         return nil;
     }
     
-    if (indexPath.item - 1 > 0) {
+    if (indexPath.item > 0) {
         JSQMessage *previousMessage = [self.demoData.messages objectAtIndex:indexPath.item - 1];
         if ([[previousMessage senderId] isEqualToString:message.senderId]) {
             return nil;
@@ -498,7 +519,7 @@
         return 0.0f;
     }
     
-    if (indexPath.item - 1 > 0) {
+    if (indexPath.item > 0) {
         JSQMessage *previousMessage = [self.demoData.messages objectAtIndex:indexPath.item - 1];
         if ([[previousMessage senderId] isEqualToString:[currentMessage senderId]]) {
             return 0.0f;
