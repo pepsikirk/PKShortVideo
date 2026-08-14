@@ -34,7 +34,7 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
     return videoPaths;
 }
 
-@interface PKMessageViewController () <UIActionSheetDelegate, PKRecordShortVideoDelegate>
+@interface PKMessageViewController () <PKRecordShortVideoDelegate>
 
 @property (strong, nonatomic) PKDemoModelData *demoData;
 
@@ -286,41 +286,43 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
 
 - (void)didPressAccessoryButton:(UIButton *)sender {
     [self.inputToolbar.contentView.textView resignFirstResponder];
-    
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Media messages"
-                                                       delegate:self
-                                              cancelButtonTitle:@"Cancel"
-                                         destructiveButtonTitle:nil
-                                              otherButtonTitles:@"Record short video", nil];
-    
-    [sheet showFromToolbar:self.inputToolbar];
+
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Media messages"
+                                                                               message:nil
+                                                                        preferredStyle:UIAlertControllerStyleActionSheet];
+    __weak typeof(self) weakSelf = self;
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Record short video"
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction *action) {
+        (void)action;
+        [weakSelf presentShortVideoRecorder];
+    }]];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel"
+                                                        style:UIAlertActionStyleCancel
+                                                      handler:^(UIAlertAction *action) {
+        (void)action;
+        [weakSelf.inputToolbar.contentView.textView becomeFirstResponder];
+    }]];
+
+    UIPopoverPresentationController *popoverPresentationController = alertController.popoverPresentationController;
+    if (popoverPresentationController) {
+        UIView *sourceView = sender ?: self.inputToolbar;
+        popoverPresentationController.sourceView = sourceView;
+        popoverPresentationController.sourceRect = sourceView.bounds;
+    }
+
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
-
-
-#pragma mark - UIActionSheetDelegate
-
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == actionSheet.cancelButtonIndex) {
-        [self.inputToolbar.contentView.textView becomeFirstResponder];
-        return;
-    }
-    
-    switch (buttonIndex) {
-        case 0: {
-            
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            NSString *fileName = [NSProcessInfo processInfo].globallyUniqueString;
-            NSString *path = [paths[0] stringByAppendingPathComponent:[fileName stringByAppendingPathExtension:@"mp4"]];
-            //跳转默认录制视频ViewController
-            PKRecordShortVideoViewController *viewController = [[PKRecordShortVideoViewController alloc] initWithOutputFilePath:path outputSize:CGSizeMake(320, 240) themeColor:[UIColor colorWithRed:0/255.0 green:153/255.0 blue:255/255.0 alpha:1]];
-            //通过代理回调
-            viewController.delegate = self;
-            [self presentViewController:viewController animated:YES completion:nil];
-        }
-            
-            break;
-    }
+- (void)presentShortVideoRecorder {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *fileName = [NSProcessInfo processInfo].globallyUniqueString;
+    NSString *path = [paths[0] stringByAppendingPathComponent:[fileName stringByAppendingPathExtension:@"mp4"]];
+    //跳转默认录制视频ViewController
+    PKRecordShortVideoViewController *viewController = [[PKRecordShortVideoViewController alloc] initWithOutputFilePath:path outputSize:CGSizeMake(320, 240) themeColor:[UIColor colorWithRed:0/255.0 green:153/255.0 blue:255/255.0 alpha:1]];
+    //通过代理回调
+    viewController.delegate = self;
+    [self presentViewController:viewController animated:YES completion:nil];
 }
 
 
