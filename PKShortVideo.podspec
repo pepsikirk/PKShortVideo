@@ -12,6 +12,9 @@ Pod::Spec.new do |s|
   s.resources = "PKShortVideo/PKAsset/*.png"
   s.frameworks = "AVFoundation", "CoreMedia", "CoreVideo", "OpenGLES", "QuartzCore"
   s.requires_arc = true
+  s.pod_target_xcconfig = {
+    "GCC_PREPROCESSOR_DEFINITIONS" => "$(inherited) GLES_SILENCE_DEPRECATION=1 COREVIDEO_SILENCE_GL_DEPRECATION=1"
+  }
 
   s.source_files = 'PKShortVideo/**/*.{h,m}' , 'PKShortVideo/*.{h,m}'
 
