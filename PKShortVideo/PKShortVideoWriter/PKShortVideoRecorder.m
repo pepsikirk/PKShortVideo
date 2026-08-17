@@ -101,8 +101,10 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 - (void)startRecording {
     if (TARGET_IPHONE_SIMULATOR) {
         NSLog(@"录制视频不支持模拟器");
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:@"录制视频不支持模拟器" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
-        [alertView show];
+        NSError *error = [self recorderErrorWithDescription:@"录制视频不支持模拟器"];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate recorder:self didFinishRecordingToOutputFilePath:nil error:error];
+        });
         return;
     }
     @synchronized(self) {
