@@ -289,6 +289,11 @@ previewLayer.frame = CGRectMake(0, 44, kScreenWidth, PKPreviewLayerHeight);
 ```objc
 //停止录制
 [self.recorder stopRecording];
+
+//查询录制状态，准备、录制和收尾阶段都会返回 YES
+if (self.recorder.isRecording) {
+    //更新自定义 UI，避免重复开始录制或切换摄像头
+}
 ```
 
 ###视频录制成功回调
