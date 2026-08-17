@@ -204,18 +204,23 @@ static CGFloat const PKRecordButtonWidth = 90;
     [self.recordButton setTitle:@"按住拍摄" forState:UIControlStateNormal];
     
     if (failture) {
-        [PKRecordShortVideoViewController showAlertViewWithText:@"生成视频失败"];
+        [self showAlertWithText:@"生成视频失败"];
     } else {
-        [PKRecordShortVideoViewController showAlertViewWithText:[NSString stringWithFormat:@"请长按超过%@秒钟",@(self.videoMinimumDuration)]];
+        [self showAlertWithText:[NSString stringWithFormat:@"请长按超过%@秒钟",@(self.videoMinimumDuration)]];
     }
     
     [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
     [self recordButtonAction];
 }
 
-+ (void)showAlertViewWithText:(NSString *)text {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"录制小视频失败" message:text delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
-    [alertView show];
+- (void)showAlertWithText:(NSString *)text {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"录制小视频失败"
+                                                                               message:text
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"确定"
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:nil]];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)invalidateTime {
