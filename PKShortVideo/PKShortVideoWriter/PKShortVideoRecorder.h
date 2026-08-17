@@ -31,6 +31,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) id<PKShortVideoRecorderDelegate> delegate;
 
+/**
+ Whether the recorder is preparing, recording, or finishing a recording.
+ */
+@property (nonatomic, assign, readonly, getter=isRecording) BOOL recording;
+
 - (instancetype)initWithOutputFilePath:(NSString *)outputFilePath outputSize:(CGSize)outputSize;
 
 - (void)startRunning;
@@ -46,5 +51,4 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
-
 

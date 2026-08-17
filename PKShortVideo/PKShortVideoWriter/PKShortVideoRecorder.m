@@ -442,6 +442,12 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 
 #pragma mark - Getter
 
+- (BOOL)isRecording {
+    @synchronized (self) {
+        return self.recordingStatus != PKRecordingStatusIdle;
+    }
+}
+
 - (AVCaptureVideoPreviewLayer *)previewLayer {
     if (!_previewLayer && _captureSession){
         _previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:self.captureSession];
