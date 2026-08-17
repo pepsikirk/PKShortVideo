@@ -229,7 +229,7 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
     
     self.videoCompressionSettings = [self.videoDataOutput recommendedVideoSettingsForAssetWriterWithOutputFileType:AVFileTypeMPEG4];
     
-    self.videoCompressionSettings = @{ AVVideoCodecKey : AVVideoCodecH264,
+    self.videoCompressionSettings = @{ AVVideoCodecKey : AVVideoCodecTypeH264,
                                  AVVideoScalingModeKey : AVVideoScalingModeResizeAspectFill,
                                        AVVideoWidthKey : @(self.outputSize.height),
                                       AVVideoHeightKey : @(self.outputSize.width),
