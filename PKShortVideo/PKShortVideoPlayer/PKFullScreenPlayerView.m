@@ -94,8 +94,23 @@
 #pragma mark - Error Handle
 
 - (void)assetFailedToPrepareForPlayback:(NSError *)error {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Video cannot be played" message:@"Video cannot be played" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alertView show];
+    UIResponder *responder = self.nextResponder;
+    while (responder != nil && ![responder isKindOfClass:[UIViewController class]]) {
+        responder = responder.nextResponder;
+    }
+
+    UIViewController *viewController = (UIViewController *)responder;
+    if (viewController == nil) {
+        return;
+    }
+
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Video cannot be played"
+                                                                               message:@"Video cannot be played"
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"OK"
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:nil]];
+    [viewController presentViewController:alertController animated:YES completion:nil];
 }
 
 
