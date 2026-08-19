@@ -61,7 +61,7 @@
     UIColor *tintColor = [UIColor jsq_messageBubbleBlueColor];
     AVAudioSessionCategoryOptions options = AVAudioSessionCategoryOptionDuckOthers
     | AVAudioSessionCategoryOptionDefaultToSpeaker
-    | AVAudioSessionCategoryOptionAllowBluetooth;
+    | AVAudioSessionCategoryOptionAllowBluetoothHFP;
 
     return [self initWithPlayButtonImage:[[UIImage jsq_defaultPlayImage] jsq_imageMaskedWithColor:tintColor]
                         pauseButtonImage:[[UIImage jsq_defaultPauseImage] jsq_imageMaskedWithColor:tintColor]
