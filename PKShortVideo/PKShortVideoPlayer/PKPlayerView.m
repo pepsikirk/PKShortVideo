@@ -133,10 +133,12 @@
         self.needPlay = YES;
         return;
     }
-    
+
+    if (!self.isPlaying) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(shortVideoItemPlayerItemDidReachEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
+    }
     [self.player play];
     self.isPlaying = YES;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(shortVideoItemPlayerItemDidReachEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
 }
 
 - (void)stop {
