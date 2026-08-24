@@ -166,7 +166,9 @@
     __weak typeof(self)weakSelf = self;
     
     while (reader.status == AVAssetReaderStatusReading && self.foreground) {
-        [weakSelf readNextVideoFrameFromOutput:readerVideoTrackOutput reader:reader];
+        @autoreleasepool {
+            [weakSelf readNextVideoFrameFromOutput:readerVideoTrackOutput reader:reader];
+        }
     }
     
     [reader cancelReading];
