@@ -2,8 +2,8 @@
 
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/pepsikirk/PKShortVideo/blob/master/LICENSE)
 [![CocoaPods](https://img.shields.io/cocoapods/v/PKShortVideo.svg)](https://cocoapods.org/pods/PKShortVideo)
-[![Platform](https://img.shields.io/badge/platform-iOS%2012.0%2B-blue.svg)](https://developer.apple.com/ios/)
-[![Xcode](https://img.shields.io/badge/Xcode-26%2B-blue.svg)](https://developer.apple.com/xcode/)
+[![Platform](https://img.shields.io/badge/minimum%20iOS-12.0-blue.svg)](https://developer.apple.com/ios/)
+[![Xcode](https://img.shields.io/badge/Xcode-26.2-blue.svg)](https://developer.apple.com/xcode/)
 
 PKShortVideo is an Objective-C video library for iOS chat interfaces. It provides short video recording, AVFoundation-based playback, and a legacy GPUImage/OpenGL ES playback path.
 
@@ -22,11 +22,11 @@ Historical development notes are available in the [original development article]
 
 ## Requirements
 
-- iOS 12.0 or later.
-- Xcode 26 or later.
+- Minimum deployment target: iOS 12.0, as configured in the Xcode project and Podspec.
+- Xcode 26.2 (validated locally).
 - Objective-C and ARC.
 
-The current project and CocoaPods specification have been validated with Xcode 26.2.
+The `PKShortVideo` scheme builds successfully with Xcode 26.2 using a generic iOS destination and code signing disabled. Device runtime behavior still requires validation on physical hardware.
 
 ## Installation
 
@@ -43,6 +43,8 @@ Then run:
 ```bash
 pod install
 ```
+
+Open the generated `.xcworkspace` in Xcode after installation.
 
 Import the public umbrella header:
 
@@ -212,7 +214,7 @@ Open `PKShortVideo.xcodeproj` in Xcode, select the `PKShortVideo` scheme, and ru
 
 ## Maintenance status
 
-The project is actively maintained again. The current CocoaPods release is `0.9.5`, and the repository is being updated incrementally while preserving the original Objective-C public APIs and legacy playback path.
+The project is actively maintained again. The current package version is `0.9.5`, matching `PKShortVideo.podspec`, the `0.9.5` Git tag, and the CocoaPods Trunk release. The repository is being updated incrementally while preserving the original Objective-C public APIs and legacy playback path.
 
 ## Changelog
 
@@ -227,6 +229,7 @@ The project is actively maintained again. The current CocoaPods release is `0.9.
 
 PKShortVideo is provided under the MIT license. See [LICENSE](LICENSE) for details.
 
-## Contact
+## Maintainer
 
-Email: [pepsikirk@gmail.com](mailto:pepsikirk@gmail.com)
+- GitHub: [@pepsikirk](https://github.com/pepsikirk)
+- Email: [pepsikirk@gmail.com](mailto:pepsikirk@gmail.com)
