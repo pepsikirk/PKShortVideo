@@ -4,7 +4,6 @@ Pod::Spec.new do |s|
   s.license      = "MIT"
   s.summary      = "A video library like WeChat short video for iOS."
   s.homepage     = "https://github.com/pepsikirk/PKShortVideo"
-  s.social_media_url   = "http://weibo.com/u/1776530813"
   s.author             = { "pepsikirk" => "pepsikirk@gmail.com" }
   s.source       = { :git => "https://github.com/pepsikirk/PKShortVideo.git", :tag => s.version }
   s.screenshots  = "https://raw.githubusercontent.com/pepsikirk/PKShortVideo/master/Screenshots/gif.gif"
