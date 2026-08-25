@@ -1,1 +1,16 @@
-PKShortVideo.xcodeproj/xcuserdata
+# Xcode user data
+**/xcuserdata/
+
+# Xcode local build and generated files
+DerivedData/
+build/
+*.xcuserstate
+*.xccheckout
+*.xcarchive
+
+# macOS and editor temporary files
+.DS_Store
+*.swp
+*.swo
+*.moved-aside
+*.orig
