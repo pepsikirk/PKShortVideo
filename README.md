@@ -65,7 +65,7 @@ Recording requires camera and microphone usage descriptions in the application `
 <string>Record audio for short videos.</string>
 ```
 
-The application is responsible for requesting and checking camera and microphone authorization before starting a recording session.
+`PKShortVideoRecorder` requests camera and microphone access when `startRunning` is called. Camera access is required; if microphone access is denied or restricted, recording continues as a video-only file and no audio writer track is created. Custom UIs can inspect `recorder.isAudioRecordingAvailable` after the capture session starts.
 
 ## Usage
 

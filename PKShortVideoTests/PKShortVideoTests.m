@@ -7,8 +7,11 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "PKShortVideoSession.h"
 
-@interface PKShortVideoTests : XCTestCase
+@interface PKShortVideoTests : XCTestCase <PKShortVideoSessionDelegate>
+
+@property (nonatomic, strong) XCTestExpectation *failureExpectation;
 
 @end
 
@@ -24,16 +27,37 @@
     [super tearDown];
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
+- (void)testMissingAudioFormatDoesNotCrashOrInitializeAudioTrack {
+    NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSProcessInfo processInfo].globallyUniqueString];
+    PKShortVideoSession *session = [[PKShortVideoSession alloc] initWithTempFilePath:path];
+
+    XCTAssertNotNil(session);
+    XCTAssertNoThrow([session addAudioTrackWithSourceFormatDescription:NULL settings:@{}]);
+    XCTAssertFalse(session.audioInitialized);
 }
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+- (void)testPreparingWithoutVideoTrackReportsFailure {
+    NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSProcessInfo processInfo].globallyUniqueString];
+    PKShortVideoSession *session = [[PKShortVideoSession alloc] initWithTempFilePath:path];
+    self.failureExpectation = [self expectationWithDescription:@"session failure callback"];
+    session.delegate = self;
+
+    [session prepareToRecord];
+
+    [self waitForExpectations:@[self.failureExpectation] timeout:1.0];
+}
+
+- (void)sessionDidFinishPreparing:(PKShortVideoSession *)session {
+    XCTFail(@"A session without a video track must not prepare successfully");
+}
+
+- (void)session:(PKShortVideoSession *)session didFailWithError:(NSError *)error {
+    XCTAssertNotNil(error);
+    [self.failureExpectation fulfill];
+}
+
+- (void)sessionDidFinishRecording:(PKShortVideoSession *)session {
+    XCTFail(@"A session without a video track must not finish recording");
 }
 
 @end

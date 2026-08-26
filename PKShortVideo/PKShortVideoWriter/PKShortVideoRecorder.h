@@ -36,6 +36,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign, readonly, getter=isRecording) BOOL recording;
 
+/**
+ Whether the current capture session has an authorized microphone input.
+ When this is NO, recordings contain video only.
+ */
+@property (nonatomic, assign, readonly, getter=isAudioRecordingAvailable) BOOL audioRecordingAvailable;
+
 - (instancetype)initWithOutputFilePath:(NSString *)outputFilePath outputSize:(CGSize)outputSize;
 
 - (void)startRunning;
@@ -51,4 +57,3 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
-
