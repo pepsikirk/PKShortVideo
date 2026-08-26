@@ -35,7 +35,7 @@ The `PKShortVideo` scheme builds successfully with Xcode 26.2 using a generic iO
 Add the following to your `Podfile`:
 
 ```ruby
-pod 'PKShortVideo', '~> 0.9.5'
+pod 'PKShortVideo', '~> 0.9.6'
 ```
 
 Then run:
@@ -214,9 +214,15 @@ Open `PKShortVideo.xcodeproj` in Xcode, select the `PKShortVideo` scheme, and ru
 
 ## Maintenance status
 
-The project is actively maintained again. The current package version is `0.9.5`, matching `PKShortVideo.podspec`, the `0.9.5` Git tag, and the CocoaPods Trunk release. The repository is being updated incrementally while preserving the original Objective-C public APIs and legacy playback path.
+The project is actively maintained again. The current package version is `0.9.6`, matching `PKShortVideo.podspec`, the `0.9.6` Git tag, and the CocoaPods Trunk release. The repository is being updated incrementally while preserving the original Objective-C public APIs and legacy playback path.
 
 ## Changelog
+
+### 0.9.6
+
+- Fixed a recording crash when microphone permission is denied; recordings now fall back to video-only output.
+- Improved capture-session startup and shutdown handling.
+- Added GitHub Actions build, unit-test, UI-test, and Podspec validation checks.
 
 ### 0.9.5
 
