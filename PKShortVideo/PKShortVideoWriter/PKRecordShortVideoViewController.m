@@ -114,11 +114,16 @@ static CGFloat const PKRecordButtonWidth = 90;
     self.recordButton.layer.masksToBounds = YES;
     [self recordButtonAction];
     [self.view addSubview:self.recordButton];
-    
-//    dispatch_async(dispatch_get_main_queue(), ^{
-        //开始预览摄像头工作
-        [self.recorder startRunning];
-//    });
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.recorder startRunning];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self.recorder stopRunning];
 }
 
 - (void)didReceiveMemoryWarning {

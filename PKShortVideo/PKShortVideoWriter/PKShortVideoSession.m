@@ -119,11 +119,10 @@ typedef NS_ENUM(NSInteger, PKSessionStatus){
         }
         [self transitionToStatus:PKSessionStatusPreparingToRecord error:nil];
     }
-            
+
     NSError *error = nil;
-    if (!self.videoTrackSourceFormatDescription || !self.videoTrackSettings ||
-        !self.audioTrackSourceFormatDescription || !self.audioTrackSettings) {
-        error = [self cannotSetupInputErrorWithReason:@"音视频轨道尚未准备完成"];
+    if (!self.videoTrackSourceFormatDescription || !self.videoTrackSettings) {
+        error = [self cannotSetupInputErrorWithReason:@"视频轨道尚未准备完成"];
     }
     //确保当前url文件不存在
     if (!error) {
@@ -135,7 +134,7 @@ typedef NS_ENUM(NSInteger, PKSessionStatus){
     if (!error && _videoTrackSourceFormatDescription) {
         [self setupAssetWriterVideoInputWithSourceFormatDescription:self.videoTrackSourceFormatDescription transform:self.videoTrackTransform settings:self.videoTrackSettings error:&error];
     }
-    if (!error && _audioTrackSourceFormatDescription) {
+    if (!error && self.audioTrackSourceFormatDescription && self.audioTrackSettings) {
         [self setupAssetWriterAudioInputWithSourceFormatDescription:self.audioTrackSourceFormatDescription settings:self.audioTrackSettings error:&error];
     }
     //开始
@@ -209,6 +208,12 @@ typedef NS_ENUM(NSInteger, PKSessionStatus){
 #pragma mark - Private methods
 
 - (BOOL)setupAssetWriterAudioInputWithSourceFormatDescription:(CMFormatDescriptionRef)audioFormatDescription settings:(NSDictionary *)audioSettings error:(NSError **)errorOut {
+    if (!audioFormatDescription || !audioSettings || !self.assetWriter) {
+        if (errorOut) {
+            *errorOut = [self cannotSetupInputErrorWithReason:@"音频轨道格式或编码设置为空"];
+        }
+        return NO;
+    }
     if ([self.assetWriter canApplyOutputSettings:audioSettings forMediaType:AVMediaTypeAudio]){
         self.audioInput = [[AVAssetWriterInput alloc] initWithMediaType:AVMediaTypeAudio outputSettings:audioSettings sourceFormatHint:audioFormatDescription];
         self.audioInput.expectsMediaDataInRealTime = YES;
@@ -233,6 +238,12 @@ typedef NS_ENUM(NSInteger, PKSessionStatus){
 }
 
 - (BOOL)setupAssetWriterVideoInputWithSourceFormatDescription:(CMFormatDescriptionRef)videoFormatDescription transform:(CGAffineTransform)transform settings:(NSDictionary *)videoSettings error:(NSError **)errorOut {
+    if (!videoFormatDescription || !videoSettings || !self.assetWriter) {
+        if (errorOut) {
+            *errorOut = [self cannotSetupInputErrorWithReason:@"视频轨道格式或编码设置为空"];
+        }
+        return NO;
+    }
     if ([self.assetWriter canApplyOutputSettings:videoSettings forMediaType:AVMediaTypeVideo]){
         self.videoInput = [[AVAssetWriterInput alloc] initWithMediaType:AVMediaTypeVideo outputSettings:videoSettings sourceFormatHint:videoFormatDescription];
         self.videoInput.expectsMediaDataInRealTime = YES;
@@ -277,7 +288,7 @@ typedef NS_ENUM(NSInteger, PKSessionStatus){
                     return;
                 }
             }
-            
+
             BOOL isVideo = [mediaType isEqualToString:AVMediaTypeVideo];
             if (!self.haveStartedSession) {
                 // AVAssetWriter cannot accept audio before its session start time.
@@ -291,6 +302,11 @@ typedef NS_ENUM(NSInteger, PKSessionStatus){
             }
             
             AVAssetWriterInput *input = isVideo ? self.videoInput : self.audioInput;
+
+            if (!input) {
+                CFRelease(sampleBuffer);
+                return;
+            }
 
             if (self.haveStartedSession && input.readyForMoreMediaData){
                 BOOL success = [input appendSampleBuffer:sampleBuffer];

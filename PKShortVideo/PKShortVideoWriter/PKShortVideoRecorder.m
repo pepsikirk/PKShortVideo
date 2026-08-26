@@ -45,6 +45,9 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 
 @property (nonatomic, assign) PKRecordingStatus recordingStatus;
 @property (nonatomic, assign) BOOL stopRequested;
+@property (nonatomic, assign) BOOL captureSessionStartRequested;
+@property (nonatomic, assign) BOOL captureSessionRunning;
+@property (nonatomic, assign, readwrite, getter=isAudioRecordingAvailable) BOOL audioRecordingAvailable;
 
 @property (nonatomic, retain) PKShortVideoSession *assetSession;
 
@@ -68,7 +71,7 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
         dispatch_set_target_queue(_videoDataOutputQueue, dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0 ) );
         
         _captureSession = [self setupCaptureSession];
-        [self addDataOutputsToCaptureSession:self.captureSession];
+        [self configureCaptureSessionForCurrentAuthorization];
     }
     return self;
 }
@@ -82,15 +85,44 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 #pragma mark - Running Session
 
 - (void)startRunning {
-    dispatch_sync(self.recorderQueue, ^{
-        [self.captureSession startRunning];
-    } );
+    @synchronized (self) {
+        if (self.captureSessionStartRequested) {
+            return;
+        }
+        self.captureSessionStartRequested = YES;
+    }
+
+    __weak typeof(self) weakSelf = self;
+    [self requestCaptureAccessWithCompletion:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) {
+            return;
+        }
+        dispatch_async(strongSelf.recorderQueue, ^{
+            @synchronized (strongSelf) {
+                if (!strongSelf.captureSessionStartRequested) {
+                    return;
+                }
+            }
+            [strongSelf configureCaptureSessionForCurrentAuthorization];
+            [strongSelf.captureSession startRunning];
+            @synchronized (strongSelf) {
+                strongSelf.captureSessionRunning = strongSelf.captureSession.isRunning;
+            }
+        });
+    }];
 }
 
 - (void)stopRunning {
+    @synchronized (self) {
+        self.captureSessionStartRequested = NO;
+    }
     dispatch_sync(self.recorderQueue, ^{
         [self stopRecording];
         [self.captureSession stopRunning];
+        @synchronized (self) {
+            self.captureSessionRunning = NO;
+        }
     } );
 }
 
@@ -112,9 +144,20 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
             NSLog(@"已经在录制了");
             return;
         }   
-        if (!self.outputVideoFormatDescription || !self.outputAudioFormatDescription) {
+        AVAuthorizationStatus cameraAuthorizationStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+        if (cameraAuthorizationStatus == AVAuthorizationStatusDenied) {
             [self transitionToRecordingStatus:PKRecordingStatusStartingRecording error:nil];
-            [self transitionToRecordingStatus:PKRecordingStatusIdle error:[self recorderErrorWithDescription:@"相机或麦克风尚未准备完成"]];
+            [self transitionToRecordingStatus:PKRecordingStatusIdle error:[self recorderErrorWithDescription:@"摄像头权限已拒绝，请在系统设置中允许访问摄像头"]];
+            return;
+        }
+        if (cameraAuthorizationStatus == AVAuthorizationStatusRestricted) {
+            [self transitionToRecordingStatus:PKRecordingStatusStartingRecording error:nil];
+            [self transitionToRecordingStatus:PKRecordingStatusIdle error:[self recorderErrorWithDescription:@"当前设备限制了摄像头访问，无法录制视频"]];
+            return;
+        }
+        if (!self.captureSessionRunning || !self.videoConnection || !self.outputVideoFormatDescription || !self.videoCompressionSettings) {
+            [self transitionToRecordingStatus:PKRecordingStatusStartingRecording error:nil];
+            [self transitionToRecordingStatus:PKRecordingStatusIdle error:[self recorderErrorWithDescription:@"摄像头尚未准备完成"]];
             return;
         }
         self.stopRequested = NO;
@@ -125,7 +168,9 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
     self.assetSession.delegate = self;
     
     [self.assetSession addVideoTrackWithSourceFormatDescription:self.outputVideoFormatDescription settings:self.videoCompressionSettings];
-    [self.assetSession addAudioTrackWithSourceFormatDescription:self.outputAudioFormatDescription settings:self.audioCompressionSettings];
+    if (self.audioRecordingAvailable && self.audioConnection && self.outputAudioFormatDescription && self.audioCompressionSettings) {
+        [self.assetSession addAudioTrackWithSourceFormatDescription:self.outputAudioFormatDescription settings:self.audioCompressionSettings];
+    }
     
     [self.assetSession prepareToRecord];
 }
@@ -183,8 +228,7 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
         }
 
         [self.captureSession beginConfiguration];
-        [self.captureSession removeOutput:self.videoDataOutput];
-        [self.captureSession removeOutput:self.audioDataOutput];
+        [self removeDataOutputsFromCaptureSession:self.captureSession];
         [self.captureSession removeInput:currentInput];
         [self.captureSession addInput:newInput];
         self.outputVideoFormatDescription = nil;
@@ -199,22 +243,56 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 #pragma mark - Private methods
 
 - (void)addDataOutputsToCaptureSession:(AVCaptureSession *)captureSession {
-    self.videoDataOutput = [AVCaptureVideoDataOutput new];
-    self.videoDataOutput.videoSettings = nil;
-    self.videoDataOutput.alwaysDiscardsLateVideoFrames = NO;
-    
-    [self.videoDataOutput setSampleBufferDelegate:self queue:self.videoDataOutputQueue];
-    
-    self.audioDataOutput = [AVCaptureAudioDataOutput new];
-    [self.audioDataOutput setSampleBufferDelegate:self queue:self.audioDataOutputQueue];
-    
-    [self addOutput:self.videoDataOutput toCaptureSession:self.captureSession];
-    self.videoConnection = [self.videoDataOutput connectionWithMediaType:AVMediaTypeVideo];
-    
-    [self addOutput:self.audioDataOutput toCaptureSession:self.captureSession];
-    self.audioConnection = [self.audioDataOutput connectionWithMediaType:AVMediaTypeAudio];
-    
+    self.videoDataOutput = nil;
+    self.audioDataOutput = nil;
+    self.videoConnection = nil;
+    self.audioConnection = nil;
+
+    if ([self inputForMediaType:AVMediaTypeVideo inCaptureSession:captureSession]) {
+        AVCaptureVideoDataOutput *videoDataOutput = [AVCaptureVideoDataOutput new];
+        videoDataOutput.videoSettings = nil;
+        videoDataOutput.alwaysDiscardsLateVideoFrames = NO;
+        [videoDataOutput setSampleBufferDelegate:self queue:self.videoDataOutputQueue];
+
+        if ([self addOutput:videoDataOutput toCaptureSession:captureSession]) {
+            self.videoDataOutput = videoDataOutput;
+            self.videoConnection = [videoDataOutput connectionWithMediaType:AVMediaTypeVideo];
+        } else {
+            [videoDataOutput setSampleBufferDelegate:nil queue:NULL];
+        }
+    }
+
+    if ([self inputForMediaType:AVMediaTypeAudio inCaptureSession:captureSession]) {
+        AVCaptureAudioDataOutput *audioDataOutput = [AVCaptureAudioDataOutput new];
+        [audioDataOutput setSampleBufferDelegate:self queue:self.audioDataOutputQueue];
+
+        if ([self addOutput:audioDataOutput toCaptureSession:captureSession]) {
+            self.audioDataOutput = audioDataOutput;
+            self.audioConnection = [audioDataOutput connectionWithMediaType:AVMediaTypeAudio];
+        } else {
+            [audioDataOutput setSampleBufferDelegate:nil queue:NULL];
+        }
+    }
+
     [self setCompressionSettings];
+    self.audioRecordingAvailable = self.audioConnection != nil;
+}
+
+- (void)removeDataOutputsFromCaptureSession:(AVCaptureSession *)captureSession {
+    [self.videoDataOutput setSampleBufferDelegate:nil queue:NULL];
+    [self.audioDataOutput setSampleBufferDelegate:nil queue:NULL];
+
+    if (self.videoDataOutput) {
+        [captureSession removeOutput:self.videoDataOutput];
+    }
+    if (self.audioDataOutput) {
+        [captureSession removeOutput:self.audioDataOutput];
+    }
+
+    self.videoDataOutput = nil;
+    self.audioDataOutput = nil;
+    self.videoConnection = nil;
+    self.audioConnection = nil;
 }
 
 - (void)setCompressionSettings {
@@ -253,7 +331,9 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
         if (!self.outputVideoFormatDescription) {
             @synchronized(self) {
                 CMFormatDescriptionRef formatDescription = CMSampleBufferGetFormatDescription(sampleBuffer);
-                self.outputVideoFormatDescription = formatDescription;
+                if (formatDescription) {
+                    self.outputVideoFormatDescription = formatDescription;
+                }
             }
         } else {
             @synchronized(self) {
@@ -266,7 +346,9 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
         if (!self.outputAudioFormatDescription) {
             @synchronized(self) {
                 CMFormatDescriptionRef formatDescription = CMSampleBufferGetFormatDescription(sampleBuffer);
-                self.outputAudioFormatDescription = formatDescription;
+                if (formatDescription) {
+                    self.outputAudioFormatDescription = formatDescription;
+                }
             }
         }
         @synchronized(self) {
@@ -353,6 +435,95 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 
 #pragma mark - Capture Session Setup
 
+- (void)configureCaptureSessionForCurrentAuthorization {
+    AVCaptureSession *captureSession = self.captureSession;
+    if (!captureSession) {
+        return;
+    }
+
+    AVAuthorizationStatus cameraAuthorizationStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    AVAuthorizationStatus microphoneAuthorizationStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
+
+    [captureSession beginConfiguration];
+    [self removeDataOutputsFromCaptureSession:captureSession];
+
+    for (AVCaptureDeviceInput *input in [captureSession.inputs copy]) {
+        if ([input.device hasMediaType:AVMediaTypeVideo] && cameraAuthorizationStatus != AVAuthorizationStatusAuthorized) {
+            [captureSession removeInput:input];
+            self.cameraDevice = nil;
+        } else if ([input.device hasMediaType:AVMediaTypeAudio] && microphoneAuthorizationStatus != AVAuthorizationStatusAuthorized) {
+            [captureSession removeInput:input];
+        }
+    }
+
+    if (cameraAuthorizationStatus == AVAuthorizationStatusAuthorized && ![self inputForMediaType:AVMediaTypeVideo inCaptureSession:captureSession]) {
+        [self addDefaultCameraInputToCaptureSession:captureSession];
+    }
+    if (microphoneAuthorizationStatus == AVAuthorizationStatusAuthorized && ![self inputForMediaType:AVMediaTypeAudio inCaptureSession:captureSession]) {
+        [self addDefaultMicInputToCaptureSession:captureSession];
+    }
+
+    AVCaptureDeviceInput *cameraInput = [self inputForMediaType:AVMediaTypeVideo inCaptureSession:captureSession];
+    if (cameraInput) {
+        self.cameraDevice = cameraInput.device;
+    }
+
+    self.outputVideoFormatDescription = nil;
+    self.outputAudioFormatDescription = nil;
+    [self addDataOutputsToCaptureSession:captureSession];
+    [captureSession commitConfiguration];
+}
+
+- (void)requestCaptureAccessWithCompletion:(void (^)(void))completion {
+    [self requestAccessForMediaType:AVMediaTypeVideo completion:^{
+        AVAuthorizationStatus cameraAuthorizationStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+        if (cameraAuthorizationStatus != AVAuthorizationStatusAuthorized) {
+            if (completion) {
+                completion();
+            }
+            return;
+        }
+        [self requestAccessForMediaType:AVMediaTypeAudio completion:completion];
+    }];
+}
+
+- (void)requestAccessForMediaType:(AVMediaType)mediaType completion:(void (^)(void))completion {
+    AVAuthorizationStatus authorizationStatus = [AVCaptureDevice authorizationStatusForMediaType:mediaType];
+    if (authorizationStatus != AVAuthorizationStatusNotDetermined) {
+        if (completion) {
+            completion();
+        }
+        return;
+    }
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [AVCaptureDevice requestAccessForMediaType:mediaType completionHandler:^(__unused BOOL granted) {
+            if (completion) {
+                completion();
+            }
+        }];
+    });
+}
+
+- (BOOL)isAuthorizedForMediaType:(AVMediaType)mediaType {
+    AVAuthorizationStatus authorizationStatus = [AVCaptureDevice authorizationStatusForMediaType:mediaType];
+    NSString *mediaTypeName = [mediaType isEqualToString:AVMediaTypeVideo] ? @"摄像头" : @"麦克风";
+    switch (authorizationStatus) {
+        case AVAuthorizationStatusNotDetermined:
+            NSLog(@"%@权限尚未决定，等待显式权限请求", mediaTypeName);
+            return NO;
+        case AVAuthorizationStatusAuthorized:
+            return YES;
+        case AVAuthorizationStatusDenied:
+            NSLog(@"%@权限已拒绝", mediaTypeName);
+            return NO;
+        case AVAuthorizationStatusRestricted:
+            NSLog(@"%@权限受系统限制", mediaTypeName);
+            return NO;
+    }
+    return NO;
+}
+
 
 - (AVCaptureSession *)setupCaptureSession {
     AVCaptureSession *captureSession = [AVCaptureSession new];
@@ -367,22 +538,24 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
         }
     }
     
-    if (![self addDefaultCameraInputToCaptureSession:captureSession]){
-        NSLog(@"加载摄像头失败");
-    }
-    if (![self addDefaultMicInputToCaptureSession:captureSession]){
-        NSLog(@"加载麦克风失败");
-    }
-    
     return captureSession;
 }
 
 - (BOOL)addDefaultCameraInputToCaptureSession:(AVCaptureSession *)captureSession {
-    NSError *error;
+    if (![self isAuthorizedForMediaType:AVMediaTypeVideo]) {
+        return NO;
+    }
+
     AVCaptureDevice *camera = [self cameraWithPosition:AVCaptureDevicePositionBack];
+    if (!camera) {
+        NSLog(@"找不到后置摄像头");
+        return NO;
+    }
+
+    NSError *error = nil;
     AVCaptureDeviceInput *cameraDeviceInput = [[AVCaptureDeviceInput alloc] initWithDevice:camera error:&error];
-    
-    if (error) {
+
+    if (!cameraDeviceInput || error) {
         NSLog(@"配置摄像头输入错误: %@", [error localizedDescription]);
         return NO;
     } else {
@@ -393,12 +566,21 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 }
 
 - (BOOL)addDefaultMicInputToCaptureSession:(AVCaptureSession *)captureSession {
-    NSError *error;
+    if (![self isAuthorizedForMediaType:AVMediaTypeAudio]) {
+        return NO;
+    }
+
     AVCaptureDevice *microphone = [AVCaptureDeviceDiscoverySession discoverySessionWithDeviceTypes:@[AVCaptureDeviceTypeBuiltInMicrophone]
                                                                                          mediaType:AVMediaTypeAudio
                                                                                           position:AVCaptureDevicePositionUnspecified].devices.firstObject;
+    if (!microphone) {
+        NSLog(@"找不到麦克风设备");
+        return NO;
+    }
+
+    NSError *error = nil;
     AVCaptureDeviceInput *micDeviceInput = [[AVCaptureDeviceInput alloc] initWithDevice:microphone error:&error];
-    if (error){
+    if (!micDeviceInput || error){
         NSLog(@"配置麦克风输入错误: %@", [error localizedDescription]);
         return NO;
     } else {
@@ -407,8 +589,17 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
     }
 }
 
+- (AVCaptureDeviceInput *)inputForMediaType:(AVMediaType)mediaType inCaptureSession:(AVCaptureSession *)captureSession {
+    for (AVCaptureDeviceInput *input in captureSession.inputs) {
+        if ([input.device hasMediaType:mediaType]) {
+            return input;
+        }
+    }
+    return nil;
+}
+
 - (BOOL)addInput:(AVCaptureDeviceInput *)input toCaptureSession:(AVCaptureSession *)captureSession {
-    if ([captureSession canAddInput:input]){
+    if (input && [captureSession canAddInput:input]){
         [captureSession addInput:input];
         return YES;
     } else {
@@ -419,7 +610,7 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 
 
 - (BOOL)addOutput:(AVCaptureOutput *)output toCaptureSession:(AVCaptureSession *)captureSession {
-    if ([captureSession canAddOutput:output]){
+    if (output && [captureSession canAddOutput:output]){
         [captureSession addOutput:output];
         return YES;
     } else {
