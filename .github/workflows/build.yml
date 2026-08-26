@@ -11,13 +11,22 @@ on:
 jobs:
   build:
     runs-on: macos-26
+    timeout-minutes: 30
+
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Show Xcode version
+      - name: Show toolchain versions
         run: xcodebuild -version
+
+      - name: Show CocoaPods version
+        run: |
+          ruby --version
+          pod --version
 
       - name: Build iOS framework and demo
         run: |
@@ -31,3 +40,52 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             build
+
+      - name: Run unit tests
+        run: |
+          xcodebuild \
+            test \
+            -project PKShortVideo.xcodeproj \
+            -scheme PKShortVideo \
+            -configuration Debug \
+            -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
+            -destination-timeout 120 \
+            -only-testing:PKShortVideoTests \
+            -parallel-testing-enabled NO \
+            -derivedDataPath "$RUNNER_TEMP/PKShortVideo-UnitTests-DerivedData" \
+            -resultBundlePath "$RUNNER_TEMP/PKShortVideo-UnitTests.xcresult" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
+
+      - name: Run UI tests
+        run: |
+          xcodebuild \
+            test \
+            -project PKShortVideo.xcodeproj \
+            -scheme PKShortVideo \
+            -configuration Debug \
+            -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
+            -destination-timeout 120 \
+            -only-testing:PKShortVideoUITests \
+            -parallel-testing-enabled NO \
+            -derivedDataPath "$RUNNER_TEMP/PKShortVideo-UITests-DerivedData" \
+            -resultBundlePath "$RUNNER_TEMP/PKShortVideo-UITests.xcresult" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
+
+      - name: Validate podspec
+        run: |
+          # Strict lint currently reports known legacy warnings from the
+          # OpenGL ES/GPUImage and Objective-C block-capture implementation.
+          # Keep errors fatal while allowing this documented warning set.
+          pod lib lint PKShortVideo.podspec \
+            --allow-warnings \
+            --verbose
+
+      - name: Upload test results on failure
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: PKShortVideo-test-results
+          path: ${{ runner.temp }}/*.xcresult
+          if-no-files-found: ignore
