@@ -27,28 +27,6 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AEDD7D5B1C34329100977BD0"
-               BuildableName = "PKShortVideo.xctest"
-               BlueprintName = "PKShortVideoTests"
-               ReferencedContainer = "container:PKShortVideo.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AEDD7D661C34329100977BD0"
-               BuildableName = "PKShortVideo.xctest"
-               BlueprintName = "PKShortVideoUITests"
-               ReferencedContainer = "container:PKShortVideo.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
@@ -58,8 +36,28 @@
             ReferencedContainer = "container:PKShortVideo.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
+      <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AEDD7D5B1C34329100977BD0"
+               BuildableName = "PKShortVideoTests.xctest"
+               BlueprintName = "PKShortVideoTests"
+               ReferencedContainer = "container:PKShortVideo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AEDD7D661C34329100977BD0"
+               BuildableName = "PKShortVideoUITests.xctest"
+               BlueprintName = "PKShortVideoUITests"
+               ReferencedContainer = "container:PKShortVideo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -81,8 +79,6 @@
             ReferencedContainer = "container:PKShortVideo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
