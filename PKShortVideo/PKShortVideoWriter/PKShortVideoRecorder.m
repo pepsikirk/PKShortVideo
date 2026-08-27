@@ -53,6 +53,8 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 
 @end
 
+static NSInteger const PKH264DimensionAlignment = 16;
+
 static NSInteger PKH264AlignedDimension(CGFloat dimension) {
     if (!isfinite(dimension) || dimension <= 0) {
         return 0;
@@ -63,7 +65,7 @@ static NSInteger PKH264AlignedDimension(CGFloat dimension) {
         return 0;
     }
 
-    return pixelDimension - (pixelDimension % 2);
+    return (pixelDimension / PKH264DimensionAlignment) * PKH264DimensionAlignment;
 }
 
 @implementation PKShortVideoRecorder
@@ -310,9 +312,10 @@ static NSInteger PKH264AlignedDimension(CGFloat dimension) {
 
 - (void)setCompressionSettings {
     // The writer stores the camera buffer in landscape and applies the portrait
-    // transform below. H.264 4:2:0 needs even encoded dimensions; passing a
-    // full-screen portrait size such as 375x667 through unchanged can leave a
-    // padded chroma column/row visible as a green edge on some decoders.
+    // transform below. Keep both encoded dimensions on a 16-pixel boundary for
+    // the H.264 crop path used here; passing a full-screen portrait size such as
+    // 375x667 through unchanged can leave encoder padding visible as a green
+    // edge on some decoders.
     NSInteger encodedWidth = PKH264AlignedDimension(self.outputSize.height);
     NSInteger encodedHeight = PKH264AlignedDimension(self.outputSize.width);
     if (encodedWidth <= 0 || encodedHeight <= 0) {
