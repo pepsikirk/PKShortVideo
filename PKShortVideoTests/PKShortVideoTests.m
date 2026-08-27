@@ -49,16 +49,16 @@
     [self waitForExpectations:@[self.failureExpectation] timeout:1.0];
 }
 
-- (void)testOddFullScreenOutputSizeUsesEvenH264Dimensions {
+- (void)testOddFullScreenOutputSizeUsesMacroblockAlignedH264Dimensions {
     NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSProcessInfo processInfo].globallyUniqueString];
     PKShortVideoRecorder *recorder = [[PKShortVideoRecorder alloc] initWithOutputFilePath:path outputSize:CGSizeMake(375, 667)];
 
     NSDictionary *videoSettings = [recorder valueForKey:@"videoCompressionSettings"];
 
-    XCTAssertEqual([videoSettings[AVVideoWidthKey] integerValue], 666);
-    XCTAssertEqual([videoSettings[AVVideoHeightKey] integerValue], 374);
-    XCTAssertEqual([videoSettings[AVVideoWidthKey] integerValue] % 2, 0);
-    XCTAssertEqual([videoSettings[AVVideoHeightKey] integerValue] % 2, 0);
+    XCTAssertEqual([videoSettings[AVVideoWidthKey] integerValue], 656);
+    XCTAssertEqual([videoSettings[AVVideoHeightKey] integerValue], 368);
+    XCTAssertEqual([videoSettings[AVVideoWidthKey] integerValue] % 16, 0);
+    XCTAssertEqual([videoSettings[AVVideoHeightKey] integerValue] % 16, 0);
 
     [recorder stopRunning];
 }
