@@ -7,7 +7,9 @@
 //
 
 #import <XCTest/XCTest.h>
+#import <AVFoundation/AVFoundation.h>
 #import "PKShortVideoSession.h"
+#import "PKShortVideoRecorder.h"
 
 @interface PKShortVideoTests : XCTestCase <PKShortVideoSessionDelegate>
 
@@ -45,6 +47,20 @@
     [session prepareToRecord];
 
     [self waitForExpectations:@[self.failureExpectation] timeout:1.0];
+}
+
+- (void)testOddFullScreenOutputSizeUsesEvenH264Dimensions {
+    NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSProcessInfo processInfo].globallyUniqueString];
+    PKShortVideoRecorder *recorder = [[PKShortVideoRecorder alloc] initWithOutputFilePath:path outputSize:CGSizeMake(375, 667)];
+
+    NSDictionary *videoSettings = [recorder valueForKey:@"videoCompressionSettings"];
+
+    XCTAssertEqual([videoSettings[AVVideoWidthKey] integerValue], 666);
+    XCTAssertEqual([videoSettings[AVVideoHeightKey] integerValue], 374);
+    XCTAssertEqual([videoSettings[AVVideoWidthKey] integerValue] % 2, 0);
+    XCTAssertEqual([videoSettings[AVVideoHeightKey] integerValue] % 2, 0);
+
+    [recorder stopRunning];
 }
 
 - (void)sessionDidFinishPreparing:(PKShortVideoSession *)session {

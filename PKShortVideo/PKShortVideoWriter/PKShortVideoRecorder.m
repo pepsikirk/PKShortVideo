@@ -53,6 +53,19 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 
 @end
 
+static NSInteger PKH264AlignedDimension(CGFloat dimension) {
+    if (!isfinite(dimension) || dimension <= 0) {
+        return 0;
+    }
+
+    NSInteger pixelDimension = (NSInteger)floor(dimension);
+    if (pixelDimension < 2) {
+        return 0;
+    }
+
+    return pixelDimension - (pixelDimension % 2);
+}
+
 @implementation PKShortVideoRecorder
 
 #pragma mark - Init
@@ -296,7 +309,19 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
 }
 
 - (void)setCompressionSettings {
-    NSInteger numPixels = self.outputSize.width * self.outputSize.height;
+    // The writer stores the camera buffer in landscape and applies the portrait
+    // transform below. H.264 4:2:0 needs even encoded dimensions; passing a
+    // full-screen portrait size such as 375x667 through unchanged can leave a
+    // padded chroma column/row visible as a green edge on some decoders.
+    NSInteger encodedWidth = PKH264AlignedDimension(self.outputSize.height);
+    NSInteger encodedHeight = PKH264AlignedDimension(self.outputSize.width);
+    if (encodedWidth <= 0 || encodedHeight <= 0) {
+        self.videoCompressionSettings = nil;
+        self.audioCompressionSettings = nil;
+        return;
+    }
+
+    NSInteger numPixels = encodedWidth * encodedHeight;
     //每像素比特
     CGFloat bitsPerPixel = 6.0;
     NSInteger bitsPerSecond = numPixels * bitsPerPixel;
@@ -311,8 +336,8 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
     
     self.videoCompressionSettings = @{ AVVideoCodecKey : AVVideoCodecTypeH264,
                                  AVVideoScalingModeKey : AVVideoScalingModeResizeAspectFill,
-                                       AVVideoWidthKey : @(self.outputSize.height),
-                                      AVVideoHeightKey : @(self.outputSize.width),
+                                       AVVideoWidthKey : @(encodedWidth),
+                                      AVVideoHeightKey : @(encodedHeight),
                        AVVideoCompressionPropertiesKey : compressionProperties };
     
     // 音频设置
