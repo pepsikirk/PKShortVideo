@@ -41,6 +41,24 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             build
 
+      - name: Build Swift Package
+        run: |
+          package_dir="$RUNNER_TEMP/PKShortVideo-SPM"
+          mkdir -p "$package_dir"
+          cp Package.swift "$package_dir/Package.swift"
+          cp -R PKShortVideo "$package_dir/PKShortVideo"
+          (
+            cd "$package_dir"
+            xcodebuild \
+              -scheme PKShortVideo \
+              -configuration Debug \
+              -destination 'generic/platform=iOS' \
+              -derivedDataPath "$RUNNER_TEMP/PKShortVideo-SPM-DerivedData" \
+              CODE_SIGNING_ALLOWED=NO \
+              CODE_SIGNING_REQUIRED=NO \
+              build
+          )
+
       - name: Run unit tests
         run: |
           xcodebuild \

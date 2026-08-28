@@ -13,6 +13,10 @@
 #import "PKFullScreenPlayerViewController.h"
 #import "UIImage+PKShortVideoPlayer.h"
 
+#if defined(SWIFT_PACKAGE)
+#import "resource_bundle_accessor.h"
+#endif
+
 #define kScreenWidth [UIScreen mainScreen].bounds.size.width
 #define kScreenHeight [UIScreen mainScreen].bounds.size.height
 
@@ -21,6 +25,20 @@ static CGFloat PKRecordButtonVarticalHeight = 0;
 static CGFloat PKPreviewLayerHeight = 0;
 
 static CGFloat const PKRecordButtonWidth = 90;
+
+static UIImage *PKShortVideoImageNamed(NSString *name) {
+#if defined(SWIFT_PACKAGE)
+    return [UIImage imageNamed:name
+                       inBundle:SWIFTPM_MODULE_BUNDLE
+  compatibleWithTraitCollection:nil];
+#else
+    NSBundle *bundle = [NSBundle bundleForClass:[PKRecordShortVideoViewController class]];
+    UIImage *image = [UIImage imageNamed:name
+                              inBundle:bundle
+         compatibleWithTraitCollection:nil];
+    return image ?: [UIImage imageNamed:name];
+#endif
+}
 
 @interface PKRecordShortVideoViewController() <PKShortVideoRecorderDelegate>
 
@@ -84,7 +102,7 @@ static CGFloat const PKRecordButtonWidth = 90;
     
     UIBarButtonItem *flexible = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
     
-    UIBarButtonItem *transformItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"PK_Camera_Turn"] style:UIBarButtonItemStyleDone target:self action:@selector(swapCamera)];
+    UIBarButtonItem *transformItem = [[UIBarButtonItem alloc] initWithImage:PKShortVideoImageNamed(@"PK_Camera_Turn") style:UIBarButtonItemStyleDone target:self action:@selector(swapCamera)];
     transformItem.tintColor = [UIColor whiteColor];
     
     [toolbar setItems:@[cancelItem,flexible,transformItem]];
@@ -273,7 +291,7 @@ static CGFloat const PKRecordButtonWidth = 90;
             
             self.playButton = [UIButton buttonWithType:UIButtonTypeCustom];
             self.playButton.tintColor = self.themeColor;
-            UIImage *playImage = [[UIImage imageNamed:@"PK_Play"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            UIImage *playImage = [PKShortVideoImageNamed(@"PK_Play") imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             [self.playButton setImage:playImage forState:UIControlStateNormal];
             [self.playButton sizeToFit];
             self.playButton.center = CGPointMake((kScreenWidth-PKRecordButtonWidth)/2/2, PKOtherButtonVarticalHeight);
@@ -281,7 +299,7 @@ static CGFloat const PKRecordButtonWidth = 90;
             
             self.refreshButton = [UIButton buttonWithType:UIButtonTypeCustom];
             self.refreshButton.tintColor = self.themeColor;
-            UIImage *refreshImage = [[UIImage imageNamed:@"PK_Delete"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            UIImage *refreshImage = [PKShortVideoImageNamed(@"PK_Delete") imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             [self.refreshButton setImage:refreshImage forState:UIControlStateNormal];
             [self.refreshButton sizeToFit];
             self.refreshButton.center = CGPointMake(kScreenWidth-(kScreenWidth-PKRecordButtonWidth)/2/2, PKOtherButtonVarticalHeight);

@@ -16,5 +16,6 @@ Pod::Spec.new do |s|
   }
 
   s.source_files = 'PKShortVideo/**/*.{h,m}' , 'PKShortVideo/*.{h,m}'
+  s.exclude_files = 'PKShortVideo/include/PKShortVideo.h'
 
 end
