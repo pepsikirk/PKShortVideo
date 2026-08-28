@@ -52,7 +52,25 @@ Import the public umbrella header:
 #import "PKShortVideo.h"
 ```
 
-PKShortVideo does not currently provide a Swift Package Manager manifest.
+### Swift Package Manager
+
+In Xcode, choose **File > Add Package Dependencies**, enter the repository URL, and select the `PKShortVideo` product. The package manifest supports iOS 12.0 and includes the library's bundled recording controls.
+
+For a `Package.swift` dependency:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/pepsikirk/PKShortVideo.git", from: "0.9.6")
+]
+```
+
+Add the product to the target that uses the library:
+
+```swift
+.product(name: "PKShortVideo", package: "PKShortVideo")
+```
+
+Swift code can import the module with `import PKShortVideo`. Objective-C clients using the Swift package can import `#import <PKShortVideo/PKShortVideo.h>`. The existing Xcode project and CocoaPods integration continue to use the original umbrella header.
 
 ## Permissions
 

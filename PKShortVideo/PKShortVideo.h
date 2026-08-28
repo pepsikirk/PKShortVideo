@@ -8,6 +8,7 @@
 
 //PKShortVideoPlayer
 #import "PKChatMessagePlayerView.h"
+#import "PKPlayerView.h"
 #import "PKVideoDecoder.h"
 #import "PKFullScreenPlayerView.h"
 #import "PKFullScreenPlayerViewController.h"
