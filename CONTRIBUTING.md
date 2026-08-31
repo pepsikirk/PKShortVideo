@@ -99,6 +99,7 @@ Please remove private data, user identifiers, and credentials from logs before p
 ## Pull requests
 
 - Keep one pull request focused on one problem whenever practical.
+- Use concise English Git commit messages.
 - Explain why the change is needed, not only what files were changed.
 - Describe how you tested the change, including the simulator or device used.
 - Reference the related issue when one exists, for example `Fixes #123`.

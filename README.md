@@ -35,7 +35,7 @@ The `PKShortVideo` scheme builds successfully with Xcode 26.2 using a generic iO
 Add the following to your `Podfile`:
 
 ```ruby
-pod 'PKShortVideo', '~> 0.9.6'
+pod 'PKShortVideo', '~> 0.9.7'
 ```
 
 Then run:
@@ -60,7 +60,7 @@ For a `Package.swift` dependency:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/pepsikirk/PKShortVideo.git", from: "0.9.6")
+    .package(url: "https://github.com/pepsikirk/PKShortVideo.git", from: "0.9.7")
 ]
 ```
 
@@ -117,12 +117,18 @@ Implement the completion callback:
 
 ### Custom recording interface
 
-Use `PKShortVideoRecorder` when the application needs to own the recording UI:
+Use `PKShortVideoRecorder` when the application needs to own the recording UI. The existing initializer retains automatic encoder settings; use a configuration object when a product needs a specific capture preset or encoder bit rate:
 
 ```objc
+PKShortVideoRecorderConfiguration *configuration = [PKShortVideoRecorderConfiguration new];
+configuration.videoBitRate = 1500000; // bits per second; 0 keeps the automatic default
+configuration.audioBitRatePerChannel = 64000;
+configuration.captureSessionPreset = AVCaptureSessionPreset1280x720;
+
 self.recorder = [[PKShortVideoRecorder alloc]
     initWithOutputFilePath:self.outputFilePath
-                outputSize:self.outputSize];
+                outputSize:self.outputSize
+    recordingConfiguration:configuration];
 self.recorder.delegate = self;
 
 AVCaptureVideoPreviewLayer *previewLayer = [self.recorder previewLayer];
@@ -143,6 +149,25 @@ if (self.recorder.isRecording) {
 
 [self.recorder stopRecording];
 [self.recorder stopRunning];
+```
+
+`outputSize` continues to control the encoded dimensions. For H.264 safety, the recorder aligns those dimensions internally before creating the writer track. A positive `videoBitRate` or `audioBitRatePerChannel` overrides the automatic defaults; a zero value preserves the original behavior. If an optional `captureSessionPreset` is not supported by the active device, the recorder falls back to its output-size based preset selection.
+
+The recorder also provides capability-safe exposure controls without exposing its internal `AVCaptureDevice`. Invoke them after the capture session has been prepared; the completion runs on the main queue and reports unsupported hardware or invalid values.
+
+```objc
+[self.recorder setContinuousAutoExposureWithCompletion:^(NSError *error) {
+    if (error != nil) {
+        NSLog(@"Automatic exposure was unavailable: %@", error);
+    }
+}];
+
+CMTime duration = CMTimeMake(1, 120);
+[self.recorder setCustomExposureWithDuration:duration ISO:100.0f completion:^(NSError *error) {
+    if (error != nil) {
+        NSLog(@"Custom exposure was unavailable: %@", error);
+    }
+}];
 ```
 
 The recorder reports completion and failures through `PKShortVideoRecorderDelegate`:
@@ -232,9 +257,15 @@ Open `PKShortVideo.xcodeproj` in Xcode, select the `PKShortVideo` scheme, and ru
 
 ## Maintenance status
 
-The project is actively maintained again. The current package version is `0.9.6`, matching `PKShortVideo.podspec`, the `0.9.6` Git tag, and the CocoaPods Trunk release. The repository is being updated incrementally while preserving the original Objective-C public APIs and legacy playback path.
+The project is actively maintained again. The current package version is `0.9.7`, matching `PKShortVideo.podspec`, the `0.9.7` Git tag, and the CocoaPods Trunk release. The repository is being updated incrementally while preserving the original Objective-C public APIs and legacy playback path.
 
 ## Changelog
+
+### 0.9.7
+
+- Added `PKShortVideoRecorderConfiguration` for capture presets and video/audio encoder bit-rate overrides.
+- Added capability-safe automatic and custom exposure APIs to `PKShortVideoRecorder`.
+- Kept the existing recorder initializer and automatic defaults unchanged for source compatibility.
 
 ### 0.9.6
 

@@ -63,6 +63,34 @@
     [recorder stopRunning];
 }
 
+- (void)testRecordingConfigurationOverridesEncoderBitRatesAndIsCopied {
+    PKShortVideoRecorderConfiguration *configuration = [PKShortVideoRecorderConfiguration new];
+    configuration.videoBitRate = 1500000;
+    configuration.audioBitRatePerChannel = 64000;
+    configuration.captureSessionPreset = AVCaptureSessionPreset1280x720;
+
+    NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSProcessInfo processInfo].globallyUniqueString];
+    PKShortVideoRecorder *recorder = [[PKShortVideoRecorder alloc] initWithOutputFilePath:path
+                                                                                 outputSize:CGSizeMake(375, 667)
+                                                                     recordingConfiguration:configuration];
+    configuration.videoBitRate = 1;
+
+    NSDictionary *videoSettings = [recorder valueForKey:@"videoCompressionSettings"];
+    NSDictionary *videoCompressionProperties = videoSettings[AVVideoCompressionPropertiesKey];
+    NSDictionary *audioSettings = [recorder valueForKey:@"audioCompressionSettings"];
+
+    XCTAssertEqual([videoCompressionProperties[AVVideoAverageBitRateKey] integerValue], 1500000);
+    XCTAssertEqual([audioSettings[AVEncoderBitRatePerChannelKey] integerValue], 64000);
+    XCTAssertEqual(recorder.recordingConfiguration.videoBitRate, 1500000);
+    XCTAssertEqualObjects(recorder.recordingConfiguration.captureSessionPreset, AVCaptureSessionPreset1280x720);
+
+    PKShortVideoRecorderConfiguration *returnedConfiguration = recorder.recordingConfiguration;
+    returnedConfiguration.videoBitRate = 1;
+    XCTAssertEqual(recorder.recordingConfiguration.videoBitRate, 1500000);
+
+    [recorder stopRunning];
+}
+
 - (void)sessionDidFinishPreparing:(PKShortVideoSession *)session {
     XCTFail(@"A session without a video track must not prepare successfully");
 }
