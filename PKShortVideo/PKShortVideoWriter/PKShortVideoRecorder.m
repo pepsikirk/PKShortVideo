@@ -10,6 +10,8 @@
 #import <AVFoundation/AVFoundation.h>
 #import "PKShortVideoSession.h"
 
+NSString * const PKShortVideoRecorderErrorDomain = @"com.PKShortVideoWriter";
+
 typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
     PKRecordingStatusIdle = 0,
     PKRecordingStatusStartingRecording,
@@ -17,10 +19,23 @@ typedef NS_ENUM( NSInteger, PKRecordingStatus ) {
     PKRecordingStatusStoppingRecording,
 }; 
 
+@implementation PKShortVideoRecorderConfiguration
+
+- (id)copyWithZone:(NSZone *)zone {
+    PKShortVideoRecorderConfiguration *configuration = [[[self class] allocWithZone:zone] init];
+    configuration.videoBitRate = self.videoBitRate;
+    configuration.audioBitRatePerChannel = self.audioBitRatePerChannel;
+    configuration.captureSessionPreset = self.captureSessionPreset;
+    return configuration;
+}
+
+@end
+
 @interface PKShortVideoRecorder() <AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, PKShortVideoSessionDelegate>
 
 @property (nonatomic, strong) NSString *outputFilePath;
 @property (nonatomic, assign) CGSize outputSize;
+@property (nonatomic, copy, readwrite) PKShortVideoRecorderConfiguration *recordingConfiguration;
 
 @property (nonatomic, strong) dispatch_queue_t recorderQueue;
 
@@ -73,10 +88,17 @@ static NSInteger PKH264AlignedDimension(CGFloat dimension) {
 #pragma mark - Init
 
 - (instancetype)initWithOutputFilePath:(NSString *)outputFilePath outputSize:(CGSize)outputSize {
+    return [self initWithOutputFilePath:outputFilePath outputSize:outputSize recordingConfiguration:nil];
+}
+
+- (instancetype)initWithOutputFilePath:(NSString *)outputFilePath
+                            outputSize:(CGSize)outputSize
+                recordingConfiguration:(nullable PKShortVideoRecorderConfiguration *)recordingConfiguration {
     self = [super init];
     if (self) {
         _outputFilePath = outputFilePath;
         _outputSize = outputSize;
+        _recordingConfiguration = [recordingConfiguration copy] ?: [PKShortVideoRecorderConfiguration new];
         
         _recorderQueue = dispatch_queue_create("com.PKShortVideoWriter.sessionQueue", DISPATCH_QUEUE_SERIAL );
         
@@ -327,7 +349,10 @@ static NSInteger PKH264AlignedDimension(CGFloat dimension) {
     NSInteger numPixels = encodedWidth * encodedHeight;
     //每像素比特
     CGFloat bitsPerPixel = 6.0;
-    NSInteger bitsPerSecond = numPixels * bitsPerPixel;
+    PKShortVideoRecorderConfiguration *configuration = _recordingConfiguration;
+    NSInteger automaticVideoBitRate = numPixels * bitsPerPixel;
+    NSInteger bitsPerSecond = configuration.videoBitRate > 0 ? configuration.videoBitRate : automaticVideoBitRate;
+    NSInteger audioBitRatePerChannel = configuration.audioBitRatePerChannel > 0 ? configuration.audioBitRatePerChannel : 28000;
     
     // 码率和帧率设置
     NSDictionary *compressionProperties = @{ AVVideoAverageBitRateKey : @(bitsPerSecond),
@@ -344,7 +369,7 @@ static NSInteger PKH264AlignedDimension(CGFloat dimension) {
                        AVVideoCompressionPropertiesKey : compressionProperties };
     
     // 音频设置
-    self.audioCompressionSettings = @{ AVEncoderBitRatePerChannelKey : @(28000),
+    self.audioCompressionSettings = @{ AVEncoderBitRatePerChannelKey : @(audioBitRatePerChannel),
                                                        AVFormatIDKey : @(kAudioFormatMPEG4AAC),
                                                AVNumberOfChannelsKey : @(1),
                                                      AVSampleRateKey : @(22050) };
@@ -555,8 +580,11 @@ static NSInteger PKH264AlignedDimension(CGFloat dimension) {
 
 - (AVCaptureSession *)setupCaptureSession {
     AVCaptureSession *captureSession = [AVCaptureSession new];
-    
-    if (self.outputSize.width > 360 || (self.outputSize.height > 0 && self.outputSize.width/self.outputSize.height > 4.0 / 3.0)) {
+
+    AVCaptureSessionPreset configuredPreset = _recordingConfiguration.captureSessionPreset;
+    if (configuredPreset.length > 0 && [captureSession canSetSessionPreset:configuredPreset]) {
+        captureSession.sessionPreset = configuredPreset;
+    } else if (self.outputSize.width > 360 || (self.outputSize.height > 0 && self.outputSize.width/self.outputSize.height > 4.0 / 3.0)) {
         if ([captureSession canSetSessionPreset:AVCaptureSessionPreset1280x720]) {
             captureSession.sessionPreset = AVCaptureSessionPreset1280x720;//720 x 1280
         }
@@ -655,13 +683,111 @@ static NSInteger PKH264AlignedDimension(CGFloat dimension) {
 }
 
 - (NSError *)recorderErrorWithDescription:(NSString *)description {
-    return [NSError errorWithDomain:@"com.PKShortVideoWriter" code:1 userInfo:@{
+    return [self recorderErrorWithDescription:description code:PKShortVideoRecorderErrorCodeUnknown];
+}
+
+- (NSError *)recorderErrorWithDescription:(NSString *)description code:(PKShortVideoRecorderErrorCode)code {
+    return [NSError errorWithDomain:PKShortVideoRecorderErrorDomain code:code userInfo:@{
         NSLocalizedDescriptionKey : description ?: @"录制不能开始"
     }];
 }
 
+- (void)dispatchExposureCompletion:(PKShortVideoRecorderExposureCompletion)completion error:(NSError *)error {
+    if (!completion) {
+        return;
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        completion(error);
+    });
+}
+
+- (NSError *)exposureErrorForCurrentCamera:(AVCaptureDevice **)cameraOut {
+    AVCaptureDevice *camera = self.cameraDevice;
+    if (!camera) {
+        return [self recorderErrorWithDescription:@"摄像头尚未准备完成" code:PKShortVideoRecorderErrorCodeCameraUnavailable];
+    }
+    if (cameraOut) {
+        *cameraOut = camera;
+    }
+    return nil;
+}
+
+- (void)setContinuousAutoExposureWithCompletion:(PKShortVideoRecorderExposureCompletion)completion {
+    dispatch_async(self.recorderQueue, ^{
+        AVCaptureDevice *camera = nil;
+        NSError *error = [self exposureErrorForCurrentCamera:&camera];
+        AVCaptureExposureMode exposureMode = AVCaptureExposureModeLocked;
+
+        if (!error) {
+            if ([camera isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure]) {
+                exposureMode = AVCaptureExposureModeContinuousAutoExposure;
+            } else if ([camera isExposureModeSupported:AVCaptureExposureModeAutoExpose]) {
+                exposureMode = AVCaptureExposureModeAutoExpose;
+            } else {
+                error = [self recorderErrorWithDescription:@"当前摄像头不支持自动曝光" code:PKShortVideoRecorderErrorCodeExposureUnsupported];
+            }
+        }
+
+        if (!error) {
+            BOOL locked = [camera lockForConfiguration:&error];
+            if (!locked && !error) {
+                error = [self recorderErrorWithDescription:@"无法配置当前摄像头" code:PKShortVideoRecorderErrorCodeCameraUnavailable];
+            }
+            if (locked) {
+                camera.exposureMode = exposureMode;
+                [camera unlockForConfiguration];
+            }
+        }
+        [self dispatchExposureCompletion:completion error:error];
+    });
+}
+
+- (void)setCustomExposureWithDuration:(CMTime)duration ISO:(float)ISO completion:(PKShortVideoRecorderExposureCompletion)completion {
+    dispatch_async(self.recorderQueue, ^{
+        AVCaptureDevice *camera = nil;
+        NSError *error = [self exposureErrorForCurrentCamera:&camera];
+
+        if (!error && ![camera isExposureModeSupported:AVCaptureExposureModeCustom]) {
+            error = [self recorderErrorWithDescription:@"当前摄像头不支持自定义曝光" code:PKShortVideoRecorderErrorCodeExposureUnsupported];
+        }
+        if (!error) {
+            AVCaptureDeviceFormat *format = camera.activeFormat;
+            BOOL validDuration = CMTIME_IS_VALID(duration) && CMTimeCompare(duration, kCMTimeZero) > 0 && CMTimeCompare(duration, format.minExposureDuration) >= 0 && CMTimeCompare(duration, format.maxExposureDuration) <= 0;
+            BOOL validISO = isfinite(ISO) && ISO >= format.minISO && ISO <= format.maxISO;
+            if (!validDuration || !validISO) {
+                error = [self recorderErrorWithDescription:@"曝光时长或 ISO 超出当前摄像头支持范围" code:PKShortVideoRecorderErrorCodeInvalidExposure];
+            }
+        }
+
+        if (error) {
+            [self dispatchExposureCompletion:completion error:error];
+            return;
+        }
+
+        BOOL locked = [camera lockForConfiguration:&error];
+        if (!locked) {
+            if (!error) {
+                error = [self recorderErrorWithDescription:@"无法配置当前摄像头" code:PKShortVideoRecorderErrorCodeCameraUnavailable];
+            }
+            [self dispatchExposureCompletion:completion error:error];
+            return;
+        }
+
+        [camera setExposureModeCustomWithDuration:duration ISO:ISO completionHandler:^(__unused CMTime syncTime) {
+            [self dispatchExposureCompletion:completion error:nil];
+        }];
+        [camera unlockForConfiguration];
+    });
+}
+
 
 #pragma mark - Getter
+
+- (PKShortVideoRecorderConfiguration *)recordingConfiguration {
+    @synchronized (self) {
+        return [_recordingConfiguration copy];
+    }
+}
 
 - (BOOL)isRecording {
     @synchronized (self) {
