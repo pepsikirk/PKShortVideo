@@ -10,6 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "PKShortVideoSession.h"
 #import "PKShortVideoRecorder.h"
+#import "PKPlayerManager.h"
 
 @interface PKShortVideoTests : XCTestCase <PKShortVideoSessionDelegate>
 
@@ -89,6 +90,19 @@
     XCTAssertEqual(recorder.recordingConfiguration.videoBitRate, 1500000);
 
     [recorder stopRunning];
+}
+
+- (void)testPlayerManagerCreatesPlayersOnDemandForPKPlayerViewUsage {
+    PKPlayerManager *manager = [PKPlayerManager sharedManager];
+    [manager removeAllPlayer];
+
+    AVPlayerItem *item = [AVPlayerItem playerItemWithURL:[NSURL fileURLWithPath:@"/tmp/PKShortVideo-player-manager-test.mp4"]];
+    AVPlayer *player = [manager getAVQueuePlayWithPlayerItem:item uniqueID:@"PKShortVideo-player-manager-test"];
+
+    XCTAssertNotNil(player);
+    XCTAssertEqual(player.currentItem, item);
+
+    [manager removeAllPlayer];
 }
 
 - (void)sessionDidFinishPreparing:(PKShortVideoSession *)session {
