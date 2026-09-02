@@ -28,6 +28,8 @@
 
 @property (nonatomic, strong) dispatch_queue_t playerQueue;
 
+- (void)createPlayersIfNeeded;
+
 @end
 
 @implementation PKPlayerManager
@@ -70,7 +72,10 @@
             return;
         }
 
-        //未在界面创建小视频时返回nil
+        // PKPlayerView can be used without an explicit manager setup call.
+        if (!self.playerArray.count) {
+            [self createPlayersIfNeeded];
+        }
         if (!self.playerArray.count) {
             return;
         }
@@ -89,15 +94,20 @@
 
 - (void)creatMessagePlayer {
     dispatch_sync(self.playerQueue, ^{
-        if (self.playerArray.count > 0) {
-            return;
-        }
-        for (NSInteger i = 0; i < self.playerMaxCount ; i++) {
-            AVPlayer *player = [AVPlayer new];
-            player.volume = 0;
-            [self.playerArray addObject:player];
-        }
+        [self createPlayersIfNeeded];
     });
+}
+
+- (void)createPlayersIfNeeded {
+    if (self.playerArray.count > 0) {
+        return;
+    }
+
+    for (NSInteger i = 0; i < self.playerMaxCount; i++) {
+        AVPlayer *player = [AVPlayer new];
+        player.volume = 0;
+        [self.playerArray addObject:player];
+    }
 }
 
 - (void)removeAllPlayer {
