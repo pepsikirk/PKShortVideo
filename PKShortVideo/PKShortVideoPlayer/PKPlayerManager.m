@@ -85,6 +85,11 @@
         //按顺序平均分配player数组里面的player
         player = self.playerArray[self.playerIndex];
         self.playerIndex = (self.playerIndex + 1) % self.playerArray.count;
+
+        // A pooled player can be reused for a new item after the pool is full.
+        // Remove mappings for the previous item so an old ID cannot control it.
+        NSArray *staleIDs = [self.playerDict allKeysForObject:player];
+        [self.playerDict removeObjectsForKeys:staleIDs];
         [player replaceCurrentItemWithPlayerItem:item];
         //缓存play可以快速获取对应的player
         self.playerDict[uniqueID] = player;
