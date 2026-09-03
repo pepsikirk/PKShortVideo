@@ -105,6 +105,25 @@
     [manager removeAllPlayer];
 }
 
+- (void)testPlayerManagerRemovesStaleMappingWhenReusingPooledPlayer {
+    PKPlayerManager *manager = [PKPlayerManager sharedManager];
+    [manager removeAllPlayer];
+    manager.playerMaxCount = 1;
+
+    AVPlayerItem *firstItem = [AVPlayerItem playerItemWithURL:[NSURL fileURLWithPath:@"/tmp/PKShortVideo-first-player.mp4"]];
+    AVPlayerItem *secondItem = [AVPlayerItem playerItemWithURL:[NSURL fileURLWithPath:@"/tmp/PKShortVideo-second-player.mp4"]];
+    AVPlayer *firstPlayer = [manager getAVQueuePlayWithPlayerItem:firstItem uniqueID:@"PKShortVideo-first-player"];
+    AVPlayer *secondPlayer = [manager getAVQueuePlayWithPlayerItem:secondItem uniqueID:@"PKShortVideo-second-player"];
+
+    NSDictionary *playerMapping = [manager valueForKey:@"playerDict"];
+    XCTAssertEqual(firstPlayer, secondPlayer);
+    XCTAssertNil(playerMapping[@"PKShortVideo-first-player"]);
+    XCTAssertEqual(playerMapping[@"PKShortVideo-second-player"], secondPlayer);
+
+    manager.playerMaxCount = 8;
+    [manager removeAllPlayer];
+}
+
 - (void)sessionDidFinishPreparing:(PKShortVideoSession *)session {
     XCTFail(@"A session without a video track must not prepare successfully");
 }
