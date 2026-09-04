@@ -554,7 +554,7 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
     if ([message.media isKindOfClass:[PKShortVideoItem class]]) {
         PKShortVideoItem *item = (PKShortVideoItem *)message.media;
         //跳转全屏播放小视频界面
-        PKFullScreenPlayerViewController *viewController = [[PKFullScreenPlayerViewController alloc] initWithVideoPath:item.videoPath previewImage:[UIImage pk_previewImageWithVideoURL:[NSURL fileURLWithPath:item.videoPath]]];
+        PKFullScreenPlayerViewController *viewController = [[PKFullScreenPlayerViewController alloc] initWithVideoPath:item.videoPath previewImage:item.image];
         [self presentViewController:viewController animated:NO completion:NULL];
     }
 }
