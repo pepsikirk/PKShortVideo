@@ -484,6 +484,10 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
 
 //将要结束显示时停止播放
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.item >= self.demoData.messages.count) {
+        return;
+    }
+
     JSQMessage *message = self.demoData.messages[indexPath.item];
     if ([message.media isKindOfClass:[PKShortVideoItem2 class]]) {
         PKShortVideoItem2 *item = (PKShortVideoItem2 *)message.media;
