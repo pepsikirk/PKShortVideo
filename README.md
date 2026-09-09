@@ -35,7 +35,7 @@ The `PKShortVideo` scheme builds successfully with Xcode 26.2 using a generic iO
 Add the following to your `Podfile`:
 
 ```ruby
-pod 'PKShortVideo', '~> 0.9.7'
+pod 'PKShortVideo', '~> 0.9.8'
 ```
 
 Then run:
@@ -60,7 +60,7 @@ For a `Package.swift` dependency:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/pepsikirk/PKShortVideo.git", from: "0.9.7")
+    .package(url: "https://github.com/pepsikirk/PKShortVideo.git", from: "0.9.8")
 ]
 ```
 
@@ -257,9 +257,14 @@ Open `PKShortVideo.xcodeproj` in Xcode, select the `PKShortVideo` scheme, and ru
 
 ## Maintenance status
 
-The project is actively maintained again. The current package version is `0.9.7`, matching `PKShortVideo.podspec`, the `0.9.7` Git tag, and the CocoaPods Trunk release. The repository is being updated incrementally while preserving the original Objective-C public APIs and legacy playback path.
+The project is actively maintained again. The current package version is `0.9.8`, matching `PKShortVideo.podspec`, the `0.9.8` Git tag, and the CocoaPods Trunk release. The repository is being updated incrementally while preserving the original Objective-C public APIs and legacy playback path.
 
 ## Changelog
+
+### 0.9.8
+
+- Fixed display geometry for portrait videos in the legacy GPUImage/OpenGL ES player.
+- Added regression coverage for rotated and unrotated video dimensions.
 
 ### 0.9.7
 
