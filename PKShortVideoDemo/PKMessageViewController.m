@@ -80,6 +80,16 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (void)reloadMessageCell:(JSQMessage *)message {
+    NSUInteger messageIndex = [self.demoData.messages indexOfObjectIdenticalTo:message];
+    if (messageIndex == NSNotFound || self.collectionView.numberOfSections == 0 || messageIndex >= [self.collectionView numberOfItemsInSection:0]) {
+        return;
+    }
+
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:messageIndex inSection:0];
+    [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+}
+
 
 
 
@@ -212,6 +222,7 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
     
     [self.demoData.messages addObject:newMessage];
     [self finishReceivingMessageAnimated:YES];
+    JSQMessage *messageToReload = newMessage;
     
     
     if (newMessage.isMediaMessage) {
@@ -229,21 +240,21 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
             
             if ([newMediaData isKindOfClass:[JSQPhotoMediaItem class]]) {
                 ((JSQPhotoMediaItem *)newMediaData).image = newMediaAttachmentCopy;
-                [self.collectionView reloadData];
+                [self reloadMessageCell:messageToReload];
             }
             else if ([newMediaData isKindOfClass:[JSQLocationMediaItem class]]) {
                 [((JSQLocationMediaItem *)newMediaData)setLocation:newMediaAttachmentCopy withCompletionHandler:^{
-                    [self.collectionView reloadData];
+                    [self reloadMessageCell:messageToReload];
                 }];
             }
             else if ([newMediaData isKindOfClass:[JSQVideoMediaItem class]]) {
                 ((JSQVideoMediaItem *)newMediaData).fileURL = newMediaAttachmentCopy;
                 ((JSQVideoMediaItem *)newMediaData).isReadyToPlay = YES;
-                [self.collectionView reloadData];
+                [self reloadMessageCell:messageToReload];
             }
             else if ([newMediaData isKindOfClass:[JSQAudioMediaItem class]]) {
                 ((JSQAudioMediaItem *)newMediaData).audioData = newMediaAttachmentCopy;
-                [self.collectionView reloadData];
+                [self reloadMessageCell:messageToReload];
             }
             else if ([newMediaData isKindOfClass:[PKShortVideoItem class]]) {
                 
