@@ -33,6 +33,8 @@
 
 @property (nonatomic, strong) PKVideoDecoder *decoder;
 
++ (CGSize)displaySizeForInputSize:(CGSize)inputSize rotationMode:(GPUImageRotationMode)rotationMode;
+
 @end
 
 @implementation PKChatMessagePlayerView
@@ -235,7 +237,12 @@
     runSynchronouslyOnVideoProcessingQueue(^{
         CGFloat heightScaling, widthScaling;
         CGSize currentViewSize = self.bounds.size;
-        CGRect insetRect = AVMakeRectWithAspectRatioInsideRect(self.inputImageSize, self.bounds);
+        CGSize displaySize = [PKChatMessagePlayerView displaySizeForInputSize:self.inputImageSize rotationMode:self.rotationMode];
+        if (currentViewSize.width <= 0 || currentViewSize.height <= 0 || displaySize.width <= 0 || displaySize.height <= 0) {
+            return;
+        }
+
+        CGRect insetRect = AVMakeRectWithAspectRatioInsideRect(displaySize, self.bounds);
         
         widthScaling = insetRect.size.width / currentViewSize.width;
         heightScaling = insetRect.size.height / currentViewSize.height;
@@ -249,6 +256,13 @@
         imageVertices[6] = widthScaling;
         imageVertices[7] = heightScaling;
     });
+}
+
++ (CGSize)displaySizeForInputSize:(CGSize)inputSize rotationMode:(GPUImageRotationMode)rotationMode {
+    if (GPUImageRotationSwapsWidthAndHeight(rotationMode)) {
+        return CGSizeMake(inputSize.height, inputSize.width);
+    }
+    return inputSize;
 }
 
 - (void)setBackgroundColorRed:(GLfloat)redComponent green:(GLfloat)greenComponent blue:(GLfloat)blueComponent alpha:(GLfloat)alphaComponent; {

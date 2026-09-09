@@ -11,6 +11,14 @@
 #import "PKShortVideoSession.h"
 #import "PKShortVideoRecorder.h"
 #import "PKPlayerManager.h"
+#import "PKChatMessagePlayerView.h"
+#import "GPUImageContext.h"
+
+@interface PKChatMessagePlayerView (GeometryTesting)
+
++ (CGSize)displaySizeForInputSize:(CGSize)inputSize rotationMode:(GPUImageRotationMode)rotationMode;
+
+@end
 
 @interface PKShortVideoTests : XCTestCase <PKShortVideoSessionDelegate>
 
@@ -103,6 +111,18 @@
     XCTAssertEqual(player.currentItem, item);
 
     [manager removeAllPlayer];
+}
+
+- (void)testOpenGLPlayerSwapsDisplayDimensionsForPortraitRotation {
+    CGSize inputSize = CGSizeMake(320, 240);
+
+    CGSize rotatedSize = [PKChatMessagePlayerView displaySizeForInputSize:inputSize rotationMode:kGPUImageRotateRight];
+    CGSize unrotatedSize = [PKChatMessagePlayerView displaySizeForInputSize:inputSize rotationMode:kGPUImageNoRotation];
+
+    XCTAssertEqual(rotatedSize.width, 240);
+    XCTAssertEqual(rotatedSize.height, 320);
+    XCTAssertEqual(unrotatedSize.width, 320);
+    XCTAssertEqual(unrotatedSize.height, 240);
 }
 
 - (void)testPlayerManagerRemovesStaleMappingWhenReusingPooledPlayer {
