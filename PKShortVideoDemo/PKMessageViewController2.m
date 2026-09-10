@@ -21,18 +21,22 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
 
     NSSet<NSString *> *videoExtensions = [NSSet setWithObjects:@"mp4", @"mov", @"m4v", nil];
     NSMutableArray<NSString *> *videoPaths = [NSMutableArray array];
+    NSMutableDictionary<NSString *, NSDate *> *modificationDates = [NSMutableDictionary dictionary];
     NSDirectoryEnumerator *directoryEnumerator = [fileManager enumeratorAtPath:documentsPath];
     for (NSString *relativePath in directoryEnumerator) {
         NSString *fullPath = [documentsPath stringByAppendingPathComponent:relativePath];
-        BOOL isDirectory = NO;
-        if (![fileManager fileExistsAtPath:fullPath isDirectory:&isDirectory] || isDirectory) {
+        NSDictionary *attributes = [fileManager attributesOfItemAtPath:fullPath error:nil];
+        if (![attributes[NSFileType] isEqualToString:NSFileTypeRegular]) {
             continue;
         }
         if ([videoExtensions containsObject:relativePath.pathExtension.lowercaseString]) {
             [videoPaths addObject:fullPath];
+            modificationDates[fullPath] = attributes[NSFileModificationDate] ?: [NSDate distantPast];
         }
     }
-    return videoPaths;
+    return [videoPaths sortedArrayUsingComparator:^NSComparisonResult(NSString *path1, NSString *path2) {
+        return [modificationDates[path2] compare:modificationDates[path1]];
+    }];
 }
 
 @interface PKMessageViewController2 () <PKRecordShortVideoDelegate>
@@ -59,16 +63,7 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
     
     //获取已经缓存视频
     NSArray *pathArray = PKDemoVideoPathsInDocuments();
-    
-    NSArray *sortArray = [pathArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-        NSDictionary* firstAttribute  = [[NSFileManager defaultManager] attributesOfItemAtPath:obj1 error:nil];
-        NSDate *first = [firstAttribute objectForKey:NSFileModificationDate];
-        NSDictionary *secondAttribute = [[NSFileManager defaultManager] attributesOfItemAtPath:obj2 error:nil];
-        NSDate *second = [secondAttribute objectForKey:NSFileModificationDate];
-        return [(second ?: [NSDate distantPast]) compare:(first ?: [NSDate distantPast])];
-    }];
-
-    for (NSString *path in sortArray) {
+    for (NSString *path in pathArray) {
         [self.demoData addShortVideoMediaMessageWithVideoPath:path playType:PKPlayTypeAVPlayer];
     }
     [self finishSendingMessageAnimated:YES];
