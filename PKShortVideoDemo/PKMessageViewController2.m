@@ -585,11 +585,12 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
 #pragma mark - Notificaiton
 
 - (void)pk_msgVC_didBecomeActiveNotification:(NSNotification *)notification {
-    NSArray *array = [self.collectionView indexPathsForVisibleItems];
-    if (!array) {
-        return;
-    }
-    for (NSIndexPath *indexPath in array) {
+    NSArray *visibleIndexPaths = [self.collectionView indexPathsForVisibleItems];
+    NSUInteger messageCount = self.demoData.messages.count;
+    for (NSIndexPath *indexPath in visibleIndexPaths) {
+        if (indexPath.item >= messageCount) {
+            continue;
+        }
         JSQMessage *msg = self.demoData.messages[indexPath.item];
         if ([msg.media isKindOfClass:[PKShortVideoItem2 class]]) {
             PKShortVideoItem2 *item = (PKShortVideoItem2 *)msg.media;
