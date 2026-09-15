@@ -222,7 +222,13 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
         /**
          *  Simulate "downloading" media
          */
+        __weak typeof(self) weakSelf = self;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) {
+                return;
+            }
+
             /**
              *  Media is "finished downloading", re-display visible cells
              *
@@ -233,21 +239,21 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
             
             if ([newMediaData isKindOfClass:[JSQPhotoMediaItem class]]) {
                 ((JSQPhotoMediaItem *)newMediaData).image = newMediaAttachmentCopy;
-                [self reloadMessageCell:messageToReload];
+                [strongSelf reloadMessageCell:messageToReload];
             }
             else if ([newMediaData isKindOfClass:[JSQLocationMediaItem class]]) {
                 [((JSQLocationMediaItem *)newMediaData)setLocation:newMediaAttachmentCopy withCompletionHandler:^{
-                    [self reloadMessageCell:messageToReload];
+                    [weakSelf reloadMessageCell:messageToReload];
                 }];
             }
             else if ([newMediaData isKindOfClass:[JSQVideoMediaItem class]]) {
                 ((JSQVideoMediaItem *)newMediaData).fileURL = newMediaAttachmentCopy;
                 ((JSQVideoMediaItem *)newMediaData).isReadyToPlay = YES;
-                [self reloadMessageCell:messageToReload];
+                [strongSelf reloadMessageCell:messageToReload];
             }
             else if ([newMediaData isKindOfClass:[JSQAudioMediaItem class]]) {
                 ((JSQAudioMediaItem *)newMediaData).audioData = newMediaAttachmentCopy;
-                [self reloadMessageCell:messageToReload];
+                [strongSelf reloadMessageCell:messageToReload];
             }
             else if ([newMediaData isKindOfClass:[PKShortVideoItem2 class]]) {
                 
