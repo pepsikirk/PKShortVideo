@@ -485,14 +485,6 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
                                               NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
     }
     
-    //iOS8以上才有willDisplayCell方法，判断iOS7在这里播放
-    if ([UIDevice currentDevice].systemVersion.floatValue <= 8.0) {
-        if ([msg.media isKindOfClass:[PKShortVideoItem class]]) {
-            PKShortVideoItem *item = (PKShortVideoItem *)msg.media;
-            [item play];
-        }
-    }
-    
     return cell;
 }
 
