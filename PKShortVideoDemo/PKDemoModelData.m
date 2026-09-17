@@ -11,6 +11,16 @@
 #import "PKShortVideoItem2.h"
 #import "UIImage+PKShortVideoPlayer.h"
 
+static NSCache<NSString *, UIImage *> *PKDemoPreviewImageCache(void) {
+    static NSCache<NSString *, UIImage *> *cache;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        cache = [[NSCache alloc] init];
+        cache.countLimit = 32;
+    });
+    return cache;
+}
+
 /**
  *  This is for demo/testing purposes only.
  *  This object sets up some fake model data.
@@ -171,7 +181,17 @@
         return;
     }
 
-    UIImage *previewImage = [UIImage pk_previewImageWithVideoURL:[NSURL fileURLWithPath:videoPath]];
+    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:videoPath error:nil];
+    NSDate *modificationDate = attributes[NSFileModificationDate];
+    NSString *cacheKey = [NSString stringWithFormat:@"%@|%.6f", videoPath, modificationDate.timeIntervalSinceReferenceDate];
+    NSCache<NSString *, UIImage *> *previewImageCache = PKDemoPreviewImageCache();
+    UIImage *previewImage = [previewImageCache objectForKey:cacheKey];
+    if (!previewImage) {
+        previewImage = [UIImage pk_previewImageWithVideoURL:[NSURL fileURLWithPath:videoPath]];
+        if (previewImage) {
+            [previewImageCache setObject:previewImage forKey:cacheKey];
+        }
+    }
     if (!previewImage) {
         NSLog(@"忽略无法生成预览图的视频文件: %@", videoPath);
         return;
