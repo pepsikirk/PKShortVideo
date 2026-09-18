@@ -503,6 +503,10 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
 
 //将要显示时播放
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.item >= self.demoData.messages.count) {
+        return;
+    }
+
     JSQMessage *message = self.demoData.messages[indexPath.item];
     if ([message.media isKindOfClass:[PKShortVideoItem class]]) {
         PKShortVideoItem *item = (PKShortVideoItem *)message.media;
@@ -557,6 +561,10 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
 
 //点击消息是跳转播放
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.item >= self.demoData.messages.count) {
+        return;
+    }
+
     JSQMessage *message = self.demoData.messages[indexPath.item];
     //判断媒体消息类型
     if ([message.media isKindOfClass:[PKShortVideoItem class]]) {
