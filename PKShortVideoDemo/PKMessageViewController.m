@@ -355,6 +355,10 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
 }
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didDeleteMessageAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.item >= self.demoData.messages.count) {
+        return;
+    }
+
     [self.demoData.messages removeObjectAtIndex:indexPath.item];
 }
 
