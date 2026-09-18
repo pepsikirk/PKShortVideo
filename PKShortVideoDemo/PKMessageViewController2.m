@@ -58,9 +58,6 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pk_msgVC_didBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
     
-    //创建player，默认8个
-    [[PKPlayerManager sharedManager] creatMessagePlayer];
-    
     //获取已经缓存视频
     NSArray *pathArray = PKDemoVideoPathsInDocuments();
     for (NSString *path in pathArray) {
