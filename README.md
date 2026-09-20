@@ -1,11 +1,11 @@
 # PKShortVideo
 
+**PKShortVideo is a high-performance iOS short video engine optimized for chat interfaces. Built on top of AVFoundation and a hardware-accelerated legacy GPUImage/OpenGL ES path, it delivers low-latency recording and silky-smooth video playback with minimal resource overhead.**
+
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/pepsikirk/PKShortVideo/blob/master/LICENSE)
 [![CocoaPods](https://img.shields.io/cocoapods/v/PKShortVideo.svg)](https://cocoapods.org/pods/PKShortVideo)
 [![Platform](https://img.shields.io/badge/minimum%20iOS-12.0-blue.svg)](https://developer.apple.com/ios/)
 [![Xcode](https://img.shields.io/badge/Xcode-26.2-blue.svg)](https://developer.apple.com/xcode/)
-
-PKShortVideo is an Objective-C video library for iOS chat interfaces. It provides short video recording, AVFoundation-based playback, and a legacy GPUImage/OpenGL ES playback path.
 
 Historical development notes are available in the [original development article](https://www.jianshu.com/p/6d35bb53f4ac).
 
