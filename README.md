@@ -7,8 +7,6 @@
 [![Platform](https://img.shields.io/badge/minimum%20iOS-12.0-blue.svg)](https://developer.apple.com/ios/)
 [![Xcode](https://img.shields.io/badge/Xcode-26.2-blue.svg)](https://developer.apple.com/xcode/)
 
-Historical development notes are available in the [original development article](https://www.jianshu.com/p/6d35bb53f4ac).
-
 ![PKShortVideo demo](https://raw.githubusercontent.com/pepsikirk/PKShortVideo/master/Screenshots/gif.gif)
 
 ## Features
