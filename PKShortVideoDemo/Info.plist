@@ -27,11 +27,9 @@
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Need shoot</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Need photo</string>
+	<string>PKShortVideo uses the camera to record short videos.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Need microphone</string>
+	<string>PKShortVideo uses the microphone to record audio with videos.</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
