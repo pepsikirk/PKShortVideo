@@ -74,9 +74,11 @@
         return nil;
     }
     
-    [self.dateFormatter setDateStyle:NSDateFormatterMediumStyle];
-    [self.dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-    return [self.dateFormatter stringFromDate:date];
+    @synchronized (self.dateFormatter) {
+        [self.dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+        [self.dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+        return [self.dateFormatter stringFromDate:date];
+    }
 }
 
 - (NSAttributedString *)attributedTimestampForDate:(NSDate *)date
@@ -105,9 +107,11 @@
         return nil;
     }
     
-    [self.dateFormatter setDateStyle:NSDateFormatterNoStyle];
-    [self.dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-    return [self.dateFormatter stringFromDate:date];
+    @synchronized (self.dateFormatter) {
+        [self.dateFormatter setDateStyle:NSDateFormatterNoStyle];
+        [self.dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+        return [self.dateFormatter stringFromDate:date];
+    }
 }
 
 - (NSString *)relativeDateForDate:(NSDate *)date
@@ -116,9 +120,11 @@
         return nil;
     }
     
-    [self.dateFormatter setDateStyle:NSDateFormatterMediumStyle];
-    [self.dateFormatter setTimeStyle:NSDateFormatterNoStyle];
-    return [self.dateFormatter stringFromDate:date];
+    @synchronized (self.dateFormatter) {
+        [self.dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+        [self.dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+        return [self.dateFormatter stringFromDate:date];
+    }
 }
 
 @end
