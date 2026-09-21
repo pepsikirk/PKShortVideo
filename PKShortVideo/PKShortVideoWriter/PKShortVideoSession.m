@@ -126,7 +126,10 @@ typedef NS_ENUM(NSInteger, PKSessionStatus){
     }
     //确保当前url文件不存在
     if (!error) {
-        [[NSFileManager defaultManager] removeItemAtPath:self.tempFilePath error:&error];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        if ([fileManager fileExistsAtPath:self.tempFilePath]) {
+            [fileManager removeItemAtPath:self.tempFilePath error:&error];
+        }
         self.assetWriter = [[AVAssetWriter alloc] initWithURL:[NSURL fileURLWithPath:self.tempFilePath] fileType:AVFileTypeMPEG4 error:&error];
     }
     

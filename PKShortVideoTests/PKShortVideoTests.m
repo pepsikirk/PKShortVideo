@@ -41,9 +41,10 @@
 - (void)testMissingAudioFormatDoesNotCrashOrInitializeAudioTrack {
     NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSProcessInfo processInfo].globallyUniqueString];
     PKShortVideoSession *session = [[PKShortVideoSession alloc] initWithTempFilePath:path];
+    CMFormatDescriptionRef missingAudioFormatDescription = NULL;
 
     XCTAssertNotNil(session);
-    XCTAssertNoThrow([session addAudioTrackWithSourceFormatDescription:NULL settings:@{}]);
+    XCTAssertNoThrow([session addAudioTrackWithSourceFormatDescription:missingAudioFormatDescription settings:@{}]);
     XCTAssertFalse(session.audioInitialized);
 }
 
@@ -56,6 +57,36 @@
     [session prepareToRecord];
 
     [self waitForExpectations:@[self.failureExpectation] timeout:1.0];
+}
+
+- (void)testPreparingWithNewOutputPathDoesNotFailWhenFileIsMissing {
+    NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSProcessInfo processInfo].globallyUniqueString];
+    XCTAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:path]);
+
+    CMVideoFormatDescriptionRef formatDescription = NULL;
+    OSStatus status = CMVideoFormatDescriptionCreate(kCFAllocatorDefault,
+                                                     kCMVideoCodecType_H264,
+                                                     320,
+                                                     240,
+                                                     NULL,
+                                                     &formatDescription);
+    XCTAssertEqual(status, noErr);
+    XCTAssertNotEqual(formatDescription, NULL);
+
+    PKShortVideoSession *session = [[PKShortVideoSession alloc] initWithTempFilePath:path];
+    [session addVideoTrackWithSourceFormatDescription:formatDescription
+                                             settings:@{
+                                                 AVVideoCodecKey : AVVideoCodecTypeH264,
+                                                 AVVideoWidthKey : @320,
+                                                 AVVideoHeightKey : @240
+                                             }];
+    [session prepareToRecord];
+
+    XCTAssertTrue(session.videoInitialized);
+
+    if (formatDescription) {
+        CFRelease(formatDescription);
+    }
 }
 
 - (void)testOddFullScreenOutputSizeUsesMacroblockAlignedH264Dimensions {
