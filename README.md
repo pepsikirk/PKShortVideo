@@ -33,7 +33,7 @@ The `PKShortVideo` scheme builds successfully with Xcode 26.2 using a generic iO
 Add the following to your `Podfile`:
 
 ```ruby
-pod 'PKShortVideo', '~> 0.9.8'
+pod 'PKShortVideo', '~> 0.9.9'
 ```
 
 Then run:
@@ -58,7 +58,7 @@ For a `Package.swift` dependency:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/pepsikirk/PKShortVideo.git", from: "0.9.8")
+    .package(url: "https://github.com/pepsikirk/PKShortVideo.git", from: "0.9.9")
 ]
 ```
 
@@ -255,9 +255,14 @@ Open `PKShortVideo.xcodeproj` in Xcode, select the `PKShortVideo` scheme, and ru
 
 ## Maintenance status
 
-The project is actively maintained again. The current package version is `0.9.8`, matching `PKShortVideo.podspec`, the `0.9.8` Git tag, and the CocoaPods Trunk release. The repository is being updated incrementally while preserving the original Objective-C public APIs and legacy playback path.
+The project is actively maintained again. The current source package version is `0.9.9`, matching `PKShortVideo.podspec` and the `0.9.9` Git tag. The repository is being updated incrementally while preserving the original Objective-C public APIs and legacy playback path.
 
 ## Changelog
+
+### 0.9.9
+
+- Fixed first-time recording failure when the configured output file did not already exist.
+- Added a regression test covering new output paths.
 
 ### 0.9.8
 
