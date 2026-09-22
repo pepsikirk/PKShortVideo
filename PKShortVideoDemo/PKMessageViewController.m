@@ -60,6 +60,7 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
     
     self.demoData = [[PKDemoModelData alloc] init];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pk_msgVC_willResignActiveNotification:) name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pk_msgVC_didBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
     
     //获取已经缓存视频
@@ -596,7 +597,17 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
 
 #pragma mark - Notificaiton
 
+- (void)pk_msgVC_willResignActiveNotification:(NSNotification *)notification {
+    (void)notification;
+    [self pk_setVisibleShortVideosPlaying:NO];
+}
+
 - (void)pk_msgVC_didBecomeActiveNotification:(NSNotification *)notification {
+    (void)notification;
+    [self pk_setVisibleShortVideosPlaying:YES];
+}
+
+- (void)pk_setVisibleShortVideosPlaying:(BOOL)playing {
     NSArray *visibleIndexPaths = [self.collectionView indexPathsForVisibleItems];
     NSUInteger messageCount = self.demoData.messages.count;
     for (NSIndexPath *indexPath in visibleIndexPaths) {
@@ -606,7 +617,11 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
         JSQMessage *msg = self.demoData.messages[indexPath.item];
         if ([msg.media isKindOfClass:[PKShortVideoItem class]]) {
             PKShortVideoItem *item = (PKShortVideoItem *)msg.media;
-            [item play];
+            if (playing) {
+                [item play];
+            } else {
+                [item pause];
+            }
         }
     }
 }
