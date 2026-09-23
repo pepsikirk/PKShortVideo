@@ -223,4 +223,53 @@ static NSCache<NSString *, UIImage *> *PKDemoPreviewImageCache(void) {
 
 }
 
+- (void)removeMessageAtIndex:(NSUInteger)index {
+    if (index >= self.messages.count) {
+        return;
+    }
+
+    JSQMessage *message = self.messages[index];
+    NSString *videoPath = nil;
+    if ([message.media isKindOfClass:[PKShortVideoItem class]]) {
+        PKShortVideoItem *videoItem = (PKShortVideoItem *)message.media;
+        videoPath = videoItem.videoPath;
+        [videoItem pause];
+    } else if ([message.media isKindOfClass:[PKShortVideoItem2 class]]) {
+        PKShortVideoItem2 *videoItem = (PKShortVideoItem2 *)message.media;
+        videoPath = videoItem.videoPath;
+        [videoItem pause];
+    }
+
+    [self.messages removeObjectAtIndex:index];
+    if (videoPath.length == 0) {
+        return;
+    }
+
+    for (JSQMessage *remainingMessage in self.messages) {
+        NSString *remainingVideoPath = nil;
+        if ([remainingMessage.media isKindOfClass:[PKShortVideoItem class]]) {
+            remainingVideoPath = ((PKShortVideoItem *)remainingMessage.media).videoPath;
+        } else if ([remainingMessage.media isKindOfClass:[PKShortVideoItem2 class]]) {
+            remainingVideoPath = ((PKShortVideoItem2 *)remainingMessage.media).videoPath;
+        }
+
+        if ([remainingVideoPath isEqualToString:videoPath]) {
+            return;
+        }
+    }
+
+    NSString *documentsPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+    NSString *standardizedDocumentsPath = documentsPath.stringByStandardizingPath;
+    NSString *standardizedVideoPath = videoPath.stringByStandardizingPath;
+    NSString *documentsPathPrefix = [standardizedDocumentsPath stringByAppendingString:@"/"];
+    if (standardizedDocumentsPath.length == 0 || ![standardizedVideoPath hasPrefix:documentsPathPrefix]) {
+        return;
+    }
+
+    NSError *error = nil;
+    if (![[NSFileManager defaultManager] removeItemAtPath:standardizedVideoPath error:&error] && error) {
+        NSLog(@"Failed to remove deleted demo video %@: %@", standardizedVideoPath, error);
+    }
+}
+
 @end

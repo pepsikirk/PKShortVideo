@@ -52,4 +52,6 @@ typedef NS_ENUM(NSUInteger, PKPlayType) {
 
 - (void)addShortVideoMediaMessageWithVideoPath:(NSString *)videoPath playType:(PKPlayType)type;
 
+- (void)removeMessageAtIndex:(NSUInteger)index;
+
 @end
