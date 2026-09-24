@@ -76,6 +76,16 @@ static NSArray<NSString *> *PKDemoVideoPathsInDocuments(void) {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self pk_setVisibleShortVideosPlaying:NO];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self pk_setVisibleShortVideosPlaying:YES];
+}
+
 - (void)reloadMessageCell:(JSQMessage *)message {
     NSUInteger messageIndex = [self.demoData.messages indexOfObjectIdenticalTo:message];
     if (messageIndex == NSNotFound || self.collectionView.numberOfSections == 0 || messageIndex >= [self.collectionView numberOfItemsInSection:0]) {
