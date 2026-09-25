@@ -86,16 +86,19 @@ static CGFloat const PKShortVideoMaxLength = 220;
 #pragma mark - NSObject
 
 - (BOOL)isEqual:(id)object {
-    if (![super isEqual:object]) {
+    if (self == object) {
+        return YES;
+    }
+    if (![object isKindOfClass:[PKShortVideoItem2 class]]) {
         return NO;
     }
     
     PKShortVideoItem2 *videoItem = (PKShortVideoItem2 *)object;
-    return [self.videoPath isEqual:videoItem.videoPath];
+    return [self.videoPath isEqualToString:videoItem.videoPath];
 }
 
 - (NSUInteger)hash {
-    return super.hash ^ self.videoPath.hash ^ self.image.hash;
+    return self.videoPath.hash;
 }
 
 #pragma mark - NSCoding
