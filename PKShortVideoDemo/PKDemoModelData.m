@@ -29,6 +29,33 @@ static NSCache<NSString *, UIImage *> *PKDemoPreviewImageCache(void) {
 
 @implementation PKDemoModelData
 
++ (NSArray<NSString *> *)videoPathsInDocuments {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *documentsPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+    if (documentsPath.length == 0) {
+        return @[];
+    }
+
+    NSSet<NSString *> *videoExtensions = [NSSet setWithObjects:@"mp4", @"mov", @"m4v", nil];
+    NSMutableArray<NSString *> *videoPaths = [NSMutableArray array];
+    NSMutableDictionary<NSString *, NSDate *> *modificationDates = [NSMutableDictionary dictionary];
+    NSDirectoryEnumerator *directoryEnumerator = [fileManager enumeratorAtPath:documentsPath];
+    for (NSString *relativePath in directoryEnumerator) {
+        NSString *fullPath = [documentsPath stringByAppendingPathComponent:relativePath];
+        NSDictionary *attributes = [fileManager attributesOfItemAtPath:fullPath error:nil];
+        if (![attributes[NSFileType] isEqualToString:NSFileTypeRegular]) {
+            continue;
+        }
+        if ([videoExtensions containsObject:relativePath.pathExtension.lowercaseString]) {
+            [videoPaths addObject:fullPath];
+            modificationDates[fullPath] = attributes[NSFileModificationDate] ?: [NSDate distantPast];
+        }
+    }
+    return [videoPaths sortedArrayUsingComparator:^NSComparisonResult(NSString *path1, NSString *path2) {
+        return [modificationDates[path2] compare:modificationDates[path1]];
+    }];
+}
+
 - (instancetype)init
 {
     self = [super init];

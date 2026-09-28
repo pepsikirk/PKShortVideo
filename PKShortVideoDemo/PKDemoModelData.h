@@ -42,6 +42,8 @@ typedef NS_ENUM(NSUInteger, PKPlayType) {
 
 @property (strong, nonatomic) NSDictionary *users;
 
++ (NSArray<NSString *> *)videoPathsInDocuments;
+
 - (void)addPhotoMediaMessage;
 
 - (void)addLocationMediaMessageCompletion:(JSQLocationMediaItemCompletionBlock)completion;
