@@ -32,6 +32,7 @@ static CGFloat const PKShortVideoMaxLength = 220;
 
 //开始播放小视频
 - (void)play {
+    [self mediaView];
     [self.playerView play];
 }
 //结束播放视频
