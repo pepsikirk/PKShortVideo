@@ -106,6 +106,9 @@
         
     NSMutableArray *userIds = [[self.demoData.users allKeys] mutableCopy];
     [userIds removeObject:self.senderId];
+    if (userIds.count == 0) {
+        return;
+    }
     NSString *randomUserId = userIds[arc4random_uniform((int)[userIds count])];
     
     JSQMessage *newMessage = nil;
