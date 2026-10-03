@@ -84,16 +84,6 @@
     
     
     /**
-     *  Show the typing indicator to be shown
-     */
-    self.showTypingIndicator = !self.showTypingIndicator;
-    
-    /**
-     *  Scroll to actually view the indicator
-     */
-    [self scrollToBottomAnimated:YES];
-    
-    /**
      *  Copy last sent message, this will be the new "received" message
      */
     JSQMessage *copyMessage = [[self.demoData.messages lastObject] copy];
@@ -110,6 +100,12 @@
         return;
     }
     NSString *randomUserId = userIds[arc4random_uniform((int)[userIds count])];
+
+    /**
+     *  Show and scroll to the typing indicator only when a sender is available
+     */
+    self.showTypingIndicator = !self.showTypingIndicator;
+    [self scrollToBottomAnimated:YES];
     
     JSQMessage *newMessage = nil;
     id<JSQMessageMediaData> newMediaData = nil;
