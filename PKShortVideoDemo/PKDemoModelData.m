@@ -210,7 +210,8 @@ static NSCache<NSString *, UIImage *> *PKDemoPreviewImageCache(void) {
 
     NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:videoPath error:nil];
     NSDate *modificationDate = attributes[NSFileModificationDate];
-    NSString *cacheKey = [NSString stringWithFormat:@"%@|%.6f", videoPath, modificationDate.timeIntervalSinceReferenceDate];
+    unsigned long long fileSize = [attributes[NSFileSize] unsignedLongLongValue];
+    NSString *cacheKey = [NSString stringWithFormat:@"%@|%.6f|%llu", videoPath, modificationDate.timeIntervalSinceReferenceDate, fileSize];
     NSCache<NSString *, UIImage *> *previewImageCache = PKDemoPreviewImageCache();
     UIImage *previewImage = [previewImageCache objectForKey:cacheKey];
     if (!previewImage) {
