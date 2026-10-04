@@ -96,12 +96,6 @@
     }
     NSString *randomUserId = userIds[arc4random_uniform((int)[userIds count])];
 
-    /**
-     *  Show and scroll to the typing indicator only when a sender is available
-     */
-    self.showTypingIndicator = !self.showTypingIndicator;
-    [self scrollToBottomAnimated:YES];
-    
     JSQMessage *newMessage = nil;
     id<JSQMessageMediaData> newMediaData = nil;
     id newMediaAttachmentCopy = nil;
@@ -114,8 +108,11 @@
         
         if ([copyMediaData isKindOfClass:[JSQPhotoMediaItem class]]) {
             JSQPhotoMediaItem *photoItemCopy = [((JSQPhotoMediaItem *)copyMediaData) copy];
+            if (!photoItemCopy.image) {
+                return;
+            }
             photoItemCopy.appliesMediaViewMaskAsOutgoing = NO;
-            newMediaAttachmentCopy = [UIImage imageWithCGImage:photoItemCopy.image.CGImage];
+            newMediaAttachmentCopy = [photoItemCopy.image copy];
             
             /**
              *  Set image to nil to simulate "downloading" the image
@@ -127,6 +124,9 @@
         }
         else if ([copyMediaData isKindOfClass:[JSQLocationMediaItem class]]) {
             JSQLocationMediaItem *locationItemCopy = [((JSQLocationMediaItem *)copyMediaData) copy];
+            if (!locationItemCopy.location) {
+                return;
+            }
             locationItemCopy.appliesMediaViewMaskAsOutgoing = NO;
             newMediaAttachmentCopy = [locationItemCopy.location copy];
             
@@ -139,6 +139,9 @@
         }
         else if ([copyMediaData isKindOfClass:[JSQVideoMediaItem class]]) {
             JSQVideoMediaItem *videoItemCopy = [((JSQVideoMediaItem *)copyMediaData) copy];
+            if (!videoItemCopy.fileURL || !videoItemCopy.isReadyToPlay) {
+                return;
+            }
             videoItemCopy.appliesMediaViewMaskAsOutgoing = NO;
             newMediaAttachmentCopy = [videoItemCopy.fileURL copy];
             
@@ -152,6 +155,9 @@
         }
         else if ([copyMediaData isKindOfClass:[JSQAudioMediaItem class]]) {
             JSQAudioMediaItem *audioItemCopy = [((JSQAudioMediaItem *)copyMediaData) copy];
+            if (!audioItemCopy.audioData) {
+                return;
+            }
             audioItemCopy.appliesMediaViewMaskAsOutgoing = NO;
             newMediaAttachmentCopy = [audioItemCopy.audioData copy];
             
@@ -183,6 +189,12 @@
                                                 text:copyMessage.text];
     }
     
+    /**
+     *  Show and scroll to the typing indicator only when a message can be received
+     */
+    self.showTypingIndicator = !self.showTypingIndicator;
+    [self scrollToBottomAnimated:YES];
+
     /**
      *  Upon receiving a message, you should:
      *
