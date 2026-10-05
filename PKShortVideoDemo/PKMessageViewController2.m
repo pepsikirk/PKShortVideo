@@ -559,6 +559,14 @@
     //判断媒体消息类型
     if ([message.media isKindOfClass:[PKShortVideoItem2 class]]) {
         PKShortVideoItem2 *item = (PKShortVideoItem2 *)message.media;
+        if (item.videoPath.length == 0 || ![[NSFileManager defaultManager] fileExistsAtPath:item.videoPath]) {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Video unavailable"
+                                                                           message:@"This video file is no longer available."
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+            [self presentViewController:alert animated:YES completion:nil];
+            return;
+        }
         //跳转全屏播放小视频界面
         PKFullScreenPlayerViewController *viewController = [[PKFullScreenPlayerViewController alloc] initWithVideoPath:item.videoPath previewImage:item.image];
         [self presentViewController:viewController animated:NO completion:NULL];
