@@ -44,7 +44,7 @@ static CGFloat const PKShortVideoMaxLength = 220;
 
 //JSQ协议方法
 - (UIView *)mediaView {
-    if (!self.videoPath) {
+    if (self.videoPath.length == 0) {
         return nil;
     }
     
