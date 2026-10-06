@@ -582,7 +582,11 @@
 //视频拍摄完成输出图片
 - (void)didFinishRecordingToOutputFilePath:(NSString *)outputFilePath {
     //自定义的生成小视频聊天对象方法
+    NSUInteger messageCount = self.demoData.messages.count;
     [self.demoData addShortVideoMediaMessageWithVideoPath:outputFilePath playType:PKPlayTypeAVPlayer];
+    if (self.demoData.messages.count == messageCount) {
+        return;
+    }
     //JSQMessagesViewController的完成发送滚动到底端方法
     [self finishSendingMessageAnimated:YES];
 }
