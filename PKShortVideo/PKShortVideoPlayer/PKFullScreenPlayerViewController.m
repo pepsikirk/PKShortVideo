@@ -53,16 +53,32 @@
     
     self.view.backgroundColor = [UIColor blackColor];
     
-    CGSize viewSize = self.view.bounds.size;
-    CGSize imageSize = self.image.size;
-    
-    self.playerView = [[PKFullScreenPlayerView alloc] initWithFrame:CGRectMake(0, 0, viewSize.width, viewSize.width* (imageSize.height/imageSize.width) ) videoPath:self.videoPath previewImage:self.image];
-    self.playerView.center = self.view.center;
+    self.playerView = [[PKFullScreenPlayerView alloc] initWithFrame:CGRectZero videoPath:self.videoPath previewImage:self.image];
     
     [self.view addSubview:self.playerView];
+    [self updatePlayerViewLayout];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizer:)];
     [self.view addGestureRecognizer:tap];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    [self updatePlayerViewLayout];
+}
+
+- (void)updatePlayerViewLayout {
+    if (!self.playerView) {
+        return;
+    }
+
+    CGSize viewSize = self.view.bounds.size;
+    CGSize imageSize = self.image.size;
+    CGFloat imageAspectRatio = imageSize.width > 0 ? imageSize.height / imageSize.width : 1.0;
+    CGFloat playerWidth = viewSize.width;
+    CGFloat playerHeight = playerWidth * imageAspectRatio;
+    self.playerView.bounds = CGRectMake(0, 0, playerWidth, playerHeight);
+    self.playerView.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
 }
 
 - (void)viewWillAppear:(BOOL)animated {

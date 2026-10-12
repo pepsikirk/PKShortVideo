@@ -57,6 +57,11 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    self.playerLayer.frame = self.bounds;
+}
+
 
 
 #pragma mark Prepare to play asset, URL
