@@ -16,6 +16,10 @@
 
 @property (nonatomic, strong) NSString *videoPath;
 @property (nonatomic, strong) UIImage *image;
+@property (nonatomic, copy) AVAudioSessionCategory previousAudioSessionCategory;
+@property (nonatomic, copy) AVAudioSessionMode previousAudioSessionMode;
+@property (nonatomic, assign) AVAudioSessionCategoryOptions previousAudioSessionCategoryOptions;
+@property (nonatomic, assign) BOOL shouldRestoreAudioSession;
 
 @end
 
@@ -45,12 +49,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    //静音模式也有声音
-    if (![[AVAudioSession sharedInstance].category isEqualToString:AVAudioSessionCategoryPlayback]) {
-        [[AVAudioSession sharedInstance] setCategory :AVAudioSessionCategoryPlayback error:nil];
-    }
-    
+
     self.view.backgroundColor = [UIColor blackColor];
     
     self.playerView = [[PKFullScreenPlayerView alloc] initWithFrame:CGRectZero videoPath:self.videoPath previewImage:self.image];
@@ -83,14 +82,54 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+
+    [self configureAudioSessionForPlayback];
     [self.navigationController setNavigationBarHidden:YES animated:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    
+
+    [self restoreAudioSession];
     [self.navigationController setNavigationBarHidden:NO animated:YES];
+}
+
+- (void)configureAudioSessionForPlayback {
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    if ([audioSession.category isEqualToString:AVAudioSessionCategoryPlayback]) {
+        return;
+    }
+
+    self.previousAudioSessionCategory = audioSession.category;
+    self.previousAudioSessionMode = audioSession.mode;
+    self.previousAudioSessionCategoryOptions = audioSession.categoryOptions;
+
+    NSError *error = nil;
+    if ([audioSession setCategory:AVAudioSessionCategoryPlayback
+                            mode:AVAudioSessionModeDefault
+                         options:0
+                           error:&error]) {
+        self.shouldRestoreAudioSession = YES;
+    } else {
+        NSLog(@"Failed to configure audio playback session: %@", error);
+    }
+}
+
+- (void)restoreAudioSession {
+    if (!self.shouldRestoreAudioSession) {
+        return;
+    }
+
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    NSError *error = nil;
+    if ([audioSession setCategory:self.previousAudioSessionCategory
+                            mode:self.previousAudioSessionMode
+                         options:self.previousAudioSessionCategoryOptions
+                           error:&error]) {
+        self.shouldRestoreAudioSession = NO;
+    } else {
+        NSLog(@"Failed to restore audio session after playback: %@", error);
+    }
 }
 
 - (BOOL)prefersStatusBarHidden {
