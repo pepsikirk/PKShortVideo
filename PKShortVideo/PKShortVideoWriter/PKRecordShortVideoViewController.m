@@ -17,13 +17,6 @@
 #import "resource_bundle_accessor.h"
 #endif
 
-#define kScreenWidth [UIScreen mainScreen].bounds.size.width
-#define kScreenHeight [UIScreen mainScreen].bounds.size.height
-
-static CGFloat PKOtherButtonVarticalHeight = 0;
-static CGFloat PKRecordButtonVarticalHeight = 0;
-static CGFloat PKPreviewLayerHeight = 0;
-
 static CGFloat const PKRecordButtonWidth = 90;
 
 static UIImage *PKShortVideoImageNamed(NSString *name) {
@@ -56,6 +49,8 @@ static UIImage *PKShortVideoImageNamed(NSString *name) {
 
 @property (nonatomic, strong) PKShortVideoProgressBar *progressBar;
 @property (nonatomic, strong) PKShortVideoRecorder *recorder;
+@property (nonatomic, strong) UIToolbar *toolbar;
+@property (nonatomic, strong) AVCaptureVideoPreviewLayer *previewLayer;
 
 @end
 
@@ -85,18 +80,13 @@ static UIImage *PKShortVideoImageNamed(NSString *name) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    PKPreviewLayerHeight = ceilf(3/4.0 * kScreenWidth);
-    CGFloat spaceHeight = ceilf( (kScreenHeight - 44 - PKPreviewLayerHeight)/3 );
-    PKRecordButtonVarticalHeight = ceilf( kScreenHeight - 2 * spaceHeight );
-    PKOtherButtonVarticalHeight = ceilf( kScreenHeight - spaceHeight );
-    
+
     self.view.backgroundColor = [UIColor blackColor];
     
-    UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, 44)];
-    toolbar.barTintColor = [UIColor blackColor];
-    toolbar.translucent = NO;
-    [self.view addSubview:toolbar];
+    self.toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
+    self.toolbar.barTintColor = [UIColor blackColor];
+    self.toolbar.translucent = NO;
+    [self.view addSubview:self.toolbar];
     UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(cancelShoot)];
     cancelItem.tintColor = [UIColor whiteColor];
     
@@ -105,19 +95,18 @@ static UIImage *PKShortVideoImageNamed(NSString *name) {
     UIBarButtonItem *transformItem = [[UIBarButtonItem alloc] initWithImage:PKShortVideoImageNamed(@"PK_Camera_Turn") style:UIBarButtonItemStyleDone target:self action:@selector(swapCamera)];
     transformItem.tintColor = [UIColor whiteColor];
     
-    [toolbar setItems:@[cancelItem,flexible,transformItem]];
+    [self.toolbar setItems:@[cancelItem,flexible,transformItem]];
     
     //创建视频录制对象
     self.recorder = [[PKShortVideoRecorder alloc] initWithOutputFilePath:self.outputFilePath outputSize:self.outputSize];
     //通过代理回调
     self.recorder.delegate = self;
     //录制时需要获取预览显示的layer，根据情况设置layer属性，显示在自定义的界面上
-    AVCaptureVideoPreviewLayer *previewLayer = [self.recorder previewLayer];
-    previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-    previewLayer.frame = CGRectMake(0, 44, kScreenWidth, PKPreviewLayerHeight);
-    [self.view.layer insertSublayer:previewLayer atIndex:0];
+    self.previewLayer = [self.recorder previewLayer];
+    self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    [self.view.layer insertSublayer:self.previewLayer atIndex:0];
     
-    self.progressBar = [[PKShortVideoProgressBar alloc] initWithFrame:CGRectMake(0, 44 + PKPreviewLayerHeight - 5, kScreenWidth, 5) themeColor:self.themeColor duration:self.videoMaximumDuration];
+    self.progressBar = [[PKShortVideoProgressBar alloc] initWithFrame:CGRectZero themeColor:self.themeColor duration:self.videoMaximumDuration];
     [self.view addSubview:self.progressBar];
     
     self.recordButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -125,13 +114,60 @@ static UIImage *PKShortVideoImageNamed(NSString *name) {
     [self.recordButton setTitleColor:self.themeColor forState:UIControlStateNormal];
     self.recordButton.titleLabel.font = [UIFont systemFontOfSize:17.0f];
     self.recordButton.frame = CGRectMake(0, 0, PKRecordButtonWidth, PKRecordButtonWidth);
-    self.recordButton.center = CGPointMake(kScreenWidth/2, PKRecordButtonVarticalHeight);
     self.recordButton.layer.cornerRadius = PKRecordButtonWidth/2;
     self.recordButton.layer.borderWidth = 3;
     self.recordButton.layer.borderColor = self.themeColor.CGColor;
     self.recordButton.layer.masksToBounds = YES;
     [self recordButtonAction];
     [self.view addSubview:self.recordButton];
+    [self.view setNeedsLayout];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+
+    CGRect bounds = self.view.bounds;
+    CGFloat width = CGRectGetWidth(bounds);
+    CGFloat height = CGRectGetHeight(bounds);
+    CGFloat toolbarHeight = 44.0;
+    CGFloat availableHeight = MAX(0, height - toolbarHeight);
+    CGFloat previewHeight = MIN(ceilf(width * 0.75), ceilf(availableHeight * 0.55));
+    CGFloat controlsTop = toolbarHeight + previewHeight;
+    CGFloat controlsHeight = MAX(0, height - controlsTop);
+
+    CGRect toolbarFrame = CGRectMake(0, 0, width, toolbarHeight);
+    if (!CGRectEqualToRect(self.toolbar.frame, toolbarFrame)) {
+        self.toolbar.frame = toolbarFrame;
+    }
+
+    CGRect previewFrame = CGRectMake(0, toolbarHeight, width, previewHeight);
+    if (!CGRectEqualToRect(self.previewLayer.frame, previewFrame)) {
+        self.previewLayer.frame = previewFrame;
+    }
+
+    CGRect progressBarFrame = CGRectMake(0, controlsTop - 5, width, 5);
+    if (!CGRectEqualToRect(self.progressBar.frame, progressBarFrame)) {
+        self.progressBar.frame = progressBarFrame;
+    }
+
+    CGPoint recordButtonCenter = CGPointMake(width / 2, controlsTop + controlsHeight / 3);
+    if (!CGPointEqualToPoint(self.recordButton.center, recordButtonCenter)) {
+        self.recordButton.center = recordButtonCenter;
+    }
+
+    if (self.playButton && self.refreshButton) {
+        CGFloat buttonSpacing = (width - PKRecordButtonWidth) / 2;
+        CGFloat accessoryButtonsY = controlsTop + controlsHeight * 2 / 3;
+        CGPoint playButtonCenter = CGPointMake(buttonSpacing / 2, accessoryButtonsY);
+        if (!CGPointEqualToPoint(self.playButton.center, playButtonCenter)) {
+            self.playButton.center = playButtonCenter;
+        }
+
+        CGPoint refreshButtonCenter = CGPointMake(width - buttonSpacing / 2, accessoryButtonsY);
+        if (!CGPointEqualToPoint(self.refreshButton.center, refreshButtonCenter)) {
+            self.refreshButton.center = refreshButtonCenter;
+        }
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -294,7 +330,6 @@ static UIImage *PKShortVideoImageNamed(NSString *name) {
             UIImage *playImage = [PKShortVideoImageNamed(@"PK_Play") imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             [self.playButton setImage:playImage forState:UIControlStateNormal];
             [self.playButton sizeToFit];
-            self.playButton.center = CGPointMake((kScreenWidth-PKRecordButtonWidth)/2/2, PKOtherButtonVarticalHeight);
             [self.view addSubview:self.playButton];
             
             self.refreshButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -302,8 +337,8 @@ static UIImage *PKShortVideoImageNamed(NSString *name) {
             UIImage *refreshImage = [PKShortVideoImageNamed(@"PK_Delete") imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             [self.refreshButton setImage:refreshImage forState:UIControlStateNormal];
             [self.refreshButton sizeToFit];
-            self.refreshButton.center = CGPointMake(kScreenWidth-(kScreenWidth-PKRecordButtonWidth)/2/2, PKOtherButtonVarticalHeight);
             [self.view addSubview:self.refreshButton];
+            [self.view setNeedsLayout];
             
             [self sendButtonAction];
         }
